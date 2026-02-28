@@ -86,11 +86,12 @@
                             android:id="@+id/original_post_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Текст оригинального поста"
-                            android:textSize="14sp"
-                            android:textColor="?attr/colorOnSurface"
                             android:layout_marginBottom="12dp"
-                            android:lineSpacingExtra="2dp" />
+                            android:lineSpacingExtra="2dp"
+                            android:text="Текст оригинального поста"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp" />
 
                         <!-- Изображение поста -->
                         <ImageView
