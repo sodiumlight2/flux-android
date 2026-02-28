@@ -2,6 +2,24 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+fun getGitCommitHash(): String {
+    return try {
+        val process = Runtime.getRuntime().exec("git rev-parse --short HEAD")
+        process.inputStream.bufferedReader().readText().trim()
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
+fun getGitCommitTime(): String {
+    return try {
+        val process = Runtime.getRuntime().exec("git log -1 --format=%ci")
+        process.inputStream.bufferedReader().readText().trim()
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
 android {
     namespace = "org.nikanikoo.flux"
     compileSdk = 36
@@ -9,7 +27,7 @@ android {
     lint {
         abortOnError = false
     }
-    
+
     defaultConfig {
         applicationId = "org.nikanikoo.flux"
         minSdk = 21
@@ -18,10 +36,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
         // Оптимизации для производительности
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
+        
+        // Add git commit info to BuildConfig
+        buildConfigField("String", "GIT_COMMIT_HASH", "\"${getGitCommitHash()}\"")
+        buildConfigField("String", "GIT_COMMIT_TIME", "\"${getGitCommitTime()}\"")
     }
 
     buildTypes {

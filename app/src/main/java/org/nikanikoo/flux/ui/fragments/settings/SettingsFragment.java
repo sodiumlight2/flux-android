@@ -32,6 +32,7 @@ import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.activities.NotificationsSettingsActivity;
 import org.nikanikoo.flux.ui.activities.AccountManagerActivity;
 import org.nikanikoo.flux.security.AccountManager;
+import org.nikanikoo.flux.utils.BuildInfo;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public class SettingsFragment extends Fragment {
@@ -141,20 +142,20 @@ public class SettingsFragment extends Fragment {
     
     private void setupAboutSettings() {
         // Get app version
-        try {
-            PackageInfo pInfo = requireContext().getPackageManager().getPackageInfo(requireContext().getPackageName(), 0);
-            appVersionValue.setText(pInfo.versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            appVersionValue.setText("Неизвестно");
+        if (getActivity() != null) {
+            String version = BuildInfo.getAppVersion(getActivity());
+            if (appVersionValue != null) {
+                appVersionValue.setText(version);
+            }
         }
-        
+
         // Get instance URL
         String currentInstance = OpenVKApi.getInstance(requireContext()).getBaseUrl();
         if (currentInstance != null && !currentInstance.isEmpty()) {
             String displayInstance = currentInstance.replace("https://", "").replace("http://", "");
             instanceUrlValue.setText(displayInstance);
         } else {
-            instanceUrlValue.setText("ovk.to");
+            instanceUrlValue.setText("N/A");
         }
         
         // About app click
