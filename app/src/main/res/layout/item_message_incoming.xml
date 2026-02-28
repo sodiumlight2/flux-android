@@ -33,9 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Входящее сообщение"
-            android:textSize="16sp"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:lineSpacingExtra="2dp" />
+            android:lineSpacingExtra="2dp"
+            android:textIsSelectable="true"
+            android:textSize="16sp"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/time_text"
