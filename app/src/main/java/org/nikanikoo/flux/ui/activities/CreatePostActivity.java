@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,12 +47,15 @@ public class CreatePostActivity extends AppCompatActivity {
     private ImageView authorAvatar;
     private RecyclerView recyclerSelectedImages;
     private CardView cardImagePreview;
-    
+    private CheckBox checkboxGroupPost;
+    private CheckBox checkboxSignPost;
+
     private List<Uri> selectedImages;
     private SelectedImagesAdapter imagesAdapter;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-    
+
     private int targetOwnerId = 0; // (0 = своя стена, >0 = пользователь, <0 = группа)
+    private boolean isPostingToGroup = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,8 @@ public class CreatePostActivity extends AppCompatActivity {
         authorAvatar = findViewById(R.id.author_avatar);
         recyclerSelectedImages = findViewById(R.id.recycler_selected_images);
         cardImagePreview = findViewById(R.id.card_image_preview);
+        checkboxGroupPost = findViewById(R.id.checkbox_group_post);
+        checkboxSignPost = findViewById(R.id.checkbox_sign_post);
 
         if (authorAvatar != null) {
             authorAvatar.setImageResource(R.drawable.camera_200);
@@ -98,6 +104,24 @@ public class CreatePostActivity extends AppCompatActivity {
 
         if (editPostContent == null || btnPublish == null) {
             Logger.e("CreatePostActivity:", "Required views not found in layout!");
+        }
+
+        isPostingToGroup = targetOwnerId < 0;
+        Logger.d("CreatePostActivity", "isPostingToGroup: " + isPostingToGroup + ", targetOwnerId: " + targetOwnerId);
+        
+        if (checkboxGroupPost != null) {
+            checkboxGroupPost.setVisibility(isPostingToGroup ? View.VISIBLE : View.GONE);
+        }
+        updateSignCheckboxVisibility();
+    }
+
+    private void updateSignCheckboxVisibility() {
+        if (checkboxSignPost != null) {
+            if (checkboxGroupPost != null && checkboxGroupPost.isChecked()) {
+                checkboxSignPost.setVisibility(View.VISIBLE);
+            } else {
+                checkboxSignPost.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -138,6 +162,12 @@ public class CreatePostActivity extends AppCompatActivity {
         if (btnAddPhoto != null) {
             btnAddPhoto.setOnClickListener(v -> {
                 openImagePicker();
+            });
+        }
+
+        if (checkboxGroupPost != null) {
+            checkboxGroupPost.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                updateSignCheckboxVisibility();
             });
         }
     }
@@ -213,10 +243,14 @@ public class CreatePostActivity extends AppCompatActivity {
     private void publishPost(String content) {
         btnPublish.setEnabled(false);
         btnPublish.setText("Публикация...");
-        
+
+        boolean fromGroup = checkboxGroupPost != null && checkboxGroupPost.isChecked();
+        boolean signed = checkboxSignPost != null && checkboxSignPost.isChecked();
+
+        Logger.d("CreatePost", "fromGroup: " + fromGroup + ", signed: " + signed);
+
         if (!selectedImages.isEmpty()) {
-            // Публикуем пост с изображениями
-            postsManager.createPostWithImages(targetOwnerId, content, selectedImages, new PostsManager.CreatePostCallback() {
+            postsManager.createPostWithImages(targetOwnerId, content, selectedImages, fromGroup, signed, new PostsManager.CreatePostCallback() {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {
@@ -235,7 +269,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 }
             });
         } else {
-            postsManager.createPost(targetOwnerId, content, new PostsManager.CreatePostCallback() {
+            postsManager.createPost(targetOwnerId, content, fromGroup, signed, new PostsManager.CreatePostCallback() {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {

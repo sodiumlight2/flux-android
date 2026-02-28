@@ -108,6 +108,7 @@
     <string name="create_post_whats_new">What\'s new?</string>
     <string name="create_post_photo">Photo</string>
     <string name="create_post_publish">Publish</string>
+    <string name="create_post_group">Post as group</string>
     <string name="create_post_author_loading">Loading...</string>
 
     <!-- Comments -->
@@ -320,4 +321,6 @@
 
     <!-- Links -->
     <string name="link_title">Link</string>
+    <string name="create_post_sign_group">Add signature</string>
+    <string name="create_post_nsfw">Contains NSFW content (coming soon)</string>
 </resources>

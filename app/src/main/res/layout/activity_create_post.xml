@@ -172,6 +172,32 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                >
+
+                <CheckBox
+                    android:id="@+id/checkbox_group_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_post_group"/>
+                <CheckBox
+                    android:id="@+id/checkbox_sign_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_post_sign_group"/>
+                <CheckBox
+                    android:id="@+id/checkbox_nsfw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_post_nsfw"
+                    android:enabled="false"/>
+
+            </LinearLayout>
+
             <!-- Кнопка публикации -->
             <Button
                 android:id="@+id/btn_publish"

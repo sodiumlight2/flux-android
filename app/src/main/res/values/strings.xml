@@ -108,6 +108,7 @@
     <string name="create_post_whats_new">Что у вас нового?</string>
     <string name="create_post_photo">Фото</string>
     <string name="create_post_publish">Опубликовать</string>
+    <string name="create_post_group">От имени сообщества</string>
     <string name="create_post_author_loading">Загрузка...</string>
 
     <!-- Comments -->
@@ -320,4 +321,6 @@
 
     <!-- Links -->
     <string name="link_title">Ссылка</string>
+    <string name="create_post_sign_group">Подпись автора</string>
+    <string name="create_post_nsfw">Содержит NSFW-контент (скоро)</string>
 </resources>
