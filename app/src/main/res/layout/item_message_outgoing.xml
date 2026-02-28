@@ -21,9 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Исходящее сообщение"
-            android:textSize="16sp"
             android:textColor="?attr/colorOnPrimary"
-            android:lineSpacingExtra="2dp" />
+            android:lineSpacingExtra="2dp"
+            android:textIsSelectable="true"
+            android:textSize="16sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,9 +49,9 @@
                 android:layout_height="16dp"
                 android:layout_marginStart="6dp"
                 android:src="@android:drawable/ic_menu_view"
-                android:tint="?attr/colorOnPrimary"
                 android:alpha="0.8"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="?attr/colorOnPrimary" />
 
         </LinearLayout>
 

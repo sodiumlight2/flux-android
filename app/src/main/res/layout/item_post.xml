@@ -92,13 +92,14 @@
             android:id="@+id/post_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Это пример текста поста. Здесь может быть любой контент, который пользователь хочет поделиться со своими друзьями."
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="12dp"
-            android:lineSpacingExtra="2dp"
             android:breakStrategy="balanced"
-            android:maxLines="1000" />
+            android:lineSpacingExtra="2dp"
+            android:maxLines="1000"
+            android:text="Это пример текста поста. Здесь может быть любой контент, который пользователь хочет поделиться со своими друзьями."
+            android:textColor="?attr/colorOnSurface"
+            android:textIsSelectable="true"
+            android:textSize="14sp" />
 
         <!-- Оригинальный пост (для репостов) -->
         <androidx.cardview.widget.CardView
