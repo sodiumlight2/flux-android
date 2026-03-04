@@ -186,40 +186,40 @@ public class ThemeManager {
     public String getThemeName(int mode) {
         switch (mode) {
             case THEME_LIGHT:
-                return "Светлая";
+                return context.getString(R.string.appearance_theme_light);
             case THEME_DARK:
-                return "Темная";
+                return context.getString(R.string.appearance_theme_dark);
             case THEME_SYSTEM:
             default:
-                return "Системная";
+                return context.getString(R.string.appearance_theme_system);
         }
     }
     
     public String getStyleName(int style) {
         switch (style) {
             case STYLE_MATERIAL_YOU:
-                return "Material You";
+                return context.getString(R.string.appearance_color_material_you);
             case STYLE_GREEN:
-                return "Зеленая";
+                return context.getString(R.string.appearance_color_green);
             case STYLE_PURPLE:
-                return "Фиолетовая";
+                return context.getString(R.string.appearance_color_purple);
             case STYLE_RED:
-                return "Красная";
+                return context.getString(R.string.appearance_color_red);
             case STYLE_DEFAULT:
             default:
-                return "Flux (по умолчанию)";
+                return context.getString(R.string.appearance_color_blue);
         }
     }
     
     public String getContrastName(int contrast) {
         switch (contrast) {
             case CONTRAST_HIGH:
-                return "Высокая";
+                return context.getString(R.string.contrast_high);
             case CONTRAST_MEDIUM:
-                return "Средняя";
+                return context.getString(R.string.contrast_medium);
             case CONTRAST_NORMAL:
             default:
-                return "Обычная";
+                return context.getString(R.string.contrast_normal);
         }
     }
 }

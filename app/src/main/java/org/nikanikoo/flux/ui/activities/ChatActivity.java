@@ -47,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(title != null ? title : "Чат");
+                getSupportActionBar().setTitle(title != null ? title : getString(R.string.chat_title));
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }

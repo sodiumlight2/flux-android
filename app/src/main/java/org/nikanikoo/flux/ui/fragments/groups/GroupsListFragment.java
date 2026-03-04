@@ -61,7 +61,7 @@ public class GroupsListFragment extends Fragment implements GroupsAdapter.OnGrou
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Сообщества");
+            mainActivity.setToolbarTitle(getString(R.string.groups_title));
         }
     }
 

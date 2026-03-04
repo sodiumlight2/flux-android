@@ -186,7 +186,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         }
 
         if (videoUrl == null || videoUrl.isEmpty()) {
-            Toast.makeText(this, "URL видео не найден", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.video_url_not_found), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -244,7 +244,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 loadingProgress.setVisibility(View.GONE);
 
                 Toast.makeText(VideoPlayerActivity.this,
-                        "Ошибка воспроизведения: " + error.getMessage(),
+                        getString(R.string.video_error) + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         });

@@ -12,7 +12,7 @@ public class AboutAppActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_container);
         
-        setupToolbar("О приложении");
+        setupToolbar(getString(R.string.settings_app_version));
         
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

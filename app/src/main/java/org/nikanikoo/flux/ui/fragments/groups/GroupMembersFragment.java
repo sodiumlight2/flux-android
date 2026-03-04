@@ -101,7 +101,7 @@ public class GroupMembersFragment extends Fragment implements FriendsAdapter.OnF
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Участники " + (groupName != null ? groupName : ""));
+            mainActivity.setToolbarTitle(getString(R.string.group_members2) + (groupName != null ? groupName : ""));
         }
     }
 
@@ -211,7 +211,7 @@ public class GroupMembersFragment extends Fragment implements FriendsAdapter.OnF
                         getActivity().runOnUiThread(() -> {
                             paginationHelper.stopLoading();
                             hideLoading();
-                            Toast.makeText(getContext(), "Ошибка загрузки участников: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.group_members_loading_error) + e.getMessage(), Toast.LENGTH_SHORT).show();
                             updateEmptyState();
                         });
                     }
@@ -224,7 +224,7 @@ public class GroupMembersFragment extends Fragment implements FriendsAdapter.OnF
                     getActivity().runOnUiThread(() -> {
                         paginationHelper.stopLoading();
                         hideLoading();
-                        Toast.makeText(getContext(), "Ошибка загрузки участников: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.group_members_loading_error) + error, Toast.LENGTH_SHORT).show();
                         updateEmptyState();
                     });
                 }
@@ -254,9 +254,9 @@ public class GroupMembersFragment extends Fragment implements FriendsAdapter.OnF
         if (isEmpty) {
             emptyState.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
-            emptyTextTitle.setText("Участники не найдены");
+            emptyTextTitle.setText(getString(R.string.group_members_not_found));
             emptyTextSubtitle.setText(currentSearchQuery.isEmpty() ? 
-                "В группе пока нет участников" : "Попробуйте изменить параметры поиска");
+                getString(R.string.group_members_none) : getString(R.string.search_none2));
         } else {
             emptyState.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

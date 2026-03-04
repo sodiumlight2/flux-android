@@ -88,7 +88,7 @@ public class AppearanceSettingsFragment extends Fragment {
         
         Dialog dialog = new MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("Применить", (d, which) -> {
+            .setPositiveButton(getString(R.string.apply), (d, which) -> {
                 int newTheme;
                 int checkedId = radioGroup.getCheckedRadioButtonId();
                 
@@ -104,7 +104,7 @@ public class AppearanceSettingsFragment extends Fragment {
                 updateThemeValues();
                 restartMainActivity();
             })
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create();
         
         dialog.show();
@@ -151,7 +151,7 @@ public class AppearanceSettingsFragment extends Fragment {
         
         Dialog dialog = new MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("Применить", (d, which) -> {
+            .setPositiveButton(getString(R.string.apply), (d, which) -> {
                 int newStyle;
                 int checkedId = radioGroup.getCheckedRadioButtonId();
                 
@@ -171,7 +171,7 @@ public class AppearanceSettingsFragment extends Fragment {
                 updateThemeValues();
                 restartMainActivity();
             })
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create();
         
         dialog.show();
@@ -199,7 +199,7 @@ public class AppearanceSettingsFragment extends Fragment {
         
         Dialog dialog = new MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("Применить", (d, which) -> {
+            .setPositiveButton(getString(R.string.apply), (d, which) -> {
                 int newContrast;
                 int checkedId = radioGroup.getCheckedRadioButtonId();
                 
@@ -215,7 +215,7 @@ public class AppearanceSettingsFragment extends Fragment {
                 updateThemeValues();
                 restartMainActivity();
             })
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create();
         
         dialog.show();

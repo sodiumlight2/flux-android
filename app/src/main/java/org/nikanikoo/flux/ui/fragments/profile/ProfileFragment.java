@@ -144,7 +144,7 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         presenter.attachView(this);
         
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setToolbarTitle("Профиль");
+            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.profile_title));
         }
         
         presenter.loadProfile();
@@ -251,7 +251,7 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
     @Override
     public void showProfileError(String error) {
-        Toast.makeText(getContext(), "Ошибка загрузки профиля: " + error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.error_loading_profile) + error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -281,7 +281,7 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         List<String> avatarUrls = new ArrayList<>();
         avatarUrls.add(photoUrl);
         
-        PhotoViewerActivity.start(getContext(), avatarUrls, 0, userName + " - Фото профиля");
+        PhotoViewerActivity.start(getContext(), avatarUrls, 0, userName);
     }
 
     @Override
@@ -380,11 +380,10 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
     @Override
     public void onShareClick(Post post) {
-        Toast.makeText(getContext(), "Поделиться постом от " + post.getAuthorName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), post.getAuthorName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPostLongClick(Post post, View view) {
-        // Context menu for post - можно добавить позже
     }
 }

@@ -269,7 +269,7 @@ public class PhotoViewerFragment extends Fragment {
         }
     }
     private void setupToolbar() {
-        toolbarTitle.setText(authorName != null ? authorName : "Фотография");
+        toolbarTitle.setText(authorName != null ? authorName : getString(R.string.photo_viewer));
         
         btnBack.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -321,7 +321,7 @@ public class PhotoViewerFragment extends Fragment {
         
         btnShare.setOnClickListener(v -> {
             // Share functionality - placeholder for future implementation
-            Toast.makeText(getContext(), "Поделиться", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.share), Toast.LENGTH_SHORT).show();
             showUI();
         });
         
@@ -330,8 +330,8 @@ public class PhotoViewerFragment extends Fragment {
     
     private void updateToolbarTitle() {
         if (imageUrls != null && imageUrls.size() > 1) {
-            String title = (authorName != null ? authorName : "Фотография") + 
-                          " (" + (currentPosition + 1) + " из " + imageUrls.size() + ")";
+            String title = (authorName != null ? authorName : getString(R.string.photo_viewer)) +
+                          " (" + (currentPosition + 1) + "/" + imageUrls.size() + ")";
             toolbarTitle.setText(title);
         }
     }
@@ -372,7 +372,7 @@ public class PhotoViewerFragment extends Fragment {
                         post.setLiked(originalLikedState);
                         post.setLikeCount(originalLikeCount);
                         updateLikeButton();
-                        Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }

@@ -6,6 +6,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading">Loading...</string>
     <string name="error">Error</string>
+    <string name="apply">Apply</string>
     <string name="success">Success</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
@@ -14,6 +15,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="pin">Pin</string>
     <string name="close">Close</string>
     <string name="back">Back</string>
     <string name="search">Search</string>
@@ -24,6 +26,7 @@
     <string name="link_copied">Link copied</string>
 
     <!-- Navigation -->
+    <string name="toolbar_globalfeed">All news</string>
     <string name="open_drawer">Open menu</string>
     <string name="close_drawer">Close menu</string>
     <string name="nav_news">News</string>
@@ -43,19 +46,28 @@
     <string name="instance_hint">Instance (e.g., api.openvk.org)</string>
     <string name="instance_helper">Enter OpenVK instance address</string>
     <string name="instance_address_hint">Enter instance address</string>
+    <string name="instance_display_names_custom">Enter manually</string>
     <string name="login_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="btn_login">Sign in</string>
+    <string name="btn_login_confirm">Log in anyway</string>
     <string name="btn_login_loading">Signing in...</string>
     <string name="no_account">No account?</string>
+    <string name="login_error4">Authentication error</string>
     <string name="register">Register</string>
     <string name="login_success">You have successfully signed in!</string>
+    <string name="login_enter_password">Enter password</string>
     <string name="select_instance">Select instance</string>
     <string name="instance_address">Address: %s</string>
     <string name="app_openvk">OpenVK</string>
 
     <!-- Two Factor -->
+    <string name="fa_error3">Authorization error</string>
+    <string name="fa_error4">Incorrect login information</string>
+    <string name="fa_invalid_request">Invalid request format</string>
+    <string name="fa_code_expired">The code has expired, request a new one.</string>
+    <string name="fa_success">The code is confirmed</string>
     <string name="two_factor_title">Two-factor authentication</string>
     <string name="two_factor_subtitle">Sign in confirmation</string>
     <string name="two_factor_description">Enter the code from SMS or authenticator app</string>
@@ -94,15 +106,17 @@
     <string name="post_likes">Likes</string>
     <string name="post_comments">Comments</string>
     <string name="post_shares">Share</string>
+    <string name="copied_link">Link is copied</string>
     <string name="post_share_from">Share post from %s</string>
     <string name="post_like_error">Cannot like this post</string>
     <string name="post_edit_not_supported">Post editing not yet implemented</string>
     <string name="post_delete_not_supported">Post deletion not yet implemented</string>
     <string name="post_pin_not_supported">Post pinning not yet implemented</string>
     <string name="post_delete_confirm">Delete post?</string>
+    <string name="post_error_like">It is impossible to like this post</string>
     <string name="post_delete_message">This action cannot be undone</string>
     <string name="post_published">Post published!</string>
-    <string name="post_publish_error">Publishing error: %s</string>
+    <string name="post_publish_error">"Publishing error: "</string>
     <string name="post_publishing">Publishing...</string>
 
     <!-- Create Post -->
@@ -157,10 +171,12 @@
     <string name="friend_decline">Decline</string>
     <string name="friend_request_accepted">Request accepted</string>
     <string name="friend_request_declined">Request declined</string>
+    <string name="friend_request_none_desc">New friend requests will appear here</string>
     <string name="friend_requests_loading_error">Error loading requests: %s</string>
     <string name="friend_send_message">Send message</string>
 
     <!-- Groups -->
+    <string name="friend_followers6">" followers"</string>
     <string name="groups_title">Groups</string>
     <string name="groups_search">Search groups...</string>
     <string name="groups_loading_error">Error loading groups: %s</string>
@@ -172,7 +188,9 @@
     <string name="group_members_search">Search members</string>
     <string name="group_members_loading_error">Error loading members: %s</string>
     <string name="group_members_not_found">No members found</string>
+    <string name="group_members2">"Followers "</string>
     <string name="group_members_none">There are no followers in the group yet</string>
+    <string name="group_leave">Leave</string>
     <string name="group_joined">You joined the group</string>
     <string name="group_left">You left the group</string>
     <string name="group_load_error">Error loading group: %s</string>
@@ -187,6 +205,8 @@
     <string name="video_preview">Video preview</string>
     <string name="video_play">Play</string>
     <string name="video_url_not_found">Video URL not found</string>
+    <string name="video_error">Playback error:</string>
+    <string name="video_search">Video search</string>
     <string name="video_forward">%d »</string>
     <string name="video_back">« %d</string>
 
@@ -199,8 +219,10 @@
     <string name="audio_search_error">Search error: %s</string>
     <string name="audio_nothing_found">Nothing found</string>
     <string name="audio_removed">Removed from audio</string>
-    <string name="audio_remove_error">Remove error: %s</string>
+    <string name="audio_loading_error">"Loading error: "</string>
+    <string name="audio_remove_error">"Remove error: "</string>
     <string name="audio_added">Added to audio</string>
+    <string name="audio_search">Music Search</string>
     <string name="audio_add">Add</string>
     <string name="audio_more">More</string>
     <string name="audio_no_title">No title</string>
@@ -221,10 +243,12 @@
     <string name="notifications_loading_error">Error loading archived notifications: %s</string>
     <string name="notifications_all_read">All notifications marked as read</string>
     <string name="notifications_mark_all_read">Mark all as read</string>
+    <string name="notifications_error_user">Couldn\'t identify the user</string>
     <string name="notification_action">User performed action</string>
     <string name="notification_time_ago">%s ago</string>
 
     <!-- Settings -->
+    <string name="notification_default">did something</string>
     <string name="settings_title">Settings</string>
     <string name="settings_accounts">Account management</string>
     <string name="settings_accounts_desc">Switch between accounts</string>
@@ -236,6 +260,7 @@
     <string name="settings_data_desc">Autoload and cache</string>
     <string name="settings_other">OTHER</string>
     <string name="settings_logout">Sign out</string>
+    <string name="settings_logout2">Sign out</string>
     <string name="settings_logout_confirm">Sign out?</string>
     <string name="settings_logout_message">Are you sure you want to sign out?</string>
     <string name="settings_logout_success">You have signed out</string>
@@ -281,6 +306,7 @@
     <!-- Data Settings -->
     <string name="data_clear_cache">Clear cache</string>
     <string name="data_clear_cache_confirm">Clear cache?</string>
+    <string name="data_clear_btn_clear">Clear</string>
     <string name="data_clear_cache_message">Are you sure you want to clear the app cache?</string>
     <string name="data_cache_cleared">Cache cleared</string>
     <string name="data_cache_clear_error">Error clearing cache</string>
@@ -291,7 +317,7 @@
     <string name="account_manager_title">Account management</string>
     <string name="account_manager_add">Add account</string>
     <string name="account_delete_confirm">Delete account?</string>
-    <string name="account_delete_message">Account %s (%s) will be removed from the app.\n\nThis action cannot be undone.</string>
+    <string name="account_delete_message2">will be deleted from the application.\n\nThis action cannot be undone.</string>
     <string name="account_switched">Switched to %s</string>
     <string name="account_encryption_error">Encryption error. Try reinstalling the app.</string>
 
@@ -318,6 +344,7 @@
     <string name="about_instance_desc">Instance Description</string>
     <string name="about_instance_stats">STATISTICS</string>
     <string name="about_instance_users">USERS</string>
+    <string name="about_instance_error">"Error in data processing: "</string>
     <string name="error_loading_profile">Error loading profile: %s</string>
     <string name="error_loading">Error: %s</string>
     <string name="error_generic">An error occurred</string>
@@ -330,6 +357,7 @@
     <string name="empty_default">Empty</string>
 
     <!-- Profile -->
+    <string name="profile_title">Profile</string>
     <string name="profile_sex_male">Male</string>
     <string name="profile_sex_female">Female</string>
     <string name="profile_about">About:</string>
@@ -345,6 +373,7 @@
     <string name="profile_posts_refresh_error">Could not load new posts</string>
 
     <!-- Links -->
+    <string name="profile_photo_title">Profile Photo</string>
     <string name="link_title">Link</string>
     <string name="create_post_sign_group">Add signature</string>
     <string name="create_post_nsfw">Contains NSFW content (coming soon)</string>
@@ -367,6 +396,7 @@
     <string name="instance_info">INFORMATION</string>
     <string name="instance_rules">Rules instance</string>
     <string name="instance_policy">Privacy Policy</string>
+    <string name="friends_title2">"Friends "</string>
     <string name="friends_all">All friends</string>
     <string name="group_none">Groups list is empty</string>
     <string name="group_none_desc">You are not a member of any group yet</string>
@@ -393,8 +423,45 @@
     <string name="about_app_thanks">Thanks to these people for their help:</string>
     <string name="about_app_translates">TRANSLATIONS</string>
     <string name="ssl_error_btn_confirm">Yes, I understand the risk</string>
+    <string name="about_app_commit">"Commit: "</string>
     <string name="about_app_github">Source code on GitHub</string>
     <string name="connection_insecure_list3">Man-in-the-middle attack is possible</string>
     <string name="ssl_error_title">⚠️ Security certificate error</string>
     <string name="ssl_error_desc">Could not verify the authenticity of the server. This may mean:</string>
+    <string name="account_delete_message1">"The account "</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="toolbar_subsfeed">My news</string>
+    <string name="closed">Closed</string>
+    <string name="login_adress">"Adress: "</string>
+    <string name="login_error1">Incorrect email or password</string>
+    <string name="login_error2">Two-factor authentication is required</string>
+    <string name="login_error3">Client error</string>
+    <string name="login_enter_email">Enter email</string>
+    <string name="fa_length6">Enter the 6-digit code</string>
+    <string name="fa_error1">Code verification error</string>
+    <string name="fa_error2">Invalid code</string>
+    <string name="fa_error_numbers">The code must contain only numbers.</string>
+    <string name="post_share">Share a post</string>
+    <string name="copy_link">Copy link</string>
+    <string name="search_none2">Try changing the search parameters</string>
+    <string name="group_join">Join</string>
+    <string name="audio_add_error">Adding error:</string>
+    <string name="audio_dob">Additional options</string>
+    <string name="about_app_version">"Version: "</string>
+    <string name="about_instance_https">HTTPS (Secure Connection)</string>
+    <string name="about_instance_http">HTTP (Unsecured connection)</string>
+    <string name="about_instance_version">"Version: "</string>
+    <string name="choosed_image">Image selected</string>
+    <string name="request_server_error">Incorrect response format from the server</string>
+    <string name="link_error">Couldn\'t open the link</string>
+    <string name="notification_like_post">liked your post</string>
+    <string name="notification_comment_post">commented on your post</string>
+    <string name="notification_comment_photo">commented on your photo</string>
+    <string name="notification_sent_gift">sent you a gift</string>
+    <string name="notification_wall">posted on your wall</string>
+    <string name="notification_mention">mentioned you in a post</string>
+    <string name="notification_copy_post">reposted your post</string>
+    <string name="friend_request_none">No friend requests</string>
+    <string name="friend_1_follower">1 follower</string>
+    <string name="friend_5_followers">" followers"</string>
 </resources>

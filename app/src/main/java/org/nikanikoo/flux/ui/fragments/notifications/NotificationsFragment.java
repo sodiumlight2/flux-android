@@ -68,7 +68,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Уведомления");
+            mainActivity.setToolbarTitle(getString(R.string.notifications_title));
         }
     }
 
@@ -238,7 +238,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Ошибка загрузки архивных уведомлений: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.notifications_loading_error) + error, Toast.LENGTH_SHORT).show();
                         hasMoreData = false; // Останавливаем дальнейшие попытки загрузки
                         
                         isLoading = false;
@@ -261,7 +261,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
                         }
                         adapter.updateNotifications(notifications);
                         markAllReadFab.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), "Все уведомления помечены как прочитанные", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.notifications_all_read), Toast.LENGTH_SHORT).show();
                         
                         // После пометки как прочитанные, сбрасываем состояние и загружаем архивные
                         currentOffset = 0;
@@ -281,7 +281,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -374,7 +374,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
             }
         } else {
             Toast.makeText(requireContext(), 
-                "Не удалось определить пользователя", 
+                getString(R.string.notifications_error_user),
                 Toast.LENGTH_SHORT).show();
         }
     }
@@ -386,7 +386,7 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
         // Создаем минимальный объект поста для перехода к комментариям
         // Не используем данные комментатора, а создаем пустой пост с ID
         Post post = new Post(
-            "Загрузка...", // Имя автора будет загружено в CommentsFragment
+            getString(R.string.loading), // Имя автора будет загружено в CommentsFragment
             notification.getDate(),
             "", // Текст поста будет загружен в CommentsFragment
             0, // likes - будут загружены при открытии

@@ -55,13 +55,14 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     
     // Тип новостей: true = подписки, false = все новости
     private boolean isSubscriptionMode = true;
-    private String[] newsTypes = {getString(R.string.toolbar_subsfeed), getString(R.string.toolbar_globalfeed)};
+    private String[] newsTypes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
-        
+
+        newsTypes = new String[] { getString(R.string.toolbar_subsfeed), getString(R.string.toolbar_globalfeed) };
         postsManager = PostsManager.getInstance(requireContext());
         profileManager = ProfileManager.getInstance(requireContext());
         posts = new ArrayList<>();
@@ -88,7 +89,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         if (getContext() == null) return;
         
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder.setTitle("Выберите тип новостей");
+        builder.setTitle(getString(R.string.news_select_type));
         
         int currentSelection = isSubscriptionMode ? 0 : 1;
         
@@ -103,7 +104,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
             dialog.dismiss();
         });
         
-        builder.setNegativeButton("Отмена", null);
+        builder.setNegativeButton(getString(R.string.cancel), null);
         builder.show();
     }
 
@@ -260,12 +261,12 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                 recyclerPosts.setVisibility(View.VISIBLE);
                 
                 if (posts.isEmpty()) {
-                    Toast.makeText(getContext(), "Ошибка загрузки новостей: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.news_loading_error) + error, Toast.LENGTH_SHORT).show();
                     // Пробуем альтернативный метод только если нет постов
                     loadPublicPosts(isRefresh);
                 } else {
                     // Если уже есть посты, просто показываем ошибку
-                    Toast.makeText(getContext(), "Не удалось загрузить новые посты", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.news_refresh_error, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -300,7 +301,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         if (posts.isEmpty()) {
-                            Toast.makeText(getContext(), "Ошибка загрузки публичных постов: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.news_public_loading_error) + error, Toast.LENGTH_SHORT).show();
                             loadTestPosts();
                         }
                     });
@@ -370,7 +371,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     public void onLikeClick(Post post) {
         // Проверяем, есть ли необходимые данные для лайка
         if (post.getPostId() == 0 || post.getOwnerId() == 0) {
-            Toast.makeText(getContext(), "Невозможно поставить лайк этому посту", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.post_like_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -432,7 +433,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                             }
                         }
                         
-                        Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -454,7 +455,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
 
     @Override
     public void onShareClick(Post post) {
-        Toast.makeText(getContext(), "Поделиться постом от " + post.getAuthorName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), post.getAuthorName(), Toast.LENGTH_SHORT).show();
     }
     
     @Override
@@ -473,18 +474,18 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         
         if (isOwnPost) {
             // Свой пост - можно редактировать, потом удалить
-            popup.getMenu().add(0, 1, 0, "Редактировать");
-            popup.getMenu().add(0, 3, 0, "Закрепить");
-            popup.getMenu().add(0, 4, 0, "Скопировать ссылку");
-            popup.getMenu().add(0, 5, 0, "Удалить");
+            popup.getMenu().add(0, 1, 0, getString(R.string.edit));
+            popup.getMenu().add(0, 3, 0, getString(R.string.pin));
+            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
+            popup.getMenu().add(0, 5, 0, getString(R.string.delete));
         } else if (isOnOwnWall) {
             // Пост на своей стене - можно закрепить, потом удалить
-            popup.getMenu().add(0, 3, 0, "Закрепить");
-            popup.getMenu().add(0, 4, 0, "Скопировать ссылку");
-            popup.getMenu().add(0, 5, 0, "Удалить");
+            popup.getMenu().add(0, 3, 0, getString(R.string.pin));
+            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
+            popup.getMenu().add(0, 5, 0, getString(R.string.delete));
         } else {
             // Общие действия
-            popup.getMenu().add(0, 4, 0, "Скопировать ссылку");
+            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
         }
         
         popup.setOnMenuItemClickListener(item -> {
@@ -510,23 +511,23 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
     
     private void editPost(Post post) {
-        Toast.makeText(getContext(), "Редактирование поста пока не реализовано", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.post_edit_not_supported), Toast.LENGTH_SHORT).show();
     }
     
     private void deletePost(Post post) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Удалить пост?")
-                .setMessage("Это действие нельзя отменить")
-                .setPositiveButton("Удалить", (dialog, which) -> {
+                .setTitle(getString(R.string.post_delete_confirm))
+                .setMessage(getString(R.string.post_delete_message))
+                .setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                     // Здесь будет вызов API для удаления поста
-                    Toast.makeText(getContext(), "Удаление поста пока не реализовано", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.post_delete_not_supported), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Отмена", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
     
     private void pinPost(Post post) {
-        Toast.makeText(getContext(), "Закрепление поста пока не реализовано", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.post_pin_not_supported), Toast.LENGTH_SHORT).show();
     }
     
     private void copyPostLink(Post post) {
@@ -541,7 +542,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                 requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
         android.content.ClipData clip = android.content.ClipData.newPlainText("Post URL", postUrl);
         clipboard.setPrimaryClip(clip);
-        Toast.makeText(getContext(), "Ссылка скопирована", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.copied_link), Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -257,7 +257,7 @@ public class PhotoViewerActivity extends AppCompatActivity {
     }
     
     private void setupUI() {
-        titleText.setText(authorName != null ? authorName : "Фотография");
+        titleText.setText(authorName != null ? authorName : getString(R.string.photo_viewer));
         
         btnBack.setOnClickListener(v -> animateExit());
         
@@ -280,7 +280,7 @@ public class PhotoViewerActivity extends AppCompatActivity {
         });
         
         btnShare.setOnClickListener(v -> {
-            Toast.makeText(this, "Поделиться", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.share), Toast.LENGTH_SHORT).show();
             showUI();
         });
         
@@ -294,8 +294,8 @@ public class PhotoViewerActivity extends AppCompatActivity {
     
     private void updateTitle() {
         if (imageUrls != null && imageUrls.size() > 1) {
-            String title = (authorName != null ? authorName : "Фотография") + 
-                          " (" + (currentPosition + 1) + " из " + imageUrls.size() + ")";
+            String title = (authorName != null ? authorName : getString(R.string.photo_viewer)) +
+                          " (" + (currentPosition + 1) + "/" + imageUrls.size() + ")";
             titleText.setText(title);
         }
     }
@@ -413,7 +413,7 @@ public class PhotoViewerActivity extends AppCompatActivity {
                     post.setLiked(originalLikedState);
                     post.setLikeCount(originalLikeCount);
                     updateLikeButton();
-                    Toast.makeText(PhotoViewerActivity.this, "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhotoViewerActivity.this, getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                 });
             }
         });

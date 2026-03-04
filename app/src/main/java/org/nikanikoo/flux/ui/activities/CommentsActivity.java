@@ -44,7 +44,7 @@ public class CommentsActivity extends AppCompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle("Комментарии");
+                getSupportActionBar().setTitle(getString(R.string.comments_title));
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }

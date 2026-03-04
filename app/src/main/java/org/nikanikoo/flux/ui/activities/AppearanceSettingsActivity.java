@@ -12,7 +12,7 @@ public class AppearanceSettingsActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_container);
         
-        setupToolbar("Внешний вид");
+        setupToolbar(getString(R.string.settings_appearance));
         
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

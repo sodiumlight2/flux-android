@@ -12,7 +12,7 @@ public class AboutInstanceActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_container);
         
-        setupToolbar("Об инстанции");
+        setupToolbar(getString(R.string.about_instance));
         
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

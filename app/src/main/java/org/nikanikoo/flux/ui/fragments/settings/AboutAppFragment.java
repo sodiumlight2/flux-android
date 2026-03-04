@@ -46,11 +46,11 @@ public class AboutAppFragment extends Fragment {
             String commitHash = BuildInfo.getCommitHash();
             
             if (versionText != null) {
-                versionText.setText("Версия: " + version);
+                versionText.setText(getString(R.string.about_app_version) + version);
             }
             
             if (commitText != null) {
-                commitText.setText("Коммит: " + commitHash);
+                commitText.setText(getString(R.string.about_app_commit) + commitHash);
             }
         }
     }
@@ -62,7 +62,7 @@ public class AboutAppFragment extends Fragment {
             try {
                 startActivity(intent);
             } catch (Exception e) {
-                Toast.makeText(requireContext(), "Не удалось открыть ссылку", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.link_error), Toast.LENGTH_SHORT).show();
             }
         });
     }

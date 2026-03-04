@@ -200,7 +200,7 @@ public class CreatePostActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        imagePickerLauncher.launch(Intent.createChooser(intent, "Выберите изображения"));
+        imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.choose_image)));
     }
 
     private void setupImagesRecyclerView() {
@@ -242,7 +242,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void publishPost(String content) {
         btnPublish.setEnabled(false);
-        btnPublish.setText("Публикация...");
+        btnPublish.setText(getString(R.string.post_publishing));
 
         boolean fromGroup = checkboxGroupPost != null && checkboxGroupPost.isChecked();
         boolean signed = checkboxSignPost != null && checkboxSignPost.isChecked();
@@ -254,7 +254,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {
-                        Toast.makeText(CreatePostActivity.this, "Пост опубликован!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.post_published), Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }
@@ -262,9 +262,9 @@ public class CreatePostActivity extends AppCompatActivity {
                 @Override
                 public void onError(String error) {
                     runOnUiThread(() -> {
-                        Toast.makeText(CreatePostActivity.this, "Ошибка публикации: " + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.post_publish_error) + error, Toast.LENGTH_LONG).show();
                         btnPublish.setEnabled(true);
-                        btnPublish.setText("Опубликовать");
+                        btnPublish.setText(getString(R.string.create_post_publish));
                     });
                 }
             });
@@ -273,7 +273,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {
-                        Toast.makeText(CreatePostActivity.this, "Пост опубликован!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.post_published), Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }
@@ -281,9 +281,9 @@ public class CreatePostActivity extends AppCompatActivity {
                 @Override
                 public void onError(String error) {
                     runOnUiThread(() -> {
-                        Toast.makeText(CreatePostActivity.this, "Ошибка публикации: " + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.post_publish_error) + error, Toast.LENGTH_LONG).show();
                         btnPublish.setEnabled(true);
-                        btnPublish.setText("Опубликовать");
+                        btnPublish.setText(getString(R.string.create_post_publish));
                     });
                 }
             });
@@ -329,7 +329,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         authorAvatar.setImageResource(R.drawable.camera_200);
                     }
                     if (authorName != null) {
-                        authorName.setText("Загрузка...");
+                        authorName.setText(getString(R.string.empty_loading));
                     }
                 });
             }

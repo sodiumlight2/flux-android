@@ -240,7 +240,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Ошибка загрузки группы: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.group_load_error) + error, Toast.LENGTH_SHORT).show();
                         swipeRefresh.setRefreshing(false);
                     });
                 }
@@ -292,7 +292,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
 
     private void updateDetailedInfo(Group group) {
         if (groupIdText != null) {
-            groupIdText.setText("ID: " + group.getId());
+            groupIdText.setText(getString(R.string.id) + group.getId());
         }
         
         if (groupScreenName != null && screenNameLayout != null) {
@@ -352,7 +352,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
 
     private void updateButtons(Group group) {
         if (btnJoinLeave != null) {
-            btnJoinLeave.setText(group.isMember() ? "Покинуть" : "Вступить");
+            btnJoinLeave.setText(group.isMember() ? getString(R.string.group_leave) : getString(R.string.group_join));
             btnJoinLeave.setVisibility(group.isClosed() && !group.isMember() ? View.GONE : View.VISIBLE);
         }
         
@@ -397,7 +397,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
                         getActivity().runOnUiThread(() -> {
                             currentGroup.setMember(false);
                             updateButtons(currentGroup);
-                            Toast.makeText(getContext(), "Вы покинули группу", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.group_left), Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
@@ -406,7 +406,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
                 public void onError(String error) {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
@@ -419,7 +419,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
                         getActivity().runOnUiThread(() -> {
                             currentGroup.setMember(true);
                             updateButtons(currentGroup);
-                            Toast.makeText(getContext(), "Вы вступили в группу", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.group_joined), Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
@@ -428,7 +428,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
                 public void onError(String error) {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
@@ -452,7 +452,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
             List<String> avatarUrls = new ArrayList<>();
             avatarUrls.add(currentGroup.getPhoto200());
             
-            PhotoViewerActivity.start(getContext(), avatarUrls, 0, currentGroup.getName() + " - Фото группы");
+            PhotoViewerActivity.start(getContext(), avatarUrls, 0, currentGroup.getName());
         }
     }
 
@@ -483,7 +483,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
-        startActivity(Intent.createChooser(shareIntent, "Поделиться постом"));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.post_share)));
     }
 
     @Override
@@ -500,7 +500,7 @@ public class GroupProfileFragment extends BaseProfileFragment {
     @Override
     public void onPostLongClick(Post post, View view) {
         android.widget.PopupMenu popup = new android.widget.PopupMenu(requireContext(), view);
-        popup.getMenu().add(0, 1, 0, "Скопировать ссылку");
+        popup.getMenu().add(0, 1, 0, getString(R.string.copy_link));
         
         popup.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == 1) {
@@ -526,6 +526,6 @@ public class GroupProfileFragment extends BaseProfileFragment {
                 requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
         android.content.ClipData clip = android.content.ClipData.newPlainText("Post URL", postUrl);
         clipboard.setPrimaryClip(clip);
-        Toast.makeText(getContext(), "Ссылка скопирована", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.copied_link), Toast.LENGTH_SHORT).show();
     }
 }

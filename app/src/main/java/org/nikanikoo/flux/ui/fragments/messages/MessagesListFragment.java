@@ -83,7 +83,7 @@ public class MessagesListFragment extends Fragment implements ConversationsAdapt
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Сообщения");
+            mainActivity.setToolbarTitle(getString(R.string.messages_title));
         }
     }
 
@@ -131,7 +131,7 @@ public class MessagesListFragment extends Fragment implements ConversationsAdapt
             public void onError(String error) {
                 if (getActivity() != null && isViewCreated) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Ошибка загрузки диалогов: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.messages_loading_error) + error, Toast.LENGTH_SHORT).show();
                         swipeRefreshLayout.setRefreshing(false);
                     });
                 }

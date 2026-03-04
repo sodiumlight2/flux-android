@@ -28,7 +28,7 @@ public class AccountManagerActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manager);
 
-        setupToolbar("Управление аккаунтами");
+        setupToolbar(getString(R.string.settings_accounts));
 
         accountManager = AccountManager.getInstance(this);
         accountsList = findViewById(R.id.accounts_list);
@@ -85,11 +85,11 @@ public class AccountManagerActivity extends BaseSettingsActivity {
                         tokenManager.saveToken(account.token);
                         tokenManager.saveInstance(account.instance);
                     } catch (org.nikanikoo.flux.security.TokenManager.EncryptionException e) {
-                        Toast.makeText(this, "Ошибка шифрования. Попробуйте переустановить приложение.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.account_encryption_error), Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    Toast.makeText(this, "Переключено на " + account.fullName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.account_switched) + account.fullName, Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -118,10 +118,10 @@ public class AccountManagerActivity extends BaseSettingsActivity {
 
     private void showRemoveAccountConfirmation(AccountManager.Account account, Runnable onConfirm) {
         new AlertDialog.Builder(this)
-                .setTitle("Удалить аккаунт?")
-                .setMessage("Аккаунт " + account.fullName + " (" + account.instance + ") будет удален из приложения.\n\nЭто действие нельзя отменить.")
-                .setPositiveButton("Удалить", (dialog, which) -> onConfirm.run())
-                .setNegativeButton("Отмена", null)
+                .setTitle(getString(R.string.account_delete_confirm))
+                .setMessage(getString(R.string.account_delete_message1) + account.fullName + " (" + account.instance + ") " + getString(R.string.account_delete_message2))
+                .setPositiveButton(getString(R.string.delete), (dialog, which) -> onConfirm.run())
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 }

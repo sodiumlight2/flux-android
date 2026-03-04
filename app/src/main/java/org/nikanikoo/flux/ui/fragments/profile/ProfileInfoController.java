@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.fragments.profile;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,8 +69,9 @@ public class ProfileInfoController {
     
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat dateTimeFormat;
-    
+    private Context context;
     public ProfileInfoController(View rootView) {
+        this.context = context.getApplicationContext();
         initViews(rootView);
         dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
@@ -272,10 +274,10 @@ public class ProfileInfoController {
         }
         
         if (sex == 1) {
-            profileSex.setText("Женский");
+            profileSex.setText(context.getString(R.string.profile_sex_male));
             sexLayout.setVisibility(View.VISIBLE);
         } else if (sex == 2) {
-            profileSex.setText("Мужской");
+            profileSex.setText(context.getString(R.string.profile_sex_female));
             sexLayout.setVisibility(View.VISIBLE);
         } else {
             sexLayout.setVisibility(View.GONE);

@@ -118,7 +118,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
 
             @Override
             public void onError(String error) {
-                Toast.makeText(requireContext(), "Ошибка загрузки профиля: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.error_loading_profile) + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -148,7 +148,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 audioAdapter.notifyDataSetChanged();
 
                 if (audios.isEmpty()) {
-                    Toast.makeText(requireContext(), "У вас пока нет аудиозаписей", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_no_tracks), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -157,7 +157,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(requireContext(), "Ошибка загрузки: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.audio_loading_error) + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,7 +197,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 audioAdapter.notifyDataSetChanged();
 
                 if (audios.isEmpty() && refresh) {
-                    Toast.makeText(requireContext(), "Ничего не найдено", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_nothing_found), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -206,7 +206,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(requireContext(), "Ошибка поиска: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.audio_search_error) + error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -235,12 +235,12 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 public void onSuccess() {
                     audio.setAdded(false);
                     audioAdapter.updateAudio(position, audio);
-                    Toast.makeText(requireContext(), "Удалено из аудиозаписей", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_removed), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(requireContext(), "Ошибка удаления: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_remove_error) + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -250,12 +250,12 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 public void onSuccess() {
                     audio.setAdded(true);
                     audioAdapter.updateAudio(position, audio);
-                    Toast.makeText(requireContext(), "Добавлено в аудиозаписи", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_added), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(requireContext(), "Ошибка добавления: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.audio_add_error) + error, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -271,7 +271,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
     @Override
     public void onMoreClick(Audio audio, int position) {
         // TODO: Show more options dialog
-        Toast.makeText(requireContext(), "Дополнительные опции", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.audio_dob), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -281,7 +281,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         
-        searchView.setQueryHint("Поиск музыки");
+        searchView.setQueryHint(getString(R.string.audio_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

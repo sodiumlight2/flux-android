@@ -12,7 +12,7 @@ public class DataSettingsActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_container);
         
-        setupToolbar("Данные и хранилище");
+        setupToolbar(getString(R.string.settings_data));
         
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

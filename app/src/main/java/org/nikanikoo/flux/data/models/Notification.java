@@ -1,8 +1,11 @@
 package org.nikanikoo.flux.data.models;
 
+import android.content.Context;
+
 import org.nikanikoo.flux.R;
 
 public class Notification {
+    private static Context appContext;
     private String id;
     private String type;
     private String date;
@@ -17,6 +20,12 @@ public class Notification {
     private int postOwnerId;
     private int postId;
     private boolean commentDataLoaded;
+
+    public static void setAppContext(Context context) {
+        if (context != null) {
+            appContext = context.getApplicationContext();
+        }
+    }
 
     public Notification(String id, String type, String date, String text, String feedback, String parent) {
         this.id = id;
@@ -77,23 +86,24 @@ public class Notification {
 
     // текст
     public String getReadableType() {
+
         switch (type) {
             case "like_post":
-                return "понравился ваш пост";
+                return getString(R.string.notification_like_post);
             case "comment_post":
-                return "оставил(а) комментарий под вашим постом";
+                return getString(R.string.notification_comment_post);
             case "comment_photo":
-                return "оставил(а) комментарий под вашей фотографией";
+                return getString(R.string.notification_comment_photo);
             case "sent_gift":
-                return "отправил(а) вам подарок";
+                return getString(R.string.notification_sent_gift);
             case "wall":
-                return "написал(а) на вашей стене пост";
+                return getString(R.string.notification_wall);
             case "mention":
-                return "упомянул вас в посте или в одной из веток его обсуждения";
+                return getString(R.string.notification_mention);
             case "copy_post":
-                return "поделился(-ась) вашим постом";
+                return getString(R.string.notification_copy_post);
             default:
-                return "что-то сделал(а) хз";
+                return getString(R.string.notification_default);
         }
     }
 
@@ -117,5 +127,12 @@ public class Notification {
             default:
                 return R.drawable.ic_notification;
         }
+    }
+
+    private String getString(int resId) {
+        if (appContext != null) {
+            return appContext.getString(resId);
+        }
+        return "";
     }
 }

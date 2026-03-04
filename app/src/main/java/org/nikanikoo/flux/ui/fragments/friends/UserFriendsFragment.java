@@ -101,7 +101,7 @@ public class UserFriendsFragment extends Fragment implements FriendsAdapter.OnFr
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Друзья " + (userName != null ? userName : ""));
+            mainActivity.setToolbarTitle(getString(R.string.friends_title2) + (userName != null ? userName : ""));
         }
     }
 
@@ -218,7 +218,7 @@ public class UserFriendsFragment extends Fragment implements FriendsAdapter.OnFr
                         getActivity().runOnUiThread(() -> {
                             paginationHelper.stopLoading();
                             hideLoading();
-                            Toast.makeText(getContext(), "Ошибка загрузки друзей: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.friends_loading_error) + e.getMessage(), Toast.LENGTH_SHORT).show();
                             updateEmptyState();
                         });
                     }
@@ -231,7 +231,7 @@ public class UserFriendsFragment extends Fragment implements FriendsAdapter.OnFr
                     getActivity().runOnUiThread(() -> {
                         paginationHelper.stopLoading();
                         hideLoading();
-                        Toast.makeText(getContext(), "Ошибка загрузки друзей: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.friends_loading_error) + error, Toast.LENGTH_SHORT).show();
                         updateEmptyState();
                     });
                 }
@@ -261,9 +261,9 @@ public class UserFriendsFragment extends Fragment implements FriendsAdapter.OnFr
         if (isEmpty) {
             emptyState.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
-            emptyTextTitle.setText("Друзья не найдены");
+            emptyTextTitle.setText(getString(R.string.friends_not_found));
             emptyTextSubtitle.setText(currentSearchQuery.isEmpty() ? 
-                "У пользователя пока нет друзей" : "Попробуйте изменить параметры поиска");
+                getString(R.string.friends_not_found_info) : getString(R.string.search_none2));
         } else {
             emptyState.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

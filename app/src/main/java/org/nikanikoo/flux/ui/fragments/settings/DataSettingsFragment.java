@@ -44,10 +44,10 @@ public class DataSettingsFragment extends Fragment {
         
         settingsClearCache.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Очистить кэш")
-                .setMessage("Вы уверены, что хотите очистить кэш приложения?")
-                .setPositiveButton("Очистить", (dialog, which) -> clearCache())
-                .setNegativeButton("Отмена", null)
+                .setTitle(getString(R.string.data_clear_cache))
+                .setMessage(getString(R.string.data_clear_cache_message))
+                .setPositiveButton(getString(R.string.data_clear_btn_clear), (dialog, which) -> clearCache())
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
         });
     }
@@ -64,7 +64,7 @@ public class DataSettingsFragment extends Fragment {
                 }
             } catch (Exception e) {
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> cacheSizeValue.setText("Неизвестно"));
+                    getActivity().runOnUiThread(() -> cacheSizeValue.setText("N/A"));
                 }
             }
         }).start();
@@ -102,14 +102,14 @@ public class DataSettingsFragment extends Fragment {
                 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Кэш очищен", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.data_cache_cleared), Toast.LENGTH_SHORT).show();
                         calculateCacheSize();
                     });
                 }
             } catch (Exception e) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Ошибка при очистке кэша", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.data_cache_clear_error), Toast.LENGTH_SHORT).show();
                     });
                 }
             }

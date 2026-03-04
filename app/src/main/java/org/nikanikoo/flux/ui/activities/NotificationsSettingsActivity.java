@@ -12,7 +12,7 @@ public class NotificationsSettingsActivity extends BaseSettingsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_container);
         
-        setupToolbar("Уведомления");
+        setupToolbar(getString(R.string.nav_notifications));
         
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

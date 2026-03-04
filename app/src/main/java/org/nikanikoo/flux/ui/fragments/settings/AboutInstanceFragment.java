@@ -107,7 +107,7 @@ public class AboutInstanceFragment extends Fragment {
                         // Check if response has the expected structure
                         if (!response.has("response")) {
                             Log.e(TAG, "Response missing 'response' field: " + response.toString());
-                            showError("Неверный формат ответа от сервера");
+                            showError(getString(R.string.request_server_error));
                             return;
                         }
                         
@@ -132,11 +132,11 @@ public class AboutInstanceFragment extends Fragment {
                         instanceUrl.setText(displayUrl);
                         
                         // Connection type
-                        String connectionType = url.startsWith("https://") ? "HTTPS (Защищённое соединение)" : "HTTP (Незащищённое соединение)";
+                        String connectionType = url.startsWith("https://") ? getString(R.string.about_instance_https) : getString(R.string.about_instance_http);
                         instanceConnectionType.setText(connectionType);
                         
                         if (!version.isEmpty()) {
-                            instanceVersion.setText("Версия: " + version);
+                            instanceVersion.setText(getString(R.string.about_instance_version) + version);
                             instanceVersion.setVisibility(View.VISIBLE);
                         }
                         
@@ -190,7 +190,7 @@ public class AboutInstanceFragment extends Fragment {
                         
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing response", e);
-                        showError("Ошибка при обработке данных: " + e.getMessage());
+                        showError(getString(R.string.about_instance_error) + e.getMessage());
                     }
                 });
             }
@@ -202,7 +202,7 @@ public class AboutInstanceFragment extends Fragment {
                 Log.e(TAG, "API Error: " + error);
                 
                 getActivity().runOnUiThread(() -> {
-                    showError("Не удалось загрузить информацию об инстанции: " + error);
+                    showError(getString(R.string.about_instance_error) + error);
                 });
             }
         });
@@ -288,7 +288,7 @@ public class AboutInstanceFragment extends Fragment {
     private void openUserProfile(int userId) {
         // Navigate to user profile
         // TODO: Implement profile navigation when ProfileFragment is available
-        Toast.makeText(requireContext(), "Открытие профиля ID: " + userId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.about_instance_error) + userId, Toast.LENGTH_SHORT).show();
     }
     
     private void setupInfoItems() {
@@ -311,7 +311,7 @@ public class AboutInstanceFragment extends Fragment {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Не удалось открыть ссылку", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.link_error), Toast.LENGTH_SHORT).show();
         }
     }
     

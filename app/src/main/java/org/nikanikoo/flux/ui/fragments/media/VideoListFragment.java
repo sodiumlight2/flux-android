@@ -124,7 +124,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
             @Override
             public void onError(String error) {
                 Logger.e(TAG, "Error loading profile: " + error);
-                showError("Ошибка загрузки профиля");
+                showError(getString(R.string.error_loading_profile));
             }
         });
     }
@@ -222,7 +222,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         
-        searchView.setQueryHint("Поиск видео");
+        searchView.setQueryHint(getString(R.string.video_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

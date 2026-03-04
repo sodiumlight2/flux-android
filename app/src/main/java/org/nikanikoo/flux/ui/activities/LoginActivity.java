@@ -44,15 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         "https://vepurovk.xyz"
     };
     
-    private static final String[] INSTANCE_DISPLAY_NAMES = {
-        "api.openvk.org",
-        "openvk.xyz",
-        "api.vepurovk.fun",
-        "vepurovk.xyz",
-        "Ввести вручную"
-    };
+    private String[] INSTANCE_DISPLAY_NAMES;
     
-    private static final String CUSTOM_OPTION = "Ввести вручную";
+    private String CUSTOM_OPTION;
     private int selectedInstanceIndex = 0;
 
     @Override
@@ -60,6 +54,16 @@ public class LoginActivity extends AppCompatActivity {
         ThemeManager themeManager = ThemeManager.getInstance(this);
         themeManager.applyThemeToActivity(this);
         super.onCreate(savedInstanceState);
+
+        INSTANCE_DISPLAY_NAMES = new String[] {
+                "api.openvk.org",
+                "openvk.xyz",
+                "api.vepurovk.fun",
+                "vepurovk.xyz",
+                getString(R.string.instance_display_names_custom)
+        };
+
+        CUSTOM_OPTION = getString(R.string.instance_display_names_custom);
         
         setContentView(R.layout.activity_login);
         
@@ -92,14 +96,14 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.text_forgot_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Закрыто", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.closed), Toast.LENGTH_SHORT).show();
             }
         });
 
         findViewById(R.id.text_register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Закрыто", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.closed), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -137,16 +141,16 @@ public class LoginActivity extends AppCompatActivity {
         String password = editPassword.getText().toString().trim();
 
         if (instance.isEmpty()) {
-            Toast.makeText(this, "Выберите инстанс", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.select_instance), Toast.LENGTH_SHORT).show();
             return;
         }
         if (login.isEmpty()) {
-            editLogin.setError("Введите почту");
+            editLogin.setError(getString(R.string.login_enter_email));
             editLogin.requestFocus();
             return;
         }
         if (password.isEmpty()) {
-            editPassword.setError("Введите пароль");
+            editPassword.setError(getString(R.string.login_enter_password));
             editPassword.requestFocus();
             return;
         }
@@ -165,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
         if (INSTANCE_DISPLAY_NAMES[selectedInstanceIndex].equals(CUSTOM_OPTION)) {
             String customInstance = editCustomInstance.getText().toString().trim();
             if (customInstance.isEmpty()) {
-                editCustomInstance.setError("Введите адрес инстанса");
+                editCustomInstance.setError(getString(R.string.instance_address_hint));
                 return "";
             }
             return customInstance;
@@ -196,19 +200,19 @@ public class LoginActivity extends AppCompatActivity {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_insecure_connection, null);
 
         TextView urlText = new TextView(this);
-        urlText.setText("\nАдрес: " + instance);
+        urlText.setText("\n" + getString(R.string.login_adress) + instance);
         urlText.setTextSize(14);
         urlText.setTextColor(getResources().getColor(android.R.color.darker_gray));
         
         new MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton("Все равно войти", (dialog, which) -> {
+            .setPositiveButton(getString(R.string.btn_login_confirm), (dialog, which) -> {
                 proceedWithLogin(instance, login, password);
             })
-            .setNegativeButton("Отмена", (dialog, which) -> {
+            .setNegativeButton(getString(R.string.cancel), (dialog, which) -> {
                 dialog.dismiss();
                 btnLogin.setEnabled(true);
-                btnLogin.setText("Войти");
+                btnLogin.setText(getString(R.string.btn_login));
             })
             .setCancelable(false)
             .show();
@@ -220,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
         OpenVKApi.getInstance(this).saveInstance(instance);
         
         btnLogin.setEnabled(false);
-        btnLogin.setText("Входим...");
+        btnLogin.setText(getString(R.string.btn_login_loading));
 
         OpenVKApi.getInstance(this).login(login, password, new OpenVKApi.LoginCallback() {
             @Override
@@ -235,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                             String instance = OpenVKApi.getInstance(LoginActivity.this).getBaseUrl();
                             AccountManager.getInstance(LoginActivity.this).addAccount(token, instance, profile);
                             
-                            Toast.makeText(LoginActivity.this, "Вы успешно вошли в аккаунт!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                             
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             if (getIntent().getBooleanExtra("add_account", false)) {
@@ -250,12 +254,12 @@ public class LoginActivity extends AppCompatActivity {
                             String instance = OpenVKApi.getInstance(LoginActivity.this).getBaseUrl();
                             UserProfile dummyProfile = new UserProfile();
                             dummyProfile.setId(0);
-                            dummyProfile.setFirstName("Загрузка...");
+                            dummyProfile.setFirstName(getString(R.string.loading));
                             dummyProfile.setLastName("");
                             dummyProfile.setScreenName(login);
                             AccountManager.getInstance(LoginActivity.this).addAccount(token, instance, dummyProfile);
                             
-                            Toast.makeText(LoginActivity.this, "Вы успешно вошли в аккаунт!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                             
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             if (getIntent().getBooleanExtra("add_account", false)) {
@@ -323,9 +327,9 @@ public class LoginActivity extends AppCompatActivity {
             
             if (!errorMsg.isEmpty()) {
                 if (errorMsg.contains("Invalid username") || errorMsg.contains("Invalid password") || errorMsg.contains("invalid_grant")) {
-                    message = "Неверный логин или пароль";
+                    message = getString(R.string.login_error1);
                 } else if (errorMsg.contains("Invalid 2FA")) {
-                    message = "Требуется двухфакторная аутентификация";
+                    message = getString(R.string.login_error2);
                 } else {
                     message = errorMsg;
                 }
@@ -334,28 +338,28 @@ public class LoginActivity extends AppCompatActivity {
                 String errorDescription = errorJson.optString("error_description", "");
                 
                 if (errorType.equals("invalid_grant") || errorDescription.contains("Invalid username or password")) {
-                    message = "Неверный логин или пароль";
+                    message = getString(R.string.login_error1);
                 } else if (errorType.equals("invalid_client")) {
-                    message = "Ошибка клиента";
+                    message = getString(R.string.login_error3);
                 } else if (!errorDescription.isEmpty()) {
                     message = errorDescription;
                 } else if (!errorType.isEmpty()) {
-                    message = "Ошибка: " + errorType;
+                    message = getString(R.string.error_loading) + errorType;
                 } else {
-                    message = "Неизвестная ошибка входа";
+                    message = getString(R.string.error_unknown);
                 }
             } else {
-                message = "Неизвестная ошибка входа";
+                message = getString(R.string.error_unknown);
             }
             
             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
             
         } catch (Exception e) {
             System.out.println("Ошибка парсинга JSON: " + e.getMessage());
-            Toast.makeText(LoginActivity.this, "Ошибка: " + error, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, getString(R.string.error_loading) + error, Toast.LENGTH_LONG).show();
         }
         
         btnLogin.setEnabled(true);
-        btnLogin.setText("Войти");
+        btnLogin.setText(getString(R.string.btn_login));
     }
 }

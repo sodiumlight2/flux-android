@@ -39,15 +39,15 @@ public class NotificationsSettingsFragment extends Fragment {
     
     private void setupSwitches() {
         switchNotificationsMessages.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Toast.makeText(requireContext(), "Уведомления о сообщениях: " + (isChecked ? "вкл" : "выкл"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.notification_enabled) + (isChecked ? getString(R.string.notification_on) : getString(R.string.notification_off)), Toast.LENGTH_SHORT).show();
         });
         
         switchNotificationsLikes.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Toast.makeText(requireContext(), "Уведомления о лайках: " + (isChecked ? "вкл" : "выкл"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.notification_likes_enabled) + (isChecked ? getString(R.string.notification_on) : getString(R.string.notification_off)), Toast.LENGTH_SHORT).show();
         });
         
         switchNotificationsComments.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Toast.makeText(requireContext(), "Уведомления о комментариях: " + (isChecked ? "вкл" : "выкл"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.notification_comments_enabled) + (isChecked ? getString(R.string.notification_on) : getString(R.string.notification_off)), Toast.LENGTH_SHORT).show();
         });
     }
 }

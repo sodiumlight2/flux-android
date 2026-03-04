@@ -1,8 +1,12 @@
 package org.nikanikoo.flux.data.models;
 
+import android.content.Context;
+
 import org.json.JSONObject;
+import org.nikanikoo.flux.R;
 
 public class Group {
+    private static Context appContext;
     private int id;
     private String name;
     private String screenName;
@@ -29,6 +33,12 @@ public class Group {
     private String country;
 
     public Group() {}
+
+    public static void setAppContext(Context context) {
+        if (context != null) {
+            appContext = context.getApplicationContext();
+        }
+    }
 
     public Group(int id, String name, String photo50, int membersCount) {
         this.id = id;
@@ -165,8 +175,15 @@ if (json.has("verified")) {
     }
 
     public String getMembersCountText() {
-        if (membersCount == 1) return "1 участник";
-        if (membersCount < 5) return membersCount + " участника";
-        return membersCount + " участников";
+        if (membersCount == 1) return getString(R.string.friend_1_follower);
+        if (membersCount < 5) return membersCount + getString(R.string.friend_5_followers);
+        return membersCount + getString(R.string.friend_followers6);
+    }
+
+    private String getString(int resId) {
+        if (appContext != null) {
+            return appContext.getString(resId);
+        }
+        return "";
     }
 }

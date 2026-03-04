@@ -83,7 +83,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         }
         
         if (originalPost == null) {
-            Toast.makeText(getContext(), "Ошибка: пост не найден", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.comments_post_not_found), Toast.LENGTH_SHORT).show();
             if (getActivity() != null) {
                 getActivity().onBackPressed();
             }
@@ -132,13 +132,13 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private void setupToolbar() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Комментарии");
+            mainActivity.setToolbarTitle(getString(R.string.comments_title));
         }
     }
 
     private void setupOriginalPost() {
         // Если данные поста неполные, загружаем их
-        if (originalPost.getAuthorName().equals("Загрузка...") || originalPost.getContent().isEmpty()) {
+        if (originalPost.getAuthorName().equals(getString(R.string.loading)) || originalPost.getContent().isEmpty()) {
             loadPostData();
         } else {
             displayOriginalPost();
@@ -259,7 +259,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         // Обработчик лайка оригинального поста
         originalPostLikeButton.setOnClickListener(v -> {
             if (originalPost.getPostId() == 0 || originalPost.getOwnerId() == 0) {
-                Toast.makeText(getContext(), "Невозможно поставить лайк этому посту", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.post_error_like), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -293,7 +293,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                             originalPost.setLiked(originalLikedState);
                             originalPost.setLikeCount(originalLikeCount);
                             updateOriginalPostLikeState();
-                            Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
@@ -338,13 +338,13 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Выберите изображение"), PICK_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_image)), PICK_IMAGE_REQUEST);
         });
         
         btnSendComment.setOnClickListener(v -> {
             String commentText = editComment.getText().toString().trim();
             if (commentText.isEmpty() && selectedImageUri == null) {
-                Toast.makeText(getContext(), "Введите текст комментария или выберите изображение", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.comments_add_error), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -376,7 +376,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
 
     private void loadComments(boolean isRefresh) {
         if (originalPost.getPostId() == 0 || originalPost.getOwnerId() == 0) {
-            Toast.makeText(getContext(), "Невозможно загрузить комментарии", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.comments_cannot_load), Toast.LENGTH_SHORT).show();
             if (isRefresh) {
                 swipeRefresh.setRefreshing(false);
             }
@@ -396,7 +396,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                         
                         if (isRefresh) {
                             swipeRefresh.setRefreshing(false);
-                            Toast.makeText(getContext(), "Комментарии обновлены", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.comments_updated), Toast.LENGTH_SHORT).show();
                         }
                         
                         System.out.println("Comments loaded successfully: " + loadedComments.size() + " comments");
@@ -411,7 +411,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                         if (isRefresh) {
                             swipeRefresh.setRefreshing(false);
                         }
-                        Toast.makeText(getContext(), "Ошибка загрузки комментариев: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.comments_loading_error) + error, Toast.LENGTH_SHORT).show();
                         System.out.println("Error loading comments: " + error);
                     });
                 }
@@ -498,7 +498,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                         originalPost.setCommentCount(originalPost.getCommentCount() + 1);
                         originalPostCommentCount.setText(String.valueOf(originalPost.getCommentCount()));
                         
-                        Toast.makeText(getContext(), "Комментарий добавлен", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.comments_added), Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -507,7 +507,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -521,7 +521,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
             updateImageAttachmentIndicator();
-            Toast.makeText(getContext(), "Изображение выбрано", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.choosed_image), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -591,7 +591,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                         comment.setLiked(originalLikedState);
                         comment.setLikesCount(originalLikeCount);
                         commentsAdapter.notifyDataSetChanged();
-                        Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -633,6 +633,6 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         Post fakePost = new Post("", "", "", 0, 0);
         fakePost.setImageUrl(imageUrl);
         
-        PhotoViewerActivity.start(getContext(), imageUrls, 0, fakePost, "Изображение из комментария");
+        PhotoViewerActivity.start(getContext(), imageUrls, 0, fakePost, getString(R.string.photo_viewer));
     }
 }

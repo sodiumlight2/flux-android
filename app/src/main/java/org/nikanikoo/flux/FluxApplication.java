@@ -6,6 +6,8 @@ import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import org.nikanikoo.flux.data.managers.PhotoUploadManager;
+import org.nikanikoo.flux.data.models.Group;
+import org.nikanikoo.flux.data.models.Notification;
 import org.nikanikoo.flux.utils.AsyncTaskHelper;
 import org.nikanikoo.flux.utils.Logger;
 import org.nikanikoo.flux.utils.SSLHelper;
@@ -23,6 +25,8 @@ public class FluxApplication extends Application {
         super.onCreate();
 
         Logger.d("FluxApplication", "Инициализация приложения");
+        Notification.setAppContext(this);
+        Group.setAppContext(this);
         configurePicasso();
     }
 

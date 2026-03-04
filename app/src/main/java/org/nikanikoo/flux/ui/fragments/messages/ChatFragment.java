@@ -261,7 +261,7 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         paginationHelper.stopLoading();
-                        Toast.makeText(requireContext(), "Ошибка загрузки сообщений: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.chat_loading_error) + error, Toast.LENGTH_SHORT).show();
                         swipeRefreshLayout.setRefreshing(false);
                     });
                 }
@@ -301,7 +301,7 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Ошибка отправки: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), getString(R.string.chat_send_error) + error, Toast.LENGTH_SHORT).show();
                         sendButton.setEnabled(true);
                         messageInput.setEnabled(true);
                     });

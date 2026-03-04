@@ -422,15 +422,15 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         ThemeManager themeManager = ThemeManager.getInstance(this);
         int currentTheme = themeManager.getThemeMode();
         
-        String[] themes = {"Светлая", "Темная", "Системная"};
+        String[] themes = {getString(R.string.appearance_theme_light), getString(R.string.appearance_theme_dark), getString(R.string.appearance_theme_system)};
         
         new AlertDialog.Builder(this)
-                .setTitle("Выбор темы")
+                .setTitle(getString(R.string.appearance_select_theme))
                 .setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
                     themeManager.setThemeMode(which);
                     dialog.dismiss();
                 })
-                .setNegativeButton("Отмена", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
     

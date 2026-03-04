@@ -81,7 +81,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
     private void setupToolbarTitle() {
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.setToolbarTitle("Друзья");
+            mainActivity.setToolbarTitle(getString(R.string.friends_title));
         }
     }
 
@@ -161,13 +161,13 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
     private void switchToFriends() {
         recyclerView.setAdapter(friendsAdapter);
         searchEditText.setVisibility(View.VISIBLE);
-        updateEmptyStateTexts("Друзья не найдены", "Попробуйте изменить параметры поиска");
+        updateEmptyStateTexts(getString(R.string.friends_not_found), getString(R.string.search_none2));
     }
 
     private void switchToRequests() {
         recyclerView.setAdapter(requestsAdapter);
         searchEditText.setVisibility(View.GONE);
-        updateEmptyStateTexts("Нет заявок в друзья", "Новые заявки появятся здесь");
+        updateEmptyStateTexts(getString(R.string.friend_request_none), getString(R.string.friend_request_none_desc));
         loadFriendRequests();
     }
 

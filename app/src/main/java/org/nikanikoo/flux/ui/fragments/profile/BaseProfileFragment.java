@@ -248,9 +248,9 @@ public abstract class BaseProfileFragment extends Fragment implements PostAdapte
             hideLoading();
             
             if (posts.isEmpty()) {
-                Toast.makeText(getContext(), "Ошибка загрузки постов: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.profile_posts_loading_error) + error, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Не удалось загрузить новые посты", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.profile_posts_refresh_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -314,7 +314,7 @@ public abstract class BaseProfileFragment extends Fragment implements PostAdapte
                                     break;
                                 }
                             }
-                            Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                         });
                     }
                 }

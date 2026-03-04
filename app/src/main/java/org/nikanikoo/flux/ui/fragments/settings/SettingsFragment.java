@@ -74,7 +74,7 @@ public class SettingsFragment extends Fragment {
         if (getActivity() != null) {
             androidx.appcompat.app.AppCompatActivity activity = (androidx.appcompat.app.AppCompatActivity) getActivity();
             if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().setTitle("Настройки");
+                activity.getSupportActionBar().setTitle(getString(R.string.settings_title));
             }
         }
     }
@@ -182,12 +182,12 @@ public class SettingsFragment extends Fragment {
     private void setupLogout() {
         btnLogout.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Выход из аккаунта")
-                .setMessage("Вы уверены, что хотите выйти?")
-                .setPositiveButton("Выйти", (dialog, which) -> {
+                .setTitle(getString(R.string.settings_logout2))
+                .setMessage(getString(R.string.settings_logout_message))
+                .setPositiveButton(getString(R.string.settings_logout), (dialog, which) -> {
                     performLogout();
                 })
-                .setNegativeButton("Отмена", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
         });
     }
@@ -213,7 +213,7 @@ public class SettingsFragment extends Fragment {
                 tokenManager.saveToken(nextAccount.token);
                 tokenManager.saveInstance(nextAccount.instance);
             } catch (org.nikanikoo.flux.security.TokenManager.EncryptionException e) {
-                Toast.makeText(requireContext(), "Ошибка шифрования. Попробуйте переустановить приложение.", Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), getString(R.string.account_encryption_error), Toast.LENGTH_LONG).show();
                 return;
             }
             
@@ -226,7 +226,7 @@ public class SettingsFragment extends Fragment {
             
             android.util.Log.d("SettingsFragment", "Switched to account: " + nextAccount.fullName + " (id: " + nextAccount.id + ")");
             
-            Toast.makeText(requireContext(), "Переключено на " + nextAccount.fullName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.account_switched) + nextAccount.fullName, Toast.LENGTH_SHORT).show();
             
             // Restart MainActivity
             Intent intent = new Intent(requireActivity(), MainActivity.class);
@@ -249,7 +249,7 @@ public class SettingsFragment extends Fragment {
         // Stop LongPoll service
         LongPollService.stop(requireContext());
         
-        Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.settings_logout_success), Toast.LENGTH_SHORT).show();
         
         // Navigate to login screen
         Intent intent = new Intent(requireActivity(), LoginActivity.class);

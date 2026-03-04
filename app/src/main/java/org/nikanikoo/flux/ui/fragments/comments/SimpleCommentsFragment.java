@@ -86,7 +86,7 @@ public class SimpleCommentsFragment extends Fragment implements CommentsAdapter.
         btnSendComment.setOnClickListener(v -> {
             String commentText = editComment.getText().toString().trim();
             if (commentText.isEmpty()) {
-                Toast.makeText(getContext(), "Введите текст комментария", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.comments_add_error), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -113,7 +113,7 @@ public class SimpleCommentsFragment extends Fragment implements CommentsAdapter.
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Ошибка загрузки комментариев: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.comments_loading_error) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -140,7 +140,7 @@ public class SimpleCommentsFragment extends Fragment implements CommentsAdapter.
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Ошибка отправки комментария: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.comments_send_error) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -186,7 +186,7 @@ public class SimpleCommentsFragment extends Fragment implements CommentsAdapter.
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Ошибка: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }
             }

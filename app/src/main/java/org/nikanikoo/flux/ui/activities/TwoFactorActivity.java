@@ -115,17 +115,17 @@ public class TwoFactorActivity extends AppCompatActivity {
         String code = editTwoFactorCode.getText().toString().trim();
 
         if (code.length() != 6) {
-            editTwoFactorCode.setError("Введите 6-значный код");
+            editTwoFactorCode.setError(getString(R.string.fa_length6));
             return;
         }
         
         if (!code.matches("\\d{6}")) {
-            editTwoFactorCode.setError("Код должен содержать только цифры");
+            editTwoFactorCode.setError(getString(R.string.fa_error_numbers));
             return;
         }
 
         btnVerifyCode.setEnabled(false);
-        btnVerifyCode.setText("Проверка...");
+        btnVerifyCode.setText(getString(R.string.btn_login_loading));
 
         performTwoFactorLogin(username, password, code);
     }
@@ -140,7 +140,7 @@ public class TwoFactorActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String token) {
                 runOnUiThread(() -> {
-                    Toast.makeText(TwoFactorActivity.this, "Код подтвержден", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TwoFactorActivity.this, getString(R.string.fa_success), Toast.LENGTH_SHORT).show();
                     OpenVKApi.getInstance(TwoFactorActivity.this).saveToken(token);
                     
                     ProfileManager.getInstance(TwoFactorActivity.this).clearCache();
@@ -163,7 +163,7 @@ public class TwoFactorActivity extends AppCompatActivity {
                             String currentInstance = OpenVKApi.getInstance(TwoFactorActivity.this).getBaseUrl();
                             UserProfile dummyProfile = new UserProfile();
                             dummyProfile.setId(0);
-                            dummyProfile.setFirstName("Загрузка...");
+                            dummyProfile.setFirstName(getString(R.string.loading));
                             dummyProfile.setLastName("");
                             dummyProfile.setScreenName(username);
                             AccountManager.getInstance(TwoFactorActivity.this).addAccount(token, currentInstance, dummyProfile);
@@ -181,7 +181,7 @@ public class TwoFactorActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     System.out.println("Ошибка 2FA: " + error);
                     
-                    String message = "Ошибка проверки кода";
+                    String message = getString(R.string.fa_error1);
                     
                     try {
                         String jsonError = error;
@@ -196,11 +196,11 @@ public class TwoFactorActivity extends AppCompatActivity {
                             String errorMsg = errorJson.optString("error_msg", "");
                             
                             if (errorCode == 28) {
-                                message = "Неверный код двухфакторной аутентификации";
+                                message = getString(R.string.fa_error2);
                             } else if (errorCode == 5) {
-                                message = "Ошибка авторизации пользователя";
+                                message = getString(R.string.fa_error2);
                             } else {
-                                message = errorMsg.isEmpty() ? "Ошибка аутентификации (код " + errorCode + ")" : errorMsg;
+                                message = errorMsg.isEmpty() ? getString(R.string.login_error4) + "(" + errorCode + ")" : errorMsg;
                             }
                         }
                         else if (errorJson.has("error")) {
@@ -210,21 +210,21 @@ public class TwoFactorActivity extends AppCompatActivity {
                             if ("invalid_grant".equals(errorCode)) {
                                 if (errorDescription.toLowerCase(Locale.ROOT).contains("2fa") || 
                                     errorDescription.toLowerCase(Locale.ROOT).contains("code")) {
-                                    message = "Неверный код двухфакторной аутентификации";
+                                    message = getString(R.string.login_error2);
                                 } else {
-                                    message = "Неверные данные для входа";
+                                    message = getString(R.string.login_error4);
                                 }
                             } else if ("invalid_request".equals(errorCode)) {
-                                message = "Неверный формат запроса";
+                                message = getString(R.string.fa_invalid_request);
                             } else {
-                                message = errorDescription.isEmpty() ? "Ошибка аутентификации" : errorDescription;
+                                message = errorDescription.isEmpty() ? getString(R.string.login_error3) : errorDescription;
                             }
                         }
                         else if (errorJson.has("error_msg")) {
                             String errorMsg = errorJson.getString("error_msg");
                             if (errorMsg.toLowerCase(Locale.ROOT).contains("invalid") && 
                                 errorMsg.toLowerCase(Locale.ROOT).contains("2fa")) {
-                                message = "Неверный код двухфакторной аутентификации";
+                                message = getString(R.string.login_error2);
                             } else {
                                 message = errorMsg;
                             }
@@ -237,16 +237,16 @@ public class TwoFactorActivity extends AppCompatActivity {
                         // Проверяем простые текстовые ошибки
                         if (error.toLowerCase(Locale.ROOT).contains("invalid") && 
                             error.toLowerCase(Locale.ROOT).contains("code")) {
-                            message = "Неверный код двухфакторной аутентификации";
+                            message = getString(R.string.login_error2);
                         } else if (error.toLowerCase(Locale.ROOT).contains("expired")) {
-                            message = "Код истек, запросите новый";
+                            message = getString(R.string.fa_code_expired);
                         }
                     }
                     
                     Toast.makeText(TwoFactorActivity.this, message, Toast.LENGTH_LONG).show();
                     btnVerifyCode.setEnabled(true);
-                    btnVerifyCode.setText("Подтвердить код");
-                    editTwoFactorCode.setError("Неверный код");
+                    btnVerifyCode.setText(getString(R.string.btn_login));
+                    editTwoFactorCode.setError(getString(R.string.fa_error2));
 
                     editTwoFactorCode.setText("");
                 });

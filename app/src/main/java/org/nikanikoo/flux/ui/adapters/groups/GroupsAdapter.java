@@ -51,19 +51,8 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.GroupViewH
         // Название группы
         holder.groupName.setText(group.getName());
         
-        // Тип группы
-        holder.groupType.setText(group.getTypeDisplayName());
-        
         // Количество участников
         holder.groupMembersCount.setText(group.getMembersCountText());
-        
-        // Описание группы
-        if (group.getDescription() != null && !group.getDescription().isEmpty()) {
-            holder.groupDescription.setVisibility(View.VISIBLE);
-            holder.groupDescription.setText(group.getDescription());
-        } else {
-            holder.groupDescription.setVisibility(View.GONE);
-        }
         
         // Индикатор верификации
         Logger.d(TAG, "Group " + group.getName() + " verified: " + group.isVerified());
@@ -126,18 +115,14 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.GroupViewH
     static class GroupViewHolder extends RecyclerView.ViewHolder {
         ImageView groupAvatar;
         TextView groupName;
-        TextView groupType;
         TextView groupMembersCount;
-        TextView groupDescription;
         ImageView verifiedIndicator;
 
         GroupViewHolder(@NonNull View itemView) {
             super(itemView);
             groupAvatar = itemView.findViewById(R.id.group_avatar);
             groupName = itemView.findViewById(R.id.group_name);
-            groupType = itemView.findViewById(R.id.group_type);
             groupMembersCount = itemView.findViewById(R.id.group_members_count);
-            groupDescription = itemView.findViewById(R.id.group_description);
             verifiedIndicator = itemView.findViewById(R.id.verified_indicator);
         }
     }

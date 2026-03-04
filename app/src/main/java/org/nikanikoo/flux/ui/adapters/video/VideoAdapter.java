@@ -91,15 +91,5 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 }
             });
         }
-
-        private String formatViews(int views) {
-            if (views >= 1000000) {
-                return String.format(Locale.ROOT, "%.1fM просмотров", views / 1000000.0);
-            } else if (views >= 1000) {
-                return String.format(Locale.ROOT, "%.1fK просмотров", views / 1000.0);
-            } else {
-                return views + " просмотров";
-            }
-        }
     }
 }
