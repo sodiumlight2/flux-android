@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Цветовая схема"
+        android:text="@string/appearance_color_scheme"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
@@ -21,38 +21,38 @@
         android:orientation="vertical">
 
         <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/radio_style_default"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Flux (синяя)"
-            android:padding="12dp" />
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_style_material_you"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Material You (динамическая)"
+            android:text="@string/appearance_color_material_you"
+            android:padding="12dp" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radio_style_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/appearance_color_blue"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_style_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Зеленая"
+            android:text="@string/appearance_color_green"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_style_purple"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Фиолетовая"
+            android:text="@string/appearance_color_purple"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_style_red"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Красная"
+            android:text="@string/appearance_color_red"
             android:padding="12dp" />
 
     </RadioGroup>
@@ -61,7 +61,7 @@
         android:id="@+id/text_material_you_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Material You доступен только на Android 12+"
+        android:text="@string/appearance_material_you_info"
         android:textSize="12sp"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginTop="8dp"

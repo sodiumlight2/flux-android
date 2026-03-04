@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:hint="Поиск друзей"
+            android:hint="@string/friends_search"
             app:startIconDrawable="@android:drawable/ic_menu_search"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
@@ -68,7 +68,7 @@
             android:id="@+id/empty_text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Друзья не найдены"
+            android:text="@string/friends_not_found"
             android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center" />
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="У пользователя пока нет друзей"
+            android:text="@string/friends_not_found_info"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:gravity="center" />

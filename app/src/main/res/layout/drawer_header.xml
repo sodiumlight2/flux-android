@@ -44,7 +44,7 @@
                     android:id="@+id/drawer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Загрузка..."
+                    android:text="@string/empty_loading"
                     android:textColor="?attr/colorOnPrimaryContainer"
                     android:textStyle="bold"
                     android:textSize="16sp"/>
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="loading..."
+                android:text="@string/empty_loading"
                 android:textColor="?attr/colorOnPrimaryContainer"
                 android:textSize="14sp"
                 android:alpha="0.8"/>
@@ -131,7 +131,7 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_marginStart="12dp"
-                 android:text="Добавить аккаунт"
+                 android:text="@string/account_manager_add"
                  android:textColor="?attr/colorOnSurface"
                  android:textSize="14sp"/>
 

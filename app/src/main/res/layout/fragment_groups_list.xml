@@ -28,7 +28,7 @@
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Поиск групп..."
+                android:hint="@string/groups_search"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="12dp"
                 android:padding="16dp"
@@ -55,7 +55,7 @@
             android:id="@+id/chip_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Группы"
+            android:text="@string/groups_title"
             android:checked="true"
             style="@style/Widget.Material3.Chip.Filter" />
 
@@ -63,7 +63,7 @@
             android:id="@+id/chip_admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Управляемые"
+            android:text="@string/group_admin"
             style="@style/Widget.Material3.Chip.Filter" />
 
     </com.google.android.material.chip.ChipGroup>
@@ -105,7 +105,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Нет групп"
+            android:text="@string/group_none"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurfaceVariant"
@@ -114,7 +114,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Вы пока не состоите ни в одной группе"
+            android:text="@string/group_none_desc"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textAlignment="center" />

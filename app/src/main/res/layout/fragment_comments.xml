@@ -126,7 +126,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_like"
-                                    android:tint="@color/like_inactive" />
+                                    app:tint="@color/like_inactive" />
 
                                 <TextView
                                     android:id="@+id/original_post_like_count"
@@ -150,7 +150,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@android:drawable/ic_menu_edit"
-                                    android:tint="@android:color/darker_gray" />
+                                    app:tint="@android:color/darker_gray" />
 
                                 <TextView
                                     android:id="@+id/original_post_comment_count"
@@ -218,7 +218,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Написать комментарий..."
+            android:hint="@string/comments_write"
             android:background="@android:drawable/edit_text"
             android:padding="12dp"
             android:layout_marginStart="8dp"
@@ -236,7 +236,7 @@
             android:clickable="true"
             android:focusable="true"
             android:layout_gravity="bottom"
-            android:tint="@color/primary_color" />
+            app:tint="@color/primary_color" />
 
     </LinearLayout>
 

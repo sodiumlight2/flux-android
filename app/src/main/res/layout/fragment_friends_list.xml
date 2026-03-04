@@ -28,7 +28,7 @@
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Поиск друзей..."
+                android:hint="@string/friends_search"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="12dp"
                 android:padding="16dp"
@@ -55,7 +55,7 @@
             android:id="@+id/chip_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Все друзья"
+            android:text="@string/friends_all"
             android:checked="true"
             style="@style/Widget.Material3.Chip.Filter" />
 
@@ -63,14 +63,14 @@
             android:id="@+id/chip_online"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Онлайн"
+            android:text="@string/instance_online"
             style="@style/Widget.Material3.Chip.Filter" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_requests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заявки"
+            android:text="@string/friends_requests"
             style="@style/Widget.Material3.Chip.Filter" />
 
     </com.google.android.material.chip.ChipGroup>
@@ -116,13 +116,13 @@
             android:layout_height="96dp"
             android:src="@drawable/ic_friends"
             android:alpha="0.5"
-            android:tint="?attr/colorOnSurfaceVariant" />
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/empty_text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Друзья не найдены"
+            android:text="@string/friends_not_found"
             android:textSize="18sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="16dp" />
@@ -131,7 +131,7 @@
             android:id="@+id/empty_text_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Попробуйте изменить параметры поиска"
+            android:text="@string/friends_not_found_info"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="8dp"

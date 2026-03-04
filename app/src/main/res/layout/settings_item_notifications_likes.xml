@@ -23,14 +23,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Лайки"
+            android:text="@string/notification_settings_likes"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Уведомления о лайках"
+            android:text="@string/notification_settings_likes_desc"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="2dp" />

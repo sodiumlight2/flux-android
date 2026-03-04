@@ -79,7 +79,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Переключение между аккаунтами"
+                            android:text="@string/settings_accounts_desc"
                             android:textSize="14sp"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="2dp" />
@@ -134,14 +134,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Внешний вид"
+                            android:text="@string/settings_appearance"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Темы, цвета и контрастность"
+                            android:text="@string/settings_appearance_desc"
                             android:textSize="14sp"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="2dp" />
@@ -195,14 +195,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Уведомления"
+                            android:text="@string/settings_notifications"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Настройки уведомлений"
+                            android:text="@string/settings_notifications_desc"
                             android:textSize="14sp"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="2dp" />
@@ -254,14 +254,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Данные и хранилище"
+                            android:text="@string/settings_data"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Автозагрузка и кэш"
+                            android:text="@string/settings_data_desc"
                             android:textSize="14sp"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="2dp" />
@@ -282,7 +282,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ПРОЧЕЕ"
+                android:text="@string/settings_other"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorPrimary"
@@ -307,7 +307,7 @@
                     <!-- Версия приложения -->
                     <include layout="@layout/settings_item_version" />
 
-                    <!-- Помощь -->
+                    <!-- Инстанция -->
                     <include layout="@layout/settings_item_instance" />
 
                 </LinearLayout>
@@ -321,7 +321,7 @@
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Выйти из аккаунта"
+                android:text="@string/settings_logout"
                 android:textSize="16sp"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/ic_account"

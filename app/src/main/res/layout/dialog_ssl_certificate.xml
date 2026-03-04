@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="⚠️ Ошибка сертификата безопасности"
+        android:text="@string/ssl_error_title"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="?attr/colorError"
@@ -17,14 +17,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Не удалось проверить подлинность сервера. Это может означать:"
+        android:text="@string/ssl_error_desc"
         android:textSize="14sp"
         android:layout_marginBottom="8dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="• Используется самоподписанный сертификат\n• Сертификат просрочен\n• Возможна попытка атаки (MITM)"
+        android:text="@string/ssl_error_list1"
         android:textSize="13sp"
         android:alpha="0.8"
         android:layout_marginBottom="16dp"/>
@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Информация о сертификате:"
+        android:text="@string/ssl_error_info_title"
         android:textSize="14sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
@@ -40,7 +40,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Хост:"
+        android:text="@string/ssl_error_info_host"
         android:textSize="12sp"
         android:alpha="0.7"/>
 
@@ -56,7 +56,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Субъект:"
+        android:text="@string/ssl_error_info_subject"
         android:textSize="12sp"
         android:alpha="0.7"/>
 
@@ -72,7 +72,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Издатель:"
+        android:text="@string/ssl_error_info_CA"
         android:textSize="12sp"
         android:alpha="0.7"/>
 
@@ -88,7 +88,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Отпечаток (SHA-256):"
+        android:text="@string/ssl_error_info_sha256"
         android:textSize="12sp"
         android:alpha="0.7"/>
 
@@ -105,7 +105,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Продолжить вход на свой страх и риск?"
+        android:text="@string/ssl_error_confirm"
         android:textSize="14sp"
         android:textStyle="bold"
         android:textColor="?attr/colorError"
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Нет, отмена"/>
+            android:text="@string/ssl_error_btn_no"/>
 
         <Button
             android:id="@+id/ssl_accept"
@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="Да, я понимаю риск"
+            android:text="@string/ssl_error_btn_confirm"
             android:backgroundTint="?attr/colorError"/>
 
     </LinearLayout>

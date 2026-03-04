@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Очистить кэш"
+            android:text="@string/data_clear_cache"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
@@ -33,7 +33,7 @@
             android:id="@+id/cache_size_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Вычисление..."
+            android:text="@string/data_cache_calculating"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="2dp" />

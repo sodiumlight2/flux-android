@@ -81,7 +81,6 @@
                 android:id="@+id/friend_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Статус"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:maxLines="1"
@@ -93,7 +92,6 @@
                 android:id="@+id/mutual_friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5 общих друзей"
                 android:textSize="12sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp"
@@ -111,7 +109,6 @@
             app:icon="@drawable/ic_messages"
             app:iconTint="?attr/colorPrimary"
             app:iconSize="24dp"
-            android:contentDescription="Написать сообщение"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
     </LinearLayout>

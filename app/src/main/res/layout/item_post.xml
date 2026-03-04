@@ -48,7 +48,6 @@
                         android:id="@+id/post_author_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Автор поста"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:textColor="?attr/colorOnSurface"
@@ -70,7 +69,6 @@
                     android:id="@+id/post_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 часа назад"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -82,8 +80,7 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_more_vert"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                android:contentDescription="Меню поста" />
+                android:padding="4dp"/>
 
         </LinearLayout>
 
@@ -96,7 +93,6 @@
             android:breakStrategy="balanced"
             android:lineSpacingExtra="2dp"
             android:maxLines="1000"
-            android:text="Это пример текста поста. Здесь может быть любой контент, который пользователь хочет поделиться со своими друзьями."
             android:textColor="?attr/colorOnSurface"
             android:textIsSelectable="true"
             android:textSize="14sp" />
@@ -153,7 +149,6 @@
                                 android:id="@+id/original_post_author_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Автор оригинального поста"
                                 android:textStyle="bold"
                                 android:textSize="14sp"
                                 android:textColor="?attr/colorOnSurface"
@@ -175,7 +170,6 @@
                             android:id="@+id/original_post_timestamp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 часа назад"
                             android:textSize="11sp"
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -188,7 +182,6 @@
                     android:id="@+id/original_post_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Текст оригинального поста"
                     android:textSize="13sp"
                     android:textColor="?attr/colorOnSurface"
                     android:layout_marginBottom="8dp"
@@ -324,13 +317,12 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_like"
-                    android:tint="@color/like_inactive" />
+                    app:tint="@color/like_inactive" />
 
                 <TextView
                     android:id="@+id/post_like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12"
                     android:textSize="12sp"
                     android:textColor="@color/like_inactive"
                     android:layout_marginStart="4dp" />
@@ -352,13 +344,12 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_edit"
-                    android:tint="@android:color/darker_gray" />
+                    app:tint="@android:color/darker_gray" />
 
                 <TextView
                     android:id="@+id/post_comment_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginStart="4dp" />
@@ -379,12 +370,12 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_share"
-                    android:tint="@android:color/darker_gray" />
+                    app:tint="@android:color/darker_gray" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Поделиться"
+                    android:text="@string/share"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginStart="4dp" />

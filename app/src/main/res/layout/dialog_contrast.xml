@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Контрастность"
+        android:text="@string/contrast_title"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
@@ -24,21 +24,21 @@
             android:id="@+id/radio_contrast_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Обычная"
+            android:text="@string/contrast_normal"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_contrast_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Средняя"
+            android:text="@string/contrast_medium"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_contrast_high"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Высокая"
+            android:text="@string/contrast_high"
             android:padding="12dp" />
 
     </RadioGroup>

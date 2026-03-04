@@ -55,7 +55,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     
     // Тип новостей: true = подписки, false = все новости
     private boolean isSubscriptionMode = true;
-    private String[] newsTypes = {"Подписки", "Все новости"};
+    private String[] newsTypes = {getString(R.string.toolbar_subsfeed), getString(R.string.toolbar_globalfeed)};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

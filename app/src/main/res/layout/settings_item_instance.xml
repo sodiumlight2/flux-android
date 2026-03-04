@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Об инстанции"
+            android:text="@string/settings_instance"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
@@ -33,7 +33,6 @@
             android:id="@+id/instance_url_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ovk.to"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="2dp" />

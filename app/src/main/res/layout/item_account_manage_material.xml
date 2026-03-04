@@ -27,7 +27,6 @@
             android:id="@+id/manage_account_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User Name"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
@@ -35,7 +34,6 @@
             android:id="@+id/manage_account_instance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="instance.domain"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
 

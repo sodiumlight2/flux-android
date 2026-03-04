@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Контрастность"
+            android:text="@string/contrast_title"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
@@ -33,7 +33,6 @@
             android:id="@+id/contrast_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Обычная"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="2dp" />

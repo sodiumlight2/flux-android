@@ -40,10 +40,10 @@
     <!-- Login -->
     <string name="login_title">Sign in</string>
     <string name="login_welcome">Welcome!</string>
-    <string name="instance_hint">Instance (e.g., ovk.to)</string>
+    <string name="instance_hint">Instance (e.g., api.openvk.org)</string>
     <string name="instance_helper">Enter OpenVK instance address</string>
     <string name="instance_address_hint">Enter instance address</string>
-    <string name="login_hint">Login or email</string>
+    <string name="login_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="btn_login">Sign in</string>
@@ -84,6 +84,8 @@
     <string name="instance_groups">Groups</string>
 
     <!-- Posts -->
+    <string name="instance_admins">ADMINISTRATORS</string>
+    <string name="instance_links">LINKS</string>
     <string name="post_author">Post author</string>
     <string name="post_content">Post content</string>
     <string name="post_original_author">Original post author</string>
@@ -144,9 +146,11 @@
 
     <!-- Friends -->
     <string name="friends_title">Friends</string>
+    <string name="friends_requests">Requests</string>
     <string name="friends_search">Search friends...</string>
     <string name="friends_loading_error">Error loading friends: %s</string>
     <string name="friends_not_found">No friends found</string>
+    <string name="friends_not_found_info">The user doesn\'t have any friends yet :(</string>
     <string name="friends_common">%d common friends</string>
     <string name="friend_request_title">Friend request</string>
     <string name="friend_accept">Accept</string>
@@ -162,11 +166,13 @@
     <string name="groups_loading_error">Error loading groups: %s</string>
     <string name="group_name">Group name</string>
     <string name="group_type">Group</string>
+    <string name="group_admin">Managed</string>
     <string name="group_members">%d members</string>
     <string name="group_description">Group description</string>
     <string name="group_members_search">Search members</string>
     <string name="group_members_loading_error">Error loading members: %s</string>
     <string name="group_members_not_found">No members found</string>
+    <string name="group_members_none">There are no followers in the group yet</string>
     <string name="group_joined">You joined the group</string>
     <string name="group_left">You left the group</string>
     <string name="group_load_error">Error loading group: %s</string>
@@ -205,6 +211,7 @@
     <string name="player_next">Next track</string>
     <string name="player_fullscreen">Fullscreen</string>
     <string name="mini_player_music">Music</string>
+    <string name="playlist">Playlist</string>
     <string name="player_time_current">0:00</string>
     <string name="player_time_total">0:00</string>
     <string name="player_track_duration">%s</string>
@@ -234,8 +241,8 @@
     <string name="settings_logout_success">You have signed out</string>
     <string name="settings_app_version">About app</string>
     <string name="settings_app_version_value">1.0.0</string>
+    <string name="settings_instance">About instance</string>
     <string name="settings_version_unknown">Unknown</string>
-    <string name="settings_instance_url">ovk.to</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings_messages">Messages</string>
@@ -256,8 +263,8 @@
     <string name="appearance_theme_light">Light</string>
     <string name="appearance_theme_dark">Dark</string>
     <string name="appearance_color_scheme">Color scheme</string>
-    <string name="appearance_color_flux_default">Flux (default)</string>
-    <string name="appearance_color_flux_blue">Flux (blue)</string>
+    <string name="appearance_color_flux_blue">Blue</string>
+    <string name="appearance_color_blue">Blue</string>
     <string name="appearance_color_material_you">Material You (dynamic)</string>
     <string name="appearance_color_green">Green</string>
     <string name="appearance_color_purple">Purple</string>
@@ -282,6 +289,7 @@
 
     <!-- Account Manager -->
     <string name="account_manager_title">Account management</string>
+    <string name="account_manager_add">Add account</string>
     <string name="account_delete_confirm">Delete account?</string>
     <string name="account_delete_message">Account %s (%s) will be removed from the app.\n\nThis action cannot be undone.</string>
     <string name="account_switched">Switched to %s</string>
@@ -291,16 +299,25 @@
     <string name="connection_insecure_title">Insecure connection</string>
     <string name="connection_insecure_message">You are connecting to the server without encryption (HTTP). Your data, including password, will be transmitted in plain text.</string>
     <string name="connection_insecure_warning">This may be dangerous:</string>
+    <string name="connection_insecure_recom">We recommend using HTTPS</string>
     <string name="ssl_certificate_title">SSL certificate</string>
 
     <!-- About App -->
+    <string name="ssl_error_btn_no">No, cancel</string>
     <string name="about_app_title">About app</string>
+    <string name="about_app_thanks_names">OpenVK Community, Nikita (skippi), koke228, Руся Дуся, Vyacheslav Petrov (Vepur), Alisa Foksovna, Georg Nation, chelka0, Alexey Chashchin, Lina Ivanova (hikeri)</string>
     <string name="about_app_open_link">Could not open link</string>
 
     <!-- Instance About -->
+    <string name="about_app_license_desc">This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License version 3.0 or any later version, published by the Free Software Foundation.</string>
+    <string name="about_app_disclaimer">DISCLAIMER</string>
+    <string name="about_app_disclaimer_desc">OpenVK is in no way affiliated with or endorsed by LLC \"VK\". The application is intended for use only with OpenVK instances.</string>
     <string name="about_instance_open_profile">Opening profile ID: %d</string>
 
     <!-- Errors -->
+    <string name="about_instance_desc">Instance Description</string>
+    <string name="about_instance_stats">STATISTICS</string>
+    <string name="about_instance_users">USERS</string>
     <string name="error_loading_profile">Error loading profile: %s</string>
     <string name="error_loading">Error: %s</string>
     <string name="error_generic">An error occurred</string>
@@ -315,7 +332,15 @@
     <!-- Profile -->
     <string name="profile_sex_male">Male</string>
     <string name="profile_sex_female">Female</string>
+    <string name="profile_about">About:</string>
+    <string name="profile_hobby">Interests:</string>
+    <string name="profile_favorite_music">Favorite music:</string>
+    <string name="profile_favorite_film">Favorite movie:</string>
+    <string name="profile_favorite_book">Favorite book:</string>
+    <string name="profile_favorite_quote">Favorite quotes:</string>
+    <string name="profile_info_desc">Detailed information</string>
     <string name="profile_status">Status</string>
+    <string name="profile_create_post">Create post</string>
     <string name="profile_posts_loading_error">Error loading posts: %s</string>
     <string name="profile_posts_refresh_error">Could not load new posts</string>
 
@@ -323,4 +348,53 @@
     <string name="link_title">Link</string>
     <string name="create_post_sign_group">Add signature</string>
     <string name="create_post_nsfw">Contains NSFW content (coming soon)</string>
+    <string name="profile_subs">followers</string>
+    <string name="profile_groups">groups</string>
+    <string name="profile_posts">All posts</string>
+    <string name="profile_friends">friends</string>
+    <string name="profile_photos">photos</string>
+    <string name="profile_videos">videos</string>
+    <string name="profile_audios">audios</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_telegram">Telegram:</string>
+    <string name="profile_username">Username:</string>
+    <string name="profile_status_online">Online</string>
+    <string name="profile_gender">Gender:</string>
+    <string name="profile_date_registered">Registration date:</string>
+    <string name="profile_status_offline">Offline</string>
+    <string name="profile_last_activity">Last activity:</string>
+    <string name="profile_city">City:</string>
+    <string name="instance_info">INFORMATION</string>
+    <string name="instance_rules">Rules instance</string>
+    <string name="instance_policy">Privacy Policy</string>
+    <string name="friends_all">All friends</string>
+    <string name="group_none">Groups list is empty</string>
+    <string name="group_none_desc">You are not a member of any group yet</string>
+    <string name="ssl_error_list1">• A self-signed certificate is being used • The certificate has expired • A man-in-the-middle (MITM) attack may be underway</string>
+    <string name="ssl_error_info_title">Certificate information:</string>
+    <string name="ssl_error_info_host">Host:</string>
+    <string name="ssl_error_info_subject">Subject:</string>
+    <string name="ssl_error_info_CA">Issuer:</string>
+    <string name="ssl_error_confirm">Continue login at your own risk?</string>
+    <string name="connection_insecure_list1">Password may be intercepted</string>
+    <string name="connection_insecure_list2">Data is not protected</string>
+    <string name="about_app_team">DEVELOPMENT TEAM</string>
+    <string name="about_app_author">Author</string>
+    <string name="about_app_author_name">Nika Falaleeva (nikanikoo)</string>
+    <string name="about_app_ru">🇷🇺 Russian</string>
+    <string name="about_app_ru_author">Nika Falaleeva</string>
+    <string name="about_app_en">🇬🇧 English</string>
+    <string name="about_app_en_author">Nika Falaleeva</string>
+    <string name="open_photo">Open photo</string>
+    <string name="upload_new_photo">Upload new photo</string>
+    <string name="about_app_ua">🇺🇦 Ukrainian</string>
+    <string name="about_app_ua_author">In development</string>
+    <string name="about_app_license">LICENSE</string>
+    <string name="about_app_thanks">Thanks to these people for their help:</string>
+    <string name="about_app_translates">TRANSLATIONS</string>
+    <string name="ssl_error_btn_confirm">Yes, I understand the risk</string>
+    <string name="about_app_github">Source code on GitHub</string>
+    <string name="connection_insecure_list3">Man-in-the-middle attack is possible</string>
+    <string name="ssl_error_title">⚠️ Security certificate error</string>
+    <string name="ssl_error_desc">Could not verify the authenticity of the server. This may mean:</string>
 </resources>

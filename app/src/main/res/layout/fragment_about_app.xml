@@ -112,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
-                            android:text="Исходный код на GitHub"
+                            android:text="@string/about_app_github"
                             android:textColor="?attr/colorOnSurface"
                             android:textSize="16sp" />
 
@@ -136,7 +136,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="КОМАНДА РАЗРАБОТКИ"
+                android:text="@string/about_app_team"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorPrimary"
@@ -160,7 +160,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Автор"
+                        android:text="@string/about_app_author"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:textStyle="bold" />
@@ -168,7 +168,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ника Фалалеева (nikanikoo)"
+                        android:text="@string/about_app_author_name"
                         android:textSize="16sp"
                         android:textColor="?attr/colorOnSurface"
                         android:layout_marginTop="4dp" />
@@ -176,7 +176,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Спасибо этим людям за помощь:"
+                        android:text="@string/about_app_thanks"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:textStyle="bold"
@@ -185,7 +185,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Сообщество OpenVK, Никита (skippi), koke228, Руся Дуся, Вячеслав Петров (Вепур), Алиса Фоксовна, Georg Nation, chelka0, Алексей Чащин, Лина Иванова (hikeri)"
+                        android:text="@string/about_app_thanks_names"
                         android:textSize="16sp"
                         android:textColor="?attr/colorOnSurface"
                         android:layout_marginTop="4dp" />
@@ -198,7 +198,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ПЕРЕВОДЫ"
+                android:text="@string/about_app_translates"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorPrimary"
@@ -229,14 +229,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🇷🇺 Русский"
+                            android:text="@string/about_app_ru"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ника Фалалеева"
+                            android:text="@string/about_app_ru_author"
                             android:textSize="14sp"
                             android:textColor="?attr/colorPrimary" />
 
@@ -253,16 +253,16 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🇬🇧 English"
+                            android:text="@string/about_app_en"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="В разработке"
+                            android:text="@string/about_app_en_author"
                             android:textSize="14sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textColor="?attr/colorPrimary" />
 
                     </LinearLayout>
 
@@ -277,14 +277,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="🇺🇦 Українська"
+                            android:text="@string/about_app_ua"
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="В разработке"
+                            android:text="@string/about_app_ua_author"
                             android:textSize="14sp"
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -298,7 +298,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ЛИЦЕНЗИЯ"
+                android:text="@string/about_app_license"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorPrimary"
@@ -322,7 +322,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Эта программа является свободным программным обеспечением: вы можете распространять ее и/или изменять ее в соответствии с условиями лицензии GNU Affero General Public License версии 3.0 или поздней версии, опубликованной Фондом свободного программного обеспечения."
+                        android:text="@string/about_app_license_desc"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:lineSpacingMultiplier="1.2" />
 
@@ -359,7 +359,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="OpenVK никак не связан с компанией ООО 'ВК' или не одобрен ею. Приложение предназначено для работы только с инстанциями OpenVK."
+                        android:text="@string/about_app_disclaimer_desc"
                         android:textSize="14sp"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:lineSpacingMultiplier="1.2" />

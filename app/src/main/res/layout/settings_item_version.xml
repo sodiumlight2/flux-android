@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="О приложении"
+            android:text="@string/settings_app_version"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface" />
 
@@ -33,7 +33,6 @@
             android:id="@+id/app_version_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1.0.0"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="2dp" />

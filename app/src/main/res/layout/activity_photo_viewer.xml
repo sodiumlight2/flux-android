@@ -42,7 +42,7 @@
             android:ellipsize="end"
             android:gravity="start|center_vertical"
             android:maxLines="1"
-            android:text="Фотография"
+            android:text="@string/photo_viewer"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />

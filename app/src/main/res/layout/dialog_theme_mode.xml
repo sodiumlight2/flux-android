@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Режим темы"
+        android:text="@string/appearance_theme_mode"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
@@ -24,21 +24,21 @@
             android:id="@+id/radio_theme_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Светлая"
+            android:text="@string/appearance_theme_light"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_theme_dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Темная"
+            android:text="@string/appearance_theme_dark"
             android:padding="12dp" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/radio_theme_system"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Системная"
+            android:text="@string/appearance_theme_system"
             android:padding="12dp" />
 
     </RadioGroup>

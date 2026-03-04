@@ -110,7 +110,6 @@
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Назад"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@android:color/white" />
 

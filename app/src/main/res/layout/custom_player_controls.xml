@@ -21,7 +21,6 @@
         android:background="@android:color/transparent"
         android:src="@drawable/ic_play"
         android:scaleType="fitCenter"
-        android:contentDescription="Воспроизвести/Пауза"
         app:tint="@android:color/white" />
 
     <!-- Bottom progress bar -->
@@ -74,7 +73,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_fullscreen"
                 android:scaleType="centerInside"
-                android:contentDescription="Полноэкранный режим"
                 app:tint="@android:color/white" />
 
         </LinearLayout>

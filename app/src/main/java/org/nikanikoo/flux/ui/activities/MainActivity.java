@@ -445,9 +445,9 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
                 runOnUiThread(() -> {
                     NavigationView navigationView = findViewById(R.id.drawer_view);
                     if (navigationView != null) {
-                        updateBadge(navigationView, R.id.drawer_notification, notifications, "Уведомления");
-                        updateBadge(navigationView, R.id.drawer_messages, messages, "Сообщения");
-                        updateBadge(navigationView, R.id.drawer_friends, friends, "Друзья");
+                        updateBadge(navigationView, R.id.drawer_notification, notifications, getString(R.string.notifications_title));
+                        updateBadge(navigationView, R.id.drawer_messages, messages, getString(R.string.messages_title));
+                        updateBadge(navigationView, R.id.drawer_friends, friends, getString(R.string.friends_title));
                     }
                 });
             }

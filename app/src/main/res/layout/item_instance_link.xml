@@ -35,7 +35,7 @@
                 android:id="@+id/link_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ссылка"
+                android:text="@string/link_title"
                 android:textSize="16sp"
                 android:textColor="?attr/colorOnSurface" />
 
@@ -43,7 +43,6 @@
                 android:id="@+id/link_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="https://example.com"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp" />

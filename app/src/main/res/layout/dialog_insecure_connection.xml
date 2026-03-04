@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Небезопасное соединение"
+            android:text="@string/connection_insecure_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface" />
@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Вы подключаетесь к серверу без шифрования (HTTP). Ваши данные, включая пароль, будут переданы в открытом виде."
+        android:text="@string/connection_insecure_message"
         android:textSize="16sp"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:lineSpacingMultiplier="1.2"
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Это может быть опасно:"
+        android:text="@string/connection_insecure_warning"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
@@ -66,7 +66,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Пароль может быть перехвачен"
+            android:text="@string/connection_insecure_list1"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -89,7 +89,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Данные не защищены"
+            android:text="@string/connection_insecure_list2"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -112,7 +112,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Возможна атака посредника"
+            android:text="@string/connection_insecure_list3"
             android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -121,7 +121,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Рекомендуется использовать HTTPS."
+        android:text="@string/connection_insecure_recom"
         android:textSize="14sp"
         android:textStyle="italic"
         android:textColor="?attr/colorPrimary"

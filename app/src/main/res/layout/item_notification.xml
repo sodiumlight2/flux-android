@@ -44,7 +44,7 @@
                 android:background="@drawable/avatar_circle"
                 android:padding="5dp"
                 android:src="@android:drawable/ic_dialog_info"
-                android:tint="?attr/colorPrimary" />
+                app:tint="?attr/colorPrimary" />
 
         </FrameLayout>
 
@@ -65,7 +65,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Пользователь выполнил действие"
                     android:textSize="14sp"
                     android:textColor="?attr/colorOnSurface"
                     android:maxLines="3"
@@ -86,7 +85,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="5 мин назад"
                 android:textSize="12sp"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 

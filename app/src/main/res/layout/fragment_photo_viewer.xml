@@ -33,7 +33,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="12dp"
                 android:src="@drawable/ic_arrow_back"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -45,7 +45,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="Фотография"
+                android:text="@string/photo_viewer"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -72,7 +72,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="12dp"
             android:src="@drawable/ic_like"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
         <ImageView
             android:id="@+id/btnComments"
@@ -82,7 +82,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="12dp"
             android:src="@drawable/ic_messages"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
         <ImageView
             android:id="@+id/btnShare"
@@ -92,7 +92,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="12dp"
             android:src="@drawable/ic_share"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
     </LinearLayout>
 

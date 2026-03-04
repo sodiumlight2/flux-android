@@ -23,6 +23,11 @@
     <string name="copy">Копировать</string>
     <string name="link_copied">Ссылка скопирована</string>
 
+    <!-- toolbars -->
+    <string name="toolbar_subsfeed">Подписки</string>
+    <string name="toolbar_globalfeed">Все новости</string>
+    
+
     <!-- Navigation -->
     <string name="open_drawer">Открыть меню</string>
     <string name="close_drawer">Закрыть меню</string>
@@ -40,10 +45,10 @@
     <!-- Login -->
     <string name="login_title">Вход</string>
     <string name="login_welcome">Добро пожаловать!</string>
-    <string name="instance_hint">Инстанс (например, ovk.to)</string>
+    <string name="instance_hint">Инстанс (например, api.openvk.org)</string>
     <string name="instance_helper">Укажите адрес инстанса OpenVK</string>
     <string name="instance_address_hint">Введите адрес инстанса</string>
-    <string name="login_hint">Логин или email</string>
+    <string name="login_hint">Email</string>
     <string name="password_hint">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="btn_login">Войти</string>
@@ -81,7 +86,12 @@
     <string name="instance_users">Пользователи</string>
     <string name="instance_online">Онлайн</string>
     <string name="instance_active">Активные</string>
-    <string name="instance_groups">Группы</string>
+    <string name="instance_groups">Сообществ</string>
+    <string name="instance_info">ИНФОРМАЦИЯ</string>
+    <string name="instance_rules">Правила инстанции</string>
+    <string name="instance_policy">Политика конфиденциальности</string>
+    <string name="instance_admins">АДМИНИСТРАТОРЫ</string>
+    <string name="instance_links">ССЫЛКИ</string>
 
     <!-- Posts -->
     <string name="post_author">Автор поста</string>
@@ -113,7 +123,7 @@
 
     <!-- Comments -->
     <string name="comments_title">Комментарии</string>
-    <string name="comments_write">Написать комментарий...</string>
+    <string name="comments_write">Написать комментарий</string>
     <string name="comments_loading_error">Ошибка загрузки комментариев: %s</string>
     <string name="comments_send_error">Ошибка отправки комментария: %s</string>
     <string name="comments_add_error">Введите текст комментария или выберите изображение</string>
@@ -134,7 +144,7 @@
     <string name="messages_title">Сообщения</string>
     <string name="messages_loading_error">Ошибка загрузки диалогов: %s</string>
     <string name="chat_title">Чат</string>
-    <string name="chat_message_hint">Введите сообщение...</string>
+    <string name="chat_message_hint">Введите сообщение</string>
     <string name="chat_send">Отправить</string>
     <string name="chat_loading_error">Ошибка загрузки сообщений: %s</string>
     <string name="chat_send_error">Ошибка отправки: %s</string>
@@ -144,9 +154,12 @@
 
     <!-- Friends -->
     <string name="friends_title">Друзья</string>
-    <string name="friends_search">Поиск друзей...</string>
+    <string name="friends_all">Все друзья</string>
+    <string name="friends_requests">Заявки</string>
+    <string name="friends_search">Поиск друзей</string>
     <string name="friends_loading_error">Ошибка загрузки друзей: %s</string>
     <string name="friends_not_found">Друзья не найдены</string>
+    <string name="friends_not_found_info">У пользователя пока нет друзей :(</string>
     <string name="friends_common">%d общих друзей</string>
     <string name="friend_request_title">Заявка в друзья</string>
     <string name="friend_accept">Принять</string>
@@ -158,15 +171,19 @@
 
     <!-- Groups -->
     <string name="groups_title">Группы</string>
-    <string name="groups_search">Поиск групп...</string>
+    <string name="groups_search">Поиск групп</string>
     <string name="groups_loading_error">Ошибка загрузки групп: %s</string>
     <string name="group_name">Название группы</string>
     <string name="group_type">Группа</string>
+    <string name="group_none">Список групп пустой</string>
+    <string name="group_none_desc">Вы пока не состоите ни в одной группе</string>
+    <string name="group_admin">Управляемые</string>
     <string name="group_members">%d участников</string>
     <string name="group_description">Описание группы</string>
     <string name="group_members_search">Поиск участников</string>
     <string name="group_members_loading_error">Ошибка загрузки участников: %s</string>
     <string name="group_members_not_found">Участники не найдены</string>
+    <string name="group_members_none">В группе пока нет участников</string>
     <string name="group_joined">Вы вступили в группу</string>
     <string name="group_left">Вы покинули группу</string>
     <string name="group_load_error">Ошибка загрузки группы: %s</string>
@@ -205,6 +222,7 @@
     <string name="player_next">Следующий трек</string>
     <string name="player_fullscreen">Полноэкранный режим</string>
     <string name="mini_player_music">Музыка</string>
+    <string name="playlist">Плейлист</string>
     <string name="player_time_current">0:00</string>
     <string name="player_time_total">0:00</string>
     <string name="player_track_duration">%s</string>
@@ -234,8 +252,8 @@
     <string name="settings_logout_success">Вы вышли из аккаунта</string>
     <string name="settings_app_version">О приложении</string>
     <string name="settings_app_version_value">1.0.0</string>
+    <string name="settings_instance">Об инстанции</string>
     <string name="settings_version_unknown">Неизвестно</string>
-    <string name="settings_instance_url">ovk.to</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings_messages">Сообщения</string>
@@ -256,8 +274,7 @@
     <string name="appearance_theme_light">Светлая</string>
     <string name="appearance_theme_dark">Тёмная</string>
     <string name="appearance_color_scheme">Цветовая схема</string>
-    <string name="appearance_color_flux_default">Flux (по умолчанию)</string>
-    <string name="appearance_color_flux_blue">Flux (синяя)</string>
+    <string name="appearance_color_blue">Синяя</string>
     <string name="appearance_color_material_you">Material You (динамическая)</string>
     <string name="appearance_color_green">Зелёная</string>
     <string name="appearance_color_purple">Фиолетовая</string>
@@ -282,6 +299,7 @@
 
     <!-- Account Manager -->
     <string name="account_manager_title">Управление аккаунтами</string>
+    <string name="account_manager_add">Добавить аккаунт</string>
     <string name="account_delete_confirm">Удалить аккаунт?</string>
     <string name="account_delete_message">Аккаунт %s (%s) будет удален из приложения.\n\nЭто действие нельзя отменить.</string>
     <string name="account_switched">Переключено на %s</string>
@@ -291,14 +309,50 @@
     <string name="connection_insecure_title">Небезопасное соединение</string>
     <string name="connection_insecure_message">Вы подключаетесь к серверу без шифрования (HTTP). Ваши данные, включая пароль, будут переданы в открытом виде.</string>
     <string name="connection_insecure_warning">Это может быть опасно:</string>
+    <string name="connection_insecure_list1">Пароль может быть перехвачен</string>
+    <string name="connection_insecure_list2">Данные не защищены</string>
+    <string name="connection_insecure_list3">Возможна атака посредника</string>
+    <string name="connection_insecure_recom">Рекомендуем использовать HTTPS</string>
     <string name="ssl_certificate_title">SSL сертификат</string>
+
+    <string name="ssl_error_title">⚠️ Ошибка сертификата безопасности</string>
+    <string name="ssl_error_desc">Не удалось проверить подлинность сервера. Это может означать:</string>
+    <string name="ssl_error_list1">• Используется самоподписанный сертификат\n• Сертификат просрочен\n• Возможна попытка атаки (MITM)</string>
+    <string name="ssl_error_info_title">Информация о сертификате:</string>
+    <string name="ssl_error_info_host">Хост:</string>
+    <string name="ssl_error_info_subject">Субъект:</string>
+    <string name="ssl_error_info_CA">Издатель:</string>
+    <string name="ssl_error_info_sha256" translatable="false">SHA-256:</string>
+    <string name="ssl_error_confirm">Продолжить вход на свой страх и риск?</string>
+    <string name="ssl_error_btn_confirm">Да, я понимаю риск</string>
+    <string name="ssl_error_btn_no">Нет, отмена</string>
 
     <!-- About App -->
     <string name="about_app_title">О приложении</string>
+    <string name="about_app_github">Исходный код на Github</string>
+    <string name="about_app_team">КОМАНДА РАЗРАБОТКИ</string>
+    <string name="about_app_author">Автор</string>
+    <string name="about_app_author_name">Ника Фалалеева (nikanikoo)</string>
+    <string name="about_app_thanks">Спасибо этим людям за помощь:</string>
+    <string name="about_app_translates">ПЕРЕВОДЫ</string>
+    <string name="about_app_thanks_names">Сообщество OpenVK, Никита (skippi), koke228, Руся Дуся, Вячеслав Петров (Вепур), Алиса Фоксовна, Georg Nation, chelka0, Алексей Чащин, Лина Иванова (hikeri)</string>
     <string name="about_app_open_link">Не удалось открыть ссылку</string>
+    <string name="about_app_ru">🇷🇺 Русский</string>
+    <string name="about_app_ru_author">Ника Фалалеева</string>
+    <string name="about_app_en">🇬🇧 Английский</string>
+    <string name="about_app_en_author">Ника Фалалеева</string>
+    <string name="about_app_ua">🇺🇦 Украинский</string>
+    <string name="about_app_ua_author">В разработке</string>
+    <string name="about_app_license">ЛИЦЕНЗИЯ</string>
+    <string name="about_app_license_desc">Эта программа является свободным программным обеспечением: вы можете распространять ее и/или изменять ее в соответствии с условиями лицензии GNU Affero General Public License версии 3.0 или поздней версии, опубликованной Фондом свободного программного обеспечения.</string>
+    <string name="about_app_disclaimer">ДИСКЛЕЙМЕР</string>
+    <string name="about_app_disclaimer_desc">OpenVK никак не связан с компанией ООО \'ВК\' или не одобрен ею. Приложение предназначено для работы только с инстанциями OpenVK.</string>
 
     <!-- Instance About -->
     <string name="about_instance_open_profile">Открытие профиля ID: %d</string>
+    <string name="about_instance_desc">Описание инстанции</string>
+    <string name="about_instance_stats">СТАТИСТИКА</string>
+    <string name="about_instance_users">ПОЛЬЗОВАТЕЛЕЙ</string>
 
     <!-- Errors -->
     <string name="error_loading_profile">Ошибка загрузки профиля: %s</string>
@@ -315,7 +369,32 @@
     <!-- Profile -->
     <string name="profile_sex_male">Мужской</string>
     <string name="profile_sex_female">Женский</string>
+    <string name="profile_username">Имя пользователя: </string>
+    <string name="profile_status_online">В сети</string>
+    <string name="profile_gender">Пол:</string>
+    <string name="profile_date_registered">Дата регистрации:</string>
+    <string name="profile_status_offline">Не в сети</string>
+    <string name="profile_last_activity">Последняя активность:</string>
+    <string name="profile_city">Город:</string>
+    <string name="profile_email">Почта:</string>
+
+    <string name="profile_telegram">Телеграм:</string>
+    <string name="profile_about">О себе:</string>
+    <string name="profile_hobby">Интересы:</string>
+    <string name="profile_favorite_music">Любимая музыка:</string>
+    <string name="profile_favorite_film">Любимый фильм:</string>
+    <string name="profile_favorite_book">Любимая книга:</string>
+    <string name="profile_favorite_quote">Любимые цитаты:</string>
+    <string name="profile_info_desc">Подробная информация</string>
     <string name="profile_status">Статус</string>
+    <string name="profile_posts">Все записи</string>
+    <string name="profile_friends">друзей</string>
+    <string name="profile_photos">фотографий</string>
+    <string name="profile_videos">видео</string>
+    <string name="profile_audios">аудиозаписей</string>
+    <string name="profile_subs">подписчиков</string>
+    <string name="profile_groups">групп</string>
+    <string name="profile_create_post">Создать пост</string>
     <string name="profile_posts_loading_error">Ошибка загрузки постов: %s</string>
     <string name="profile_posts_refresh_error">Не удалось загрузить новые посты</string>
 
@@ -323,4 +402,12 @@
     <string name="link_title">Ссылка</string>
     <string name="create_post_sign_group">Подпись автора</string>
     <string name="create_post_nsfw">Содержит NSFW-контент (скоро)</string>
+
+    <!-- прочая херня -->
+    <string name="open_photo">Открыть фотографию</string>
+    <string name="upload_new_photo">Загрузить новую фотографию</string>
+    <string name="id" translatable="false">ID:</string>
+    <string name="appearance_color_flux_blue">Синяя</string>
+    <string name="settings_instance_url" translatable="false">api.openvk.org</string>
+
 </resources>

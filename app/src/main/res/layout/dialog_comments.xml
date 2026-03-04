@@ -22,15 +22,6 @@
         android:background="?attr/colorSurface"
         android:elevation="4dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/camera_200"
-            android:scaleType="centerCrop"
-            android:background="@drawable/avatar_circle"
-            android:layout_marginEnd="12dp" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -46,7 +37,7 @@
                 android:id="@+id/edit_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Написать комментарий..."
+                android:hint="@string/comments_write"
                 android:maxLines="3"
                 android:inputType="textMultiLine|textCapSentences" />
 

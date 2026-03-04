@@ -24,8 +24,7 @@
                 android:id="@+id/video_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="Превью видео" />
+                android:scaleType="centerCrop"/>
 
             <View
                 android:layout_width="match_parent"
@@ -37,8 +36,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_play_circle"
-                android:contentDescription="Воспроизвести" />
+                android:src="@drawable/ic_play_circle"/>
 
             <TextView
                 android:id="@+id/video_duration"
