@@ -2,6 +2,7 @@ package org.nikanikoo.flux.ui.fragments.news;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     private ProfileManager profileManager;
     private List<Post> posts;
     private SwipeRefreshLayout swipeRefresh;
+    private ImageView arrow;
     private FloatingActionButton fabCreatePost;
     private ProgressBar progressLoading;
     private LinearLayoutManager layoutManager;
@@ -113,6 +115,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         swipeRefresh = view.findViewById(R.id.swipe_refresh_news);
         fabCreatePost = view.findViewById(R.id.fab_create_post);
         progressLoading = view.findViewById(R.id.progress_loading);
+        arrow = view.findViewById(R.id.news_toolbar_arrow);
         
         // Обработчик клика на FAB
         if (fabCreatePost != null) {
@@ -543,6 +546,28 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         android.content.ClipData clip = android.content.ClipData.newPlainText("Post URL", postUrl);
         clipboard.setPrimaryClip(clip);
         Toast.makeText(getContext(), getString(R.string.copied_link), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getActivity() != null) {
+            arrow = getActivity().findViewById(R.id.news_toolbar_arrow);
+            if (arrow != null) {
+                arrow.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (getActivity() != null) {
+            arrow = getActivity().findViewById(R.id.news_toolbar_arrow);
+            if (arrow != null) {
+                arrow.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
