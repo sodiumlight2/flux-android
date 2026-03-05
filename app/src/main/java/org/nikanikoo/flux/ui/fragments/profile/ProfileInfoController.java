@@ -70,8 +70,9 @@ public class ProfileInfoController {
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat dateTimeFormat;
     private Context context;
+    
     public ProfileInfoController(View rootView) {
-        this.context = context.getApplicationContext();
+        this.context = rootView.getContext().getApplicationContext();
         initViews(rootView);
         dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());

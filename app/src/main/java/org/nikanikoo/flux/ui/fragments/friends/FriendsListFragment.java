@@ -344,6 +344,18 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
         });
     }
 
+    @Override
+    public void onRequestClick(FriendRequest request) {
+        ProfileFragment profileFragment = ProfileFragment.newInstanceWithId(request.getUserId(), request.getName());
+
+        if (getParentFragmentManager() != null) {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, profileFragment)
+                    .addToBackStack("request_profile")
+                    .commit();
+        }
+    }
+
     public void updateUserOnlineStatus(int userId, boolean isOnline) {
         for (Friend friend : allFriends) {
             if (friend.getId() == userId) {

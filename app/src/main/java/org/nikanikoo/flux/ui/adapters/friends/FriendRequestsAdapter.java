@@ -25,6 +25,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
     public interface OnRequestActionListener {
         void onAcceptRequest(FriendRequest request);
         void onDeclineRequest(FriendRequest request);
+        void onRequestClick(FriendRequest request);
     }
 
     public FriendRequestsAdapter(Context context, List<FriendRequest> friendRequests) {
@@ -48,7 +49,6 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         FriendRequest request = friendRequests.get(position);
         
         holder.friendName.setText(request.getName());
-        holder.friendStatus.setText(request.getStatus());
         
         // Загружаем аватар
         if (request.getAvatarUrl() != null && !request.getAvatarUrl().isEmpty()) {
@@ -67,10 +67,16 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 listener.onAcceptRequest(request);
             }
         });
-        
+
         holder.btnDecline.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDeclineRequest(request);
+            }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRequestClick(request);
             }
         });
     }
