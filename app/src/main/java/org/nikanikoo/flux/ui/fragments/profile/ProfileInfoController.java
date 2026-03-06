@@ -275,10 +275,10 @@ public class ProfileInfoController {
         }
         
         if (sex == 1) {
-            profileSex.setText(context.getString(R.string.profile_sex_male));
+            profileSex.setText(context.getString(R.string.profile_sex_female));
             sexLayout.setVisibility(View.VISIBLE);
         } else if (sex == 2) {
-            profileSex.setText(context.getString(R.string.profile_sex_female));
+            profileSex.setText(context.getString(R.string.profile_sex_male));
             sexLayout.setVisibility(View.VISIBLE);
         } else {
             sexLayout.setVisibility(View.GONE);

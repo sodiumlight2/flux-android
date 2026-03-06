@@ -6,19 +6,27 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.services.AudioPlayerService;
+import org.nikanikoo.flux.ui.adapters.audio.PlaylistAdapter;
 import org.nikanikoo.flux.utils.Logger;
 import org.nikanikoo.flux.utils.ThemeManager;
 
+import java.util.List;
 import java.util.Locale;
 
 public class AudioPlayerActivity extends AppCompatActivity implements AudioPlayerService.PlayerCallback {
@@ -36,6 +44,11 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
     private ImageButton btnPlayPause;
     private ImageButton btnPrevious;
     private ImageButton btnNext;
+
+    private DrawerLayout drawerLayout;
+    private RecyclerView playlistRecycler;
+    private TextView playlistCount;
+    private PlaylistAdapter playlistAdapter;
 
     private boolean isUserSeeking = false;
 
@@ -79,6 +92,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
         btnPlayPause = findViewById(R.id.btn_play_pause);
         btnPrevious = findViewById(R.id.btn_previous);
         btnNext = findViewById(R.id.btn_next);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        playlistRecycler = findViewById(R.id.playlist_recycler);
+        playlistCount = findViewById(R.id.playlist_count);
     }
 
     private void setupToolbar() {
@@ -134,11 +150,45 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
                 isUserSeeking = false;
             }
         });
+
+        setupPlaylist();
+    }
+
+    private void setupPlaylist() {
+        playlistRecycler.setLayoutManager(new LinearLayoutManager(this));
+        playlistAdapter = new PlaylistAdapter(
+                new java.util.ArrayList<>(),
+                -1,
+                position -> {
+                    if (serviceBound) {
+                        playerService.seekToTrack(position);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                    }
+                }
+        );
+        playlistRecycler.setAdapter(playlistAdapter);
     }
 
     private void bindService() {
         Intent intent = new Intent(this, AudioPlayerService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_audio_player, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_playlist) {
+            if (drawerLayout != null && !drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateUI() {
@@ -150,7 +200,17 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
             trackArtist.setText(currentAudio.getArtist());
         }
 
+        updatePlaylist();
         updatePlayPauseButton();
+    }
+
+    private void updatePlaylist() {
+        if (serviceBound && playlistAdapter != null) {
+            List<Audio> playlist = playerService.getPlaylist();
+            int currentPosition = playerService.getCurrentTrackPosition();
+            playlistAdapter.updatePlaylist(playlist, currentPosition);
+            playlistCount.setText(playlist.size() > 0 ? String.valueOf(playlist.size()) : "");
+        }
     }
 
     private void updatePlayPauseButton() {
@@ -171,6 +231,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
         runOnUiThread(() -> {
             trackTitle.setText(audio.getTitle());
             trackArtist.setText(audio.getArtist());
+            updatePlaylist();
         });
     }
 

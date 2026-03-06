@@ -43,6 +43,7 @@
     <string name="nav_notes">Заметки</string>
     <string name="nav_notifications">Уведомления</string>
     <string name="nav_settings">Настройки</string>
+    <string name="nav_profile">Профиль</string>
 
     <!-- Login -->
     <string name="login_title">Вход</string>
@@ -238,7 +239,7 @@
     <string name="video_back">« %d</string>
 
     <!-- Audio -->
-    <string name="audio_title">Название трека</string>
+    <string name="audio_title">Аудиоплеер</string>
     <string name="audio_artist">Исполнитель</string>
     <string name="audio_playlist">Плейлист</string>
     <string name="audio_track_name">Название</string>

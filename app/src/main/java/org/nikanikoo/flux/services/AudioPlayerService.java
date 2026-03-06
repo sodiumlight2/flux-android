@@ -329,6 +329,16 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    public void seekToTrack(int trackPosition) {
+        if (trackPosition < 0 || trackPosition >= playlist.size()) {
+            return;
+        }
+        
+        currentPosition = trackPosition;
+        prepareAudio(playlist.get(currentPosition));
+        Logger.d(TAG, "Seek to track: " + currentPosition);
+    }
+
     public void stop() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -516,7 +526,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 .setSmallIcon(R.drawable.ic_music)
                 .setContentTitle(currentAudio.getTitle())
                 .setContentText(currentAudio.getArtist())
-                .setSubText("OpenVK FLux")
+                .setSubText("OpenVK Flux")
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP))

@@ -277,30 +277,31 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_audio, menu);
-        
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        
-        searchView.setQueryHint(getString(R.string.audio_search));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                scrollListener.resetState();
-                searchAudios(query, true);
-                return true;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty() && isSearchMode) {
-                    isSearchMode = false;
-                    scrollListener.resetState();
-                    loadAudios(true);
-                }
-                return true;
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            if (searchView != null) {
+                searchView.setQueryHint(getString(R.string.audio_search));
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        scrollListener.resetState();
+                        searchAudios(query, true);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty() && isSearchMode) {
+                            isSearchMode = false;
+                            scrollListener.resetState();
+                            loadAudios(true);
+                        }
+                        return true;
+                    }
+                });
             }
-        });
-        
-        super.onCreateOptionsMenu(menu, inflater);
+        }
     }
 }

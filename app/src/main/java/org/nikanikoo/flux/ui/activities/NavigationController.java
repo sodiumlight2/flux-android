@@ -147,17 +147,17 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
                 Logger.d(TAG, "Avatar clicked, navigating to profile");
                 closeDrawer();
                 navigateToFragmentWithBackStack(ProfileFragment.newInstance("", ""), "profile");
-                activity.setToolbarTitle("Профиль");
+                activity.setToolbarTitle(activity.getString(R.string.nav_profile));
             });
         }
-        
+
         // Также добавляем клик на имя пользователя
         if (drawerName != null) {
             drawerName.setOnClickListener(v -> {
                 Logger.d(TAG, "Name clicked, navigating to profile");
                 closeDrawer();
                 navigateToFragmentWithBackStack(ProfileFragment.newInstance("", ""), "profile");
-                activity.setToolbarTitle("Профиль");
+                activity.setToolbarTitle(activity.getString(R.string.nav_profile));
             });
         }
     }
@@ -354,35 +354,35 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         if (id == R.id.drawer_news) {
             fragment = new NewsFragment();
             tag = "news";
-            activity.setToolbarTitle("Новости");
+            activity.setToolbarTitle(activity.getString(R.string.nav_news));
         } else if (id == R.id.drawer_messages) {
             fragment = new MessagesListFragment();
             tag = "messages";
-            activity.setToolbarTitle("Сообщения");
+            activity.setToolbarTitle(activity.getString(R.string.nav_messages));
         } else if (id == R.id.drawer_friends) {
             fragment = new FriendsListFragment();
             tag = "friends";
-            activity.setToolbarTitle("Друзья");
+            activity.setToolbarTitle(activity.getString(R.string.nav_friends));
         } else if (id == R.id.drawer_groups) {
             fragment = new GroupsListFragment();
             tag = "groups";
-            activity.setToolbarTitle("Сообщества");
+            activity.setToolbarTitle(activity.getString(R.string.nav_groups));
         } else if (id == R.id.drawer_audio) {
             fragment = new MusicListFragment();
             tag = "music";
-            activity.setToolbarTitle("Музыка");
+            activity.setToolbarTitle(activity.getString(R.string.nav_music));
         } else if (id == R.id.drawer_videos) {
             fragment = new VideoListFragment();
             tag = "videos";
-            activity.setToolbarTitle("Видео");
+            activity.setToolbarTitle(activity.getString(R.string.nav_videos));
         } else if (id == R.id.drawer_notification) {
             fragment = new NotificationsFragment();
             tag = "notifications";
-            activity.setToolbarTitle("Уведомления");
+            activity.setToolbarTitle(activity.getString(R.string.nav_notifications));
         } else if (id == R.id.drawer_settings) {
             fragment = new SettingsFragment();
             tag = "settings";
-            activity.setToolbarTitle("Настройки");
+            activity.setToolbarTitle(activity.getString(R.string.nav_settings));
         }
         
         if (fragment != null) {

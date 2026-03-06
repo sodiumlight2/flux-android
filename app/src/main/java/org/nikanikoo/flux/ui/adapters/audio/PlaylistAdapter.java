@@ -29,6 +29,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         this.listener = listener;
     }
 
+    public void updatePlaylist(List<Audio> newPlaylist, int currentPosition) {
+        this.playlist = newPlaylist;
+        this.currentPosition = currentPosition;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,11 +84,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             title.setText(audio.getTitle());
             duration.setText(audio.getFormattedDuration());
 
-            if (isCurrent) {
-                itemView.setBackgroundColor(0x22000000);
-            } else {
-                itemView.setBackgroundColor(0x00000000);
-            }
+            itemView.setSelected(isCurrent);
         }
     }
 }
