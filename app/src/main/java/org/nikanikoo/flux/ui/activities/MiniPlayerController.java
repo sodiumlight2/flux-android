@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.services.AudioPlayerService;
@@ -30,7 +32,8 @@ public class MiniPlayerController {
     private TextView miniPlayerTitle;
     private TextView miniPlayerArtist;
     private ImageButton miniPlayerPlayPause;
-    
+    private ImageButton miniPlayerStop;
+    private LinearProgressIndicator miniPlayerProgress;
     // Service
     private AudioPlayerService playerService;
     private boolean playerServiceBound = false;
@@ -51,23 +54,57 @@ public class MiniPlayerController {
             playerService = binder.getService();
             playerServiceBound = true;
             Logger.d(TAG, "AudioPlayerService connected");
-            
+
+            playerService.registerCallback(playerCallback);
+
             updateUI();
-            
+
             if (stateChangeListener != null) {
                 stateChangeListener.onPlayerConnected();
             }
         }
-        
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            if (playerService != null) {
+                playerService.unregisterCallback(playerCallback);
+            }
             playerServiceBound = false;
             playerService = null;
             Logger.d(TAG, "AudioPlayerService disconnected");
-            
+
             if (stateChangeListener != null) {
                 stateChangeListener.onPlayerDisconnected();
             }
+        }
+    };
+
+    private final AudioPlayerService.PlayerCallback playerCallback = new AudioPlayerService.PlayerCallback() {
+        @Override
+        public void onPlaybackStateChanged(boolean isPlaying) {
+            activity.runOnUiThread(() -> {
+                updatePlayPauseButton();
+                updateNotificationVisibility();
+            });
+        }
+
+        @Override
+        public void onTrackChanged(Audio audio, int position) {
+            activity.runOnUiThread(() -> {
+                updateUI();
+            });
+        }
+
+        @Override
+        public void onProgressUpdate(int currentPosition, int duration) {
+            activity.runOnUiThread(() -> {
+                updateProgress(currentPosition, duration);
+            });
+        }
+
+        @Override
+        public void onError(String error) {
+            Logger.e(TAG, "Player error: " + error);
         }
     };
     
@@ -79,14 +116,21 @@ public class MiniPlayerController {
      * Инициализация View
      */
     public void initViews(View rootView) {
-        miniPlayerContainer = rootView.findViewById(R.id.mini_player_container);
-        miniPlayerTitle = rootView.findViewById(R.id.mini_player_title);
-        miniPlayerArtist = rootView.findViewById(R.id.mini_player_artist);
-        miniPlayerPlayPause = rootView.findViewById(R.id.mini_player_play_pause);
-        
+        View miniPlayerView = rootView.findViewById(R.id.mini_player_container);
+        if (miniPlayerView == null) {
+            miniPlayerView = rootView;
+        }
+
+        miniPlayerContainer = (LinearLayout) miniPlayerView;
+        miniPlayerTitle = miniPlayerContainer.findViewById(R.id.mini_player_title);
+        miniPlayerArtist = miniPlayerContainer.findViewById(R.id.mini_player_artist);
+        miniPlayerPlayPause = miniPlayerContainer.findViewById(R.id.mini_player_play_pause);
+        miniPlayerStop = miniPlayerContainer.findViewById(R.id.mini_player_stop);
+        miniPlayerProgress = miniPlayerContainer.findViewById(R.id.mini_player_progress);
+
         setupClickListeners();
     }
-    
+
     /**
      * Настройка обработчиков кликов
      */
@@ -94,7 +138,11 @@ public class MiniPlayerController {
         if (miniPlayerPlayPause != null) {
             miniPlayerPlayPause.setOnClickListener(v -> togglePlayPause());
         }
-        
+
+        if (miniPlayerStop != null) {
+            miniPlayerStop.setOnClickListener(v -> stopAudio());
+        }
+
         if (miniPlayerContainer != null) {
             miniPlayerContainer.setOnClickListener(v -> openFullPlayer());
         }
@@ -112,6 +160,9 @@ public class MiniPlayerController {
      * Отвязка от AudioPlayerService
      */
     public void unbindService() {
+        if (playerServiceBound && playerService != null) {
+            playerService.unregisterCallback(playerCallback);
+        }
         if (playerServiceBound) {
             activity.unbindService(serviceConnection);
             playerServiceBound = false;
@@ -125,16 +176,26 @@ public class MiniPlayerController {
         if (!playerServiceBound || playerService == null) {
             return;
         }
-        
+
         if (playerService.isPlaying()) {
             playerService.pause();
         } else {
             playerService.play();
         }
-        
+
         updatePlayPauseButton();
     }
-    
+
+    private void stopAudio() {
+        if (!playerServiceBound || playerService == null) {
+            return;
+        }
+
+        playerService.stop();
+        playerService.clearPlaylist();
+        hidePlayer();
+    }
+
     /**
      * Открыть полноэкранный плеер
      */
@@ -142,7 +203,7 @@ public class MiniPlayerController {
         if (!playerServiceBound || playerService == null) {
             return;
         }
-        
+
         Intent intent = new Intent(activity, AudioPlayerActivity.class);
         activity.startActivity(intent);
     }
@@ -152,28 +213,31 @@ public class MiniPlayerController {
      */
     public void updateUI() {
         if (!playerServiceBound || playerService == null) {
+            Logger.d(TAG, "updateUI: service not bound, hiding player");
             hidePlayer();
             return;
         }
-        
+
         Audio currentTrack = playerService.getCurrentAudio();
         if (currentTrack == null) {
+            Logger.d(TAG, "updateUI: no current track, hiding player");
             hidePlayer();
             return;
         }
-        
+
+        Logger.d(TAG, "updateUI: showing player for " + currentTrack.getFullTitle());
         showPlayer();
-        
+
         if (miniPlayerTitle != null) {
             miniPlayerTitle.setText(currentTrack.getTitle());
         }
-        
+
         if (miniPlayerArtist != null) {
             miniPlayerArtist.setText(currentTrack.getArtist());
         }
-        
+
         updatePlayPauseButton();
-        
+
         if (stateChangeListener != null) {
             stateChangeListener.onTrackChanged(currentTrack);
         }
@@ -186,29 +250,57 @@ public class MiniPlayerController {
         if (miniPlayerPlayPause == null || !playerServiceBound) {
             return;
         }
-        
+
         if (playerService.isPlaying()) {
             miniPlayerPlayPause.setImageResource(R.drawable.ic_pause);
         } else {
             miniPlayerPlayPause.setImageResource(R.drawable.ic_play);
         }
     }
-    
+
+    private void updateProgress(int currentPosition, int duration) {
+        if (miniPlayerProgress == null || !playerServiceBound || duration <= 0) {
+            return;
+        }
+
+        int progress = (int) ((currentPosition / (float) duration) * 100);
+        miniPlayerProgress.setProgress(progress);
+    }
+
+    private void updateNotificationVisibility() {
+        if (!playerServiceBound || playerService == null) {
+            hidePlayer();
+            return;
+        }
+
+        Audio currentTrack = playerService.getCurrentAudio();
+        if (currentTrack == null) {
+            hidePlayer();
+        } else {
+            showPlayer();
+            updatePlayPauseButton();
+        }
+    }
+
     /**
      * Показать плеер
      */
     private void showPlayer() {
         if (miniPlayerContainer != null) {
             miniPlayerContainer.setVisibility(View.VISIBLE);
+            Logger.d(TAG, "Mini player shown");
+        } else {
+            Logger.e(TAG, "miniPlayerContainer is null!");
         }
     }
-    
+
     /**
      * Скрыть плеер
      */
     private void hidePlayer() {
         if (miniPlayerContainer != null) {
             miniPlayerContainer.setVisibility(View.GONE);
+            Logger.d(TAG, "Mini player hidden");
         }
     }
     

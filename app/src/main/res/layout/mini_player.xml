@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mini_player_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,38 +15,52 @@
         android:layout_height="1dp"
         android:background="?attr/colorOutline"/>
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/mini_player_progress"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:max="100"
+        android:progress="0"
+        app:trackColor="?attr/colorOutline"
+        app:indicatorColor="?attr/colorPrimary"
+        app:trackCornerRadius="0dp"
+        app:trackThickness="4dp"/>
+
     <LinearLayout
+        android:id="@+id/mini_player_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
+        android:padding="8dp"
         android:gravity="center_vertical"
-        android:clickable="true"
-        android:focusable="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:descendantFocusability="blocksDescendants"
         android:background="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/mini_player_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_music"
             android:scaleType="centerInside"
-            android:contentDescription="Музыка"/>
+            android:contentDescription="Музыка"
+            android:layout_marginStart="4dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp">
 
             <TextView
                 android:id="@+id/mini_player_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Название трека"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
                 android:maxLines="1"
@@ -56,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Исполнитель"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -66,13 +81,22 @@
 
         <ImageButton
             android:id="@+id/mini_player_play_pause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_play"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Воспроизвести/Пауза"
             android:scaleType="centerInside"
-            android:padding="10dp"/>
+            android:padding="8dp"/>
+
+        <ImageButton
+            android:id="@+id/mini_player_stop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_close"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:padding="8dp"/>
 
     </LinearLayout>
 

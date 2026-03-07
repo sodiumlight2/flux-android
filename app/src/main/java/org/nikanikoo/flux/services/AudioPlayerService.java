@@ -350,6 +350,17 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    public void clearPlaylist() {
+        playlist.clear();
+        currentPosition = 0;
+        isPrepared = false;
+
+        stopForeground(true);
+        stopSelf();
+        
+        Logger.d(TAG, "Playlist cleared and service stopped");
+    }
+
     public boolean isPlaying() {
         return isPrepared && mediaPlayer.isPlaying();
     }

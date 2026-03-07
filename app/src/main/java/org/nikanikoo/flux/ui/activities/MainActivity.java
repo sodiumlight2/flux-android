@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         
         // Mini Player Controller
         miniPlayerController = new MiniPlayerController(this);
-        miniPlayerController.initViews(findViewById(android.R.id.content));
+        miniPlayerController.initViews(findViewById(R.id.main_mini_player));
         miniPlayerController.setOnPlayerStateChangeListener(
                 new MiniPlayerController.OnPlayerStateChangeListener() {
             @Override
