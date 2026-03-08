@@ -40,11 +40,11 @@
 
         <ImageView
             android:id="@+id/mini_player_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_music"
-            android:scaleType="centerInside"
-            android:contentDescription="Музыка"
+            android:scaleType="centerCrop"
+            android:contentDescription="Обложка трека"
             android:layout_marginStart="4dp"/>
 
         <LinearLayout

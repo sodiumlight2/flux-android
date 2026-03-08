@@ -24,6 +24,7 @@ import androidx.media.session.MediaButtonReceiver;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.ui.activities.AudioPlayerActivity;
+import org.nikanikoo.flux.utils.AlbumArtFetcher;
 import org.nikanikoo.flux.utils.Logger;
 
 import java.io.IOException;
@@ -55,6 +56,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private final IBinder binder = new AudioBinder();
     private final List<PlayerCallback> callbacks = new CopyOnWriteArrayList<>();
     private java.util.concurrent.ExecutorService audioLoadExecutor;
+    private AlbumArtFetcher albumArtFetcher;
 
     public interface PlayerCallback {
         void onPlaybackStateChanged(boolean isPlaying);
@@ -77,6 +79,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         initMediaSession();
         initMediaPlayer();
         audioLoadExecutor = java.util.concurrent.Executors.newSingleThreadExecutor();
+        albumArtFetcher = new AlbumArtFetcher(this);
     }
 
     private void initMediaSession() {
@@ -464,17 +467,80 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration());
 
         // Загружаем обложку асинхронно
-        if (currentAudio.getCoverUrl() != null && !currentAudio.getCoverUrl().isEmpty()) {
-            new Thread(() -> {
-                Bitmap albumArt = loadAlbumArt(currentAudio.getCoverUrl());
-                if (albumArt != null) {
-                    metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt);
-                    mediaSession.setMetadata(metadataBuilder.build());
-                }
-            }).start();
-        }
+        audioLoadExecutor.execute(() -> {
+            Bitmap albumArt = null;
+            if (currentAudio.getCoverUrl() != null && !currentAudio.getCoverUrl().isEmpty()) {
+                albumArt = loadAlbumArt(currentAudio.getCoverUrl());
+            }
+            if (albumArt == null) {
+                albumArt = loadAlbumArtFromLastFm(currentAudio);
+            }
+            
+            if (albumArt != null) {
+                Bitmap scaledArt = Bitmap.createScaledBitmap(albumArt, 512, 512, true);
+                metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, scaledArt);
+                mediaSession.setMetadata(metadataBuilder.build());
+                updateNotification();
+            } else {
+                metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+                mediaSession.setMetadata(metadataBuilder.build());
+            }
+        });
+    }
 
-        mediaSession.setMetadata(metadataBuilder.build());
+    private Bitmap loadAlbumArtFromLastFm(Audio audio) {
+        try {
+            String artist = audio.getArtist();
+            String title = audio.getTitle();
+            
+            if (artist == null || title == null) return null;
+            String encodedArtist = java.net.URLEncoder.encode(artist, "UTF-8");
+            String encodedTitle = java.net.URLEncoder.encode(title, "UTF-8");
+            String apiKey = "TOKEN";
+            
+            String urlString = "https://ws.audioscrobbler.com/2.0?method=track.getInfo" +
+                    "&api_key=" + apiKey +
+                    "&artist=" + encodedArtist +
+                    "&track=" + encodedTitle +
+                    "&format=json";
+            
+            java.net.URL url = new java.net.URL(urlString);
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            
+            int responseCode = connection.getResponseCode();
+            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                
+                org.json.JSONObject json = new org.json.JSONObject(response.toString());
+                if (json.has("track") && json.getJSONObject("track").has("album")) {
+                    org.json.JSONObject track = json.getJSONObject("track");
+                    org.json.JSONObject album = track.getJSONObject("album");
+                    if (album.has("image")) {
+                        org.json.JSONArray images = album.getJSONArray("image");
+                        for (int i = images.length() - 1; i >= 0; i--) {
+                            org.json.JSONObject image = images.getJSONObject(i);
+                            String imageUrl = image.optString("#text", null);
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                return loadAlbumArt(imageUrl);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Logger.e(TAG, "Error loading album art from Last.fm", e);
+        }
+        return null;
     }
 
     private void updatePlaybackState(int state) {
@@ -525,7 +591,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         );
 
         // Create media style notification with MediaSession
-        androidx.media.app.NotificationCompat.MediaStyle mediaStyle = 
+        androidx.media.app.NotificationCompat.MediaStyle mediaStyle =
             new androidx.media.app.NotificationCompat.MediaStyle()
                 .setMediaSession(mediaSession.getSessionToken())
                 .setShowActionsInCompactView(0, 1, 2)
@@ -533,8 +599,15 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(
                         this, PlaybackStateCompat.ACTION_STOP));
 
+        Bitmap albumArt = null;
+        MediaMetadataCompat metadata = mediaSession.getController().getMetadata();
+        if (metadata != null) {
+            albumArt = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART);
+        }
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_music)
+                .setLargeIcon(albumArt != null ? albumArt : getFallbackIcon())
                 .setContentTitle(currentAudio.getTitle())
                 .setContentText(currentAudio.getArtist())
                 .setSubText("OpenVK Flux")
@@ -555,19 +628,18 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 ))
                 .addAction(createAction(R.drawable.ic_next, "Вперед", ACTION_NEXT));
 
-        // Добавляем обложку из MediaSession если доступна
-        MediaMetadataCompat metadata = mediaSession.getController().getMetadata();
-        if (metadata != null) {
-            Bitmap albumArt = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART);
-            if (albumArt != null) {
-                builder.setLargeIcon(albumArt);
-            }
-        }
-
         Notification notification = builder.build();
-        
+
         startForeground(NOTIFICATION_ID, notification);
         Logger.d(TAG, "Notification updated");
+    }
+
+    private Bitmap getFallbackIcon() {
+        try {
+            return BitmapFactory.decodeResource(getResources(), R.drawable.logo_flux);
+        } catch (Exception e) {
+            return BitmapFactory.decodeResource(getResources(), R.drawable.ic_music);
+        }
     }
 
     private NotificationCompat.Action createAction(int icon, String title, String action) {

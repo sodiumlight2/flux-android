@@ -42,6 +42,14 @@
                     android:id="@+id/album_art"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_music"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/album_art_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:padding="32dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_music" />

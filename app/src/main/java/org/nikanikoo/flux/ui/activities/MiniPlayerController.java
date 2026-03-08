@@ -4,9 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.services.AudioPlayerService;
+import org.nikanikoo.flux.utils.AlbumArtFetcher;
 import org.nikanikoo.flux.utils.Logger;
 
 /**
@@ -29,11 +32,15 @@ public class MiniPlayerController {
     
     // Views
     private LinearLayout miniPlayerContainer;
+    private ImageView miniPlayerIcon;
     private TextView miniPlayerTitle;
     private TextView miniPlayerArtist;
     private ImageButton miniPlayerPlayPause;
     private ImageButton miniPlayerStop;
     private LinearProgressIndicator miniPlayerProgress;
+
+    private AlbumArtFetcher albumArtFetcher;
+
     // Service
     private AudioPlayerService playerService;
     private boolean playerServiceBound = false;
@@ -110,6 +117,7 @@ public class MiniPlayerController {
     
     public MiniPlayerController(MainActivity activity) {
         this.activity = activity;
+        this.albumArtFetcher = new AlbumArtFetcher(activity);
     }
     
     /**
@@ -122,6 +130,7 @@ public class MiniPlayerController {
         }
 
         miniPlayerContainer = (LinearLayout) miniPlayerView;
+        miniPlayerIcon = miniPlayerContainer.findViewById(R.id.mini_player_icon);
         miniPlayerTitle = miniPlayerContainer.findViewById(R.id.mini_player_title);
         miniPlayerArtist = miniPlayerContainer.findViewById(R.id.mini_player_artist);
         miniPlayerPlayPause = miniPlayerContainer.findViewById(R.id.mini_player_play_pause);
@@ -236,11 +245,25 @@ public class MiniPlayerController {
             miniPlayerArtist.setText(currentTrack.getArtist());
         }
 
+        loadAlbumArt(currentTrack.getArtist(), currentTrack.getTitle());
+
         updatePlayPauseButton();
 
         if (stateChangeListener != null) {
             stateChangeListener.onTrackChanged(currentTrack);
         }
+    }
+
+    private void loadAlbumArt(String artist, String title) {
+        if (miniPlayerIcon == null || artist == null || title == null || 
+            artist.isEmpty() || title.isEmpty()) {
+            if (miniPlayerIcon != null) {
+                miniPlayerIcon.setImageResource(R.drawable.ic_music);
+            }
+            return;
+        }
+
+        albumArtFetcher.loadAlbumArt(artist, title, miniPlayerIcon, R.drawable.ic_music);
     }
     
     /**

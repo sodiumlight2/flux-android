@@ -8,9 +8,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.services.AudioPlayerService;
+import org.nikanikoo.flux.utils.AlbumArtFetcher;
 
 import java.util.List;
 
@@ -25,13 +28,13 @@ public class AudioAttachmentView {
 
     /**
      * Add audio attachments to a container view
-     * 
+     *
      * @param context Context
      * @param container Container to add audio views to
      * @param audios List of audio attachments
      * @param listener Click listener for audio playback
      */
-    public static void addAudioAttachments(Context context, LinearLayout container, 
+    public static void addAudioAttachments(Context context, LinearLayout container,
                                           List<Audio> audios, OnAudioClickListener listener) {
         if (audios == null || audios.isEmpty()) {
             return;
@@ -46,17 +49,21 @@ public class AudioAttachmentView {
             Audio audio = audios.get(i);
             final int position = i;
             View audioView = inflater.inflate(R.layout.item_audio_attachment, container, false);
-            
+
+            MaterialCardView audioCard = audioView.findViewById(R.id.audio_attachment_card);
+            ImageView audioCover = audioView.findViewById(R.id.audio_attachment_cover);
             TextView artistText = audioView.findViewById(R.id.audio_attachment_artist);
             TextView titleText = audioView.findViewById(R.id.audio_attachment_title);
             TextView durationText = audioView.findViewById(R.id.audio_attachment_duration);
-            ImageView playButton = audioView.findViewById(R.id.audio_attachment_play);
 
             artistText.setText(audio.getArtist());
             titleText.setText(audio.getTitle());
             durationText.setText(audio.getFormattedDuration());
 
-            playButton.setOnClickListener(v -> {
+            AlbumArtFetcher albumArtFetcher = new AlbumArtFetcher(context);
+            albumArtFetcher.loadAlbumArt(audio.getArtist(), audio.getTitle(), audioCover, R.drawable.ic_music);
+
+            audioCard.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onAudioPlay(audio);
                 } else {
@@ -65,16 +72,8 @@ public class AudioAttachmentView {
                 }
             });
 
-            // Update play button icon based on playback state
-            updatePlayButtonIcon(playButton, audio);
-
             container.addView(audioView);
         }
-    }
-
-    private static void updatePlayButtonIcon(ImageView playButton, Audio audio) {
-        // TODO: Check if this audio is currently playing and update icon
-        playButton.setImageResource(R.drawable.ic_play);
     }
 
     /**
@@ -84,13 +83,12 @@ public class AudioAttachmentView {
         Intent serviceIntent = new Intent(context, AudioPlayerService.class);
         context.startService(serviceIntent);
 
-        // Set playlist through service
         AudioPlayerHelper.setPlaylist(context, playlist, startPosition);
     }
 
     /**
      * Clear audio attachments from container
-     * 
+     *
      * @param container Container to clear
      */
     public static void clearAudioAttachments(LinearLayout container) {
@@ -100,4 +98,3 @@ public class AudioAttachmentView {
         }
     }
 }
-

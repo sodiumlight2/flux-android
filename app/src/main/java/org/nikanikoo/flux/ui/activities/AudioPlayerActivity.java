@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -19,10 +20,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
 import org.nikanikoo.flux.services.AudioPlayerService;
 import org.nikanikoo.flux.ui.adapters.audio.PlaylistAdapter;
+import org.nikanikoo.flux.utils.AlbumArtFetcher;
 import org.nikanikoo.flux.utils.Logger;
 import org.nikanikoo.flux.utils.ThemeManager;
 
@@ -38,6 +42,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
 
     private TextView trackTitle;
     private TextView trackArtist;
+    private ImageView albumArt;
+    private ImageView albumArtEmpty;
     private TextView currentTime;
     private TextView totalTime;
     private SeekBar seekBar;
@@ -50,6 +56,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
     private TextView playlistCount;
     private PlaylistAdapter playlistAdapter;
 
+    private AlbumArtFetcher albumArtFetcher;
     private boolean isUserSeeking = false;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -86,6 +93,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
     private void initViews() {
         trackTitle = findViewById(R.id.track_title);
         trackArtist = findViewById(R.id.track_artist);
+        albumArt = findViewById(R.id.album_art);
+        albumArtEmpty = findViewById(R.id.album_art_empty);
         currentTime = findViewById(R.id.current_time);
         totalTime = findViewById(R.id.total_time);
         seekBar = findViewById(R.id.seek_bar);
@@ -95,6 +104,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
         drawerLayout = findViewById(R.id.drawer_layout);
         playlistRecycler = findViewById(R.id.playlist_recycler);
         playlistCount = findViewById(R.id.playlist_count);
+        
+        albumArtFetcher = new AlbumArtFetcher(this);
     }
 
     private void setupToolbar() {
@@ -198,10 +209,33 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
         if (currentAudio != null) {
             trackTitle.setText(currentAudio.getTitle());
             trackArtist.setText(currentAudio.getArtist());
+            loadAlbumArt(currentAudio.getArtist(), currentAudio.getTitle());
         }
 
         updatePlaylist();
         updatePlayPauseButton();
+    }
+
+    private void loadAlbumArt(String artist, String title) {
+        albumArt.setVisibility(android.view.View.GONE);
+        albumArtEmpty.setVisibility(android.view.View.VISIBLE);
+        
+        if (artist == null || title == null || artist.isEmpty() || title.isEmpty()) {
+            return;
+        }
+
+        albumArtFetcher.loadAlbumArt(artist, title, albumArt, R.drawable.ic_music, new AlbumArtFetcher.AlbumArtCallback() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                albumArt.setVisibility(android.view.View.VISIBLE);
+                albumArtEmpty.setVisibility(android.view.View.GONE);
+            }
+
+            @Override
+            public void onError(String error) {
+                Logger.d(TAG, "Failed to load album art: " + error);
+            }
+        });
     }
 
     private void updatePlaylist() {
@@ -231,6 +265,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
         runOnUiThread(() -> {
             trackTitle.setText(audio.getTitle());
             trackArtist.setText(audio.getArtist());
+            loadAlbumArt(audio.getArtist(), audio.getTitle());
             updatePlaylist();
         });
     }
@@ -268,6 +303,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
             playerService.unregisterCallback(this);
             unbindService(serviceConnection);
             serviceBound = false;
+        }
+        if (albumArtFetcher != null) {
+            albumArtFetcher.shutdown();
         }
     }
 }

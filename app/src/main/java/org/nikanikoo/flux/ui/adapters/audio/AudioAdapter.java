@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.adapters.audio;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Audio;
+import org.nikanikoo.flux.utils.AlbumArtFetcher;
 
 import java.util.List;
 
@@ -57,27 +61,37 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
     }
 
     class AudioViewHolder extends RecyclerView.ViewHolder {
+        MaterialCardView audioCard;
+        ImageView audioCover;
         TextView artistText;
         TextView titleText;
         TextView durationText;
-        ImageView playButton;
         ImageView addButton;
         ImageView moreButton;
+        
+        AlbumArtFetcher albumArtFetcher;
 
         AudioViewHolder(@NonNull View itemView) {
             super(itemView);
+            Context context = itemView.getContext();
+            audioCard = itemView.findViewById(R.id.audio_card);
+            audioCover = itemView.findViewById(R.id.audio_cover);
             artistText = itemView.findViewById(R.id.audio_artist);
             titleText = itemView.findViewById(R.id.audio_title);
             durationText = itemView.findViewById(R.id.audio_duration);
-            playButton = itemView.findViewById(R.id.audio_play_button);
             addButton = itemView.findViewById(R.id.audio_add_button);
             moreButton = itemView.findViewById(R.id.audio_more_button);
+            
+            albumArtFetcher = new AlbumArtFetcher(context);
         }
 
         void bind(Audio audio, int position) {
             artistText.setText(audio.getArtist());
             titleText.setText(audio.getTitle());
             durationText.setText(audio.getFormattedDuration());
+
+            // Загрузка обложки
+            loadAlbumArt(audio);
 
             // Обновляем иконку добавления
             if (audio.isAdded()) {
@@ -88,7 +102,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
                 addButton.setContentDescription("Добавить");
             }
 
-            playButton.setOnClickListener(v -> {
+            audioCard.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onPlayClick(audio, position);
                 }
@@ -105,6 +119,20 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
                     listener.onMoreClick(audio, position);
                 }
             });
+        }
+        
+        private void loadAlbumArt(Audio audio) {
+            if (audioCover == null) return;
+            
+            String artist = audio.getArtist();
+            String title = audio.getTitle();
+            
+            if (artist == null || title == null || artist.isEmpty() || title.isEmpty()) {
+                audioCover.setImageResource(R.drawable.ic_music);
+                return;
+            }
+            
+            albumArtFetcher.loadAlbumArt(artist, title, audioCover, R.drawable.ic_music);
         }
     }
 }
