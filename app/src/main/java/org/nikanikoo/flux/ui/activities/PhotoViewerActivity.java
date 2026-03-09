@@ -29,6 +29,7 @@ import org.nikanikoo.flux.data.models.Post;
 import org.nikanikoo.flux.data.managers.PostsManager;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.custom.SwipeToCloseHelper;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.Logger;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,14 @@ public class PhotoViewerActivity extends AppCompatActivity {
     public static void start(Context context, List<String> imageUrls, int position, String title) {
         start(context, imageUrls, position, null, title);
     }
-    
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

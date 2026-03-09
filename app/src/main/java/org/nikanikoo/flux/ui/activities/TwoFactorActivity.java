@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import org.nikanikoo.flux.data.managers.ProfileManager;
 import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.security.AccountManager;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 import java.util.Locale;
@@ -33,18 +35,25 @@ public class TwoFactorActivity extends AppCompatActivity {
     private MaterialButton btnVerifyCode;
     private TextView textResendCode;
     private TextView textUseBackupCode;
-    
+
     private String username;
     private String password;
     private String instance;
-    
+
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
             navigateToLogin();
         }
     };
-    
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
+
     private void navigateToLogin() {
         Intent intent = new Intent(TwoFactorActivity.this, LoginActivity.class);
         startActivity(intent);

@@ -476,4 +476,17 @@
     <string name="request_server_error">Неверный формат ответа от сервера</string>
     <string name="link_error">Не удалось открыть ссылку</string>
 
+    <!-- Language Settings -->
+    <string name="settings_language">Язык приложения</string>
+    <string name="settings_language_desc">Выбор языка интерфейса</string>
+    <string name="language_system">Системный</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+    <string name="language_select">Выберите язык</string>
+    <string name="language_applied">Язык изменён</string>
+    <string name="language_restart">Приложение будет перезапущено для применения языка</string>
+    <string name="language_translators">Переводчики</string>
+    <string name="language_translator_ru">Ника Фалалеева (nikanikoo)</string>
+    <string name="language_translator_en">Ника Фалалеева (nikanikoo)</string>
+
 </resources>

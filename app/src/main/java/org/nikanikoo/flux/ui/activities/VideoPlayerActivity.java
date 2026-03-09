@@ -24,6 +24,7 @@ import androidx.media3.ui.PlayerView;
 
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 import org.nikanikoo.flux.data.models.Video;
 
@@ -137,6 +138,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_VIDEO_URL, videoUrl);
         intent.putExtra(EXTRA_VIDEO_TITLE, videoTitle);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
     }
 
     @Override

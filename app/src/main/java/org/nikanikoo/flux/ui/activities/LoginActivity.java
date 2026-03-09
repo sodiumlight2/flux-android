@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import org.nikanikoo.flux.data.managers.ProfileManager;
 import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.security.AccountManager;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -48,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
     
     private String CUSTOM_OPTION;
     private int selectedInstanceIndex = 0;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

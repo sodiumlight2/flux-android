@@ -28,6 +28,7 @@ import org.nikanikoo.flux.services.AudioPlayerService;
 import org.nikanikoo.flux.ui.adapters.audio.PlaylistAdapter;
 import org.nikanikoo.flux.utils.AlbumArtFetcher;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 import java.util.List;
@@ -76,6 +77,13 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
             Logger.d(TAG, "Service disconnected");
         }
     };
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

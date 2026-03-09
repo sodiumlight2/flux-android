@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -8,9 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import org.nikanikoo.flux.R;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public abstract class BaseSettingsActivity extends AppCompatActivity {
+
+    private LocaleManager localeManager;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +29,7 @@ public abstract class BaseSettingsActivity extends AppCompatActivity {
         ThemeManager themeManager = ThemeManager.getInstance(this);
         themeManager.applySavedTheme();
         themeManager.applyThemeToActivity(this);
-        
+
         super.onCreate(savedInstanceState);
     }
 

@@ -465,4 +465,18 @@
     <string name="friend_request_none">No friend requests</string>
     <string name="friend_1_follower">1 follower</string>
     <string name="friend_5_followers">" followers"</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language">App language</string>
+    <string name="settings_language_desc">Interface language selection</string>
+    <string name="language_system">System</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+    <string name="language_select">Select language</string>
+    <string name="language_applied">Language changed</string>
+    <string name="language_restart">App will restart to apply language</string>
+    <string name="language_translators">Translators</string>
+    <string name="language_translator_ru">Nika Falaleeva (nikanikoo)</string>
+    <string name="language_translator_en">Nika Falaleeva (nikanikoo)</string>
+
 </resources>

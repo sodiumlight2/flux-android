@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,11 +11,19 @@ import androidx.appcompat.widget.Toolbar;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.Post;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public class CommentsActivity extends AppCompatActivity {
 
     public static final String EXTRA_POST = "post";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

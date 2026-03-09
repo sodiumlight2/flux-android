@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -31,6 +32,7 @@ import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.adapters.media.SelectedImagesAdapter;
 import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 import java.util.ArrayList;
@@ -56,6 +58,13 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private int targetOwnerId = 0; // (0 = своя стена, >0 = пользователь, <0 = группа)
     private boolean isPostingToGroup = false;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

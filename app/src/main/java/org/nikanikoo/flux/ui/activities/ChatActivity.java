@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.fragments.messages.ChatFragment;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public class ChatActivity extends AppCompatActivity {
@@ -16,6 +18,13 @@ public class ChatActivity extends AppCompatActivity {
     public static final String EXTRA_PEER_ID = "peer_id";
     public static final String EXTRA_PEER_NAME = "peer_name";
     public static final String EXTRA_FROM_ID = "from_id";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        LocaleManager localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

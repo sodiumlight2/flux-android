@@ -27,67 +27,64 @@ import org.nikanikoo.flux.ui.activities.AboutAppActivity;
 import org.nikanikoo.flux.ui.activities.AboutInstanceActivity;
 import org.nikanikoo.flux.ui.activities.AppearanceSettingsActivity;
 import org.nikanikoo.flux.ui.activities.DataSettingsActivity;
+import org.nikanikoo.flux.ui.activities.LanguageSettingsActivity;
 import org.nikanikoo.flux.ui.activities.LoginActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.activities.NotificationsSettingsActivity;
 import org.nikanikoo.flux.ui.activities.AccountManagerActivity;
 import org.nikanikoo.flux.security.AccountManager;
 import org.nikanikoo.flux.utils.BuildInfo;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 
 public class SettingsFragment extends Fragment {
 
     private ThemeManager themeManager;
-    
+    private LocaleManager localeManager;
+
     // Settings value views
     private TextView appVersionValue;
     private TextView instanceUrlValue;
-    
+    private TextView languageValue;
+
     // Clickable items
     private View settingsAboutApp;
     private View settingsAboutInstance;
-    
+    private View cardLanguage;
+
     private MaterialButton btnLogout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        
+
         themeManager = ThemeManager.getInstance(requireContext());
-        
+        localeManager = LocaleManager.getInstance(requireContext());
+
         initViews(view);
         setupThemeSettings(view);
         setupNotificationSettings(view);
         setupDataSettings(view);
+        setupLanguageSettings(view);
         setupAccountsSettings(view);
         setupAboutSettings();
         setupLogout();
-        
+
         return view;
     }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Set title for settings screen
-        if (getActivity() != null) {
-            androidx.appcompat.app.AppCompatActivity activity = (androidx.appcompat.app.AppCompatActivity) getActivity();
-            if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().setTitle(getString(R.string.settings_title));
-            }
-        }
-    }
-    
+
     private void initViews(View view) {
         // About
         appVersionValue = view.findViewById(R.id.app_version_value);
         instanceUrlValue = view.findViewById(R.id.instance_url_value);
-        
+        languageValue = view.findViewById(R.id.language_value);
+
         // Clickable items
         settingsAboutApp = view.findViewById(R.id.settings_about_app);
         settingsAboutInstance = view.findViewById(R.id.settings_about_instance);
-        
+        cardLanguage = view.findViewById(R.id.card_language);
+
         btnLogout = view.findViewById(R.id.btn_logout);
     }
     
@@ -139,7 +136,37 @@ public class SettingsFragment extends Fragment {
         Intent intent = new Intent(requireContext(), DataSettingsActivity.class);
         startActivity(intent);
     }
-    
+
+    private void setupLanguageSettings(View view) {
+        updateLanguageValue();
+        if (cardLanguage != null) {
+            cardLanguage.setOnClickListener(v -> navigateToLanguageSettings());
+        }
+    }
+
+    private void navigateToLanguageSettings() {
+        Intent intent = new Intent(requireContext(), LanguageSettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void updateLanguageValue() {
+        if (languageValue != null) {
+            languageValue.setText(localeManager.getLanguageName(localeManager.getLanguage()));
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLanguageValue();
+        if (getActivity() != null) {
+            androidx.appcompat.app.AppCompatActivity activity = (androidx.appcompat.app.AppCompatActivity) getActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle(getString(R.string.settings_title));
+            }
+        }
+    }
+
     private void setupAboutSettings() {
         // Get app version
         if (getActivity() != null) {

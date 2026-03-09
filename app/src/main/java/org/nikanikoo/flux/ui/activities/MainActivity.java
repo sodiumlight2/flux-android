@@ -1,5 +1,6 @@
 package org.nikanikoo.flux.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import org.nikanikoo.flux.ui.fragments.messages.ChatFragment;
 import org.nikanikoo.flux.ui.fragments.messages.MessagesListFragment;
 import org.nikanikoo.flux.ui.fragments.news.NewsFragment;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
@@ -41,28 +43,29 @@ import org.nikanikoo.flux.utils.ValidationUtils;
 public class MainActivity extends AppCompatActivity implements NotificationBadgeListener {
 
     private static final String TAG = "MainActivity";
-    
+
     // Controllers
     private NavigationController navigationController;
     private MiniPlayerController miniPlayerController;
-    
+
     // Managers
     private ProfileManager profileManager;
     private NotificationsManager notificationsManager;
     private LongPollManager longPollManager;
     private AccountManager accountManager;
-    
+    private LocaleManager localeManager;
+
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            Logger.d(TAG, "onBackPressed handled by callback, backStackCount=" + 
+            Logger.d(TAG, "onBackPressed handled by callback, backStackCount=" +
                 getSupportFragmentManager().getBackStackEntryCount());
-            
+
             if (navigationController != null && navigationController.handleBackPress()) {
                 Logger.d(TAG, "Drawer was open, closed it");
                 return;
             }
-            
+
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 Logger.d(TAG, "Popping back stack");
                 getSupportFragmentManager().popBackStack();
@@ -72,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
             }
         }
     };
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        localeManager = LocaleManager.getInstance(newBase);
+        Context context = localeManager.updateContext(newBase);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

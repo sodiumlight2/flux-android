@@ -103,7 +103,12 @@
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/Theme.Flux" />
-        
+        <activity
+            android:name=".ui.activities.LanguageSettingsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/Theme.Flux" />
+
         <service
             android:name=".services.LongPollService"
             android:enabled="true"
