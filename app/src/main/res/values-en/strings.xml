@@ -377,7 +377,7 @@
     <string name="profile_photo_title">Profile Photo</string>
     <string name="link_title">Link</string>
     <string name="create_post_sign_group">Add signature</string>
-    <string name="create_post_nsfw">Contains NSFW content (coming soon)</string>
+    <string name="create_post_nsfw">Contains NSFW content</string>
     <string name="profile_subs">followers</string>
     <string name="profile_groups">groups</string>
     <string name="profile_posts">All posts</string>

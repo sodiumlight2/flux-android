@@ -463,7 +463,7 @@
     <!-- Links -->
     <string name="link_title">Ссылка</string>
     <string name="create_post_sign_group">Подпись автора</string>
-    <string name="create_post_nsfw">Содержит NSFW-контент (скоро)</string>
+    <string name="create_post_nsfw">Содержит NSFW-контент</string>
 
     <!-- прочая херня -->
     <string name="open_photo">Открыть фотографию</string>

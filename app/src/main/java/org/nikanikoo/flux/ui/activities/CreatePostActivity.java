@@ -51,6 +51,7 @@ public class CreatePostActivity extends AppCompatActivity {
     private CardView cardImagePreview;
     private CheckBox checkboxGroupPost;
     private CheckBox checkboxSignPost;
+    private CheckBox checkboxNsfw;
 
     private List<Uri> selectedImages;
     private SelectedImagesAdapter imagesAdapter;
@@ -106,6 +107,7 @@ public class CreatePostActivity extends AppCompatActivity {
         cardImagePreview = findViewById(R.id.card_image_preview);
         checkboxGroupPost = findViewById(R.id.checkbox_group_post);
         checkboxSignPost = findViewById(R.id.checkbox_sign_post);
+        checkboxNsfw = findViewById(R.id.checkbox_nsfw);
 
         if (authorAvatar != null) {
             authorAvatar.setImageResource(R.drawable.camera_200);
@@ -255,11 +257,12 @@ public class CreatePostActivity extends AppCompatActivity {
 
         boolean fromGroup = checkboxGroupPost != null && checkboxGroupPost.isChecked();
         boolean signed = checkboxSignPost != null && checkboxSignPost.isChecked();
+        boolean explicit = checkboxNsfw != null && checkboxNsfw.isChecked();
 
-        Logger.d("CreatePost", "fromGroup: " + fromGroup + ", signed: " + signed);
+        Logger.d("CreatePost", "fromGroup: " + fromGroup + ", signed: " + signed + ", explicit: " + explicit);
 
         if (!selectedImages.isEmpty()) {
-            postsManager.createPostWithImages(targetOwnerId, content, selectedImages, fromGroup, signed, new PostsManager.CreatePostCallback() {
+            postsManager.createPostWithImages(targetOwnerId, content, selectedImages, fromGroup, signed, explicit, new PostsManager.CreatePostCallback() {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {
@@ -278,7 +281,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 }
             });
         } else {
-            postsManager.createPost(targetOwnerId, content, fromGroup, signed, new PostsManager.CreatePostCallback() {
+            postsManager.createPost(targetOwnerId, content, fromGroup, signed, explicit, new PostsManager.CreatePostCallback() {
                 @Override
                 public void onSuccess(int postId) {
                     runOnUiThread(() -> {

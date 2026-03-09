@@ -193,8 +193,7 @@
                     android:id="@+id/checkbox_nsfw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/create_post_nsfw"
-                    android:enabled="false"/>
+                    android:text="@string/create_post_nsfw"/>
 
             </LinearLayout>
 

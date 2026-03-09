@@ -64,14 +64,18 @@ public class PostsManager extends BaseManager<PostsManager> {
     }
 
     public void createPost(String message, CreatePostCallback callback) {
-        createPost(0, message, false, false, callback); // 0 означает свою стену
+        createPost(0, message, false, false, false, callback); // 0 означает свою стену
     }
 
     public void createPost(int ownerId, String message, CreatePostCallback callback) {
-        createPost(ownerId, message, false, false, callback);
+        createPost(ownerId, message, false, false, false, callback);
     }
 
     public void createPost(int ownerId, String message, boolean fromGroup, boolean signed, CreatePostCallback callback) {
+        createPost(ownerId, message, fromGroup, signed, false, callback);
+    }
+
+    public void createPost(int ownerId, String message, boolean fromGroup, boolean signed, boolean explicit, CreatePostCallback callback) {
         if (!ValidationUtils.isValidPostText(message) && ownerId == 0 && !fromGroup) {
             callback.onError("Текст поста не может быть пустым");
             return;
@@ -85,7 +89,7 @@ public class PostsManager extends BaseManager<PostsManager> {
                 public void onSuccess(UserProfile profile) {
                     int userId = profile.getId();
                     Logger.d(TAG, "ID пользователя получен из профиля: " + userId);
-                    createPostInternal(userId, message, fromGroup, signed, callback);
+                    createPostInternal(userId, message, fromGroup, signed, explicit, callback);
                 }
 
                 @Override
@@ -94,7 +98,7 @@ public class PostsManager extends BaseManager<PostsManager> {
                     getCurrentUserId(new UserIdCallback() {
                         @Override
                         public void onSuccess(int userId) {
-                            createPostInternal(userId, message, fromGroup, signed, callback);
+                            createPostInternal(userId, message, fromGroup, signed, explicit, callback);
                         }
 
                         @Override
@@ -106,11 +110,11 @@ public class PostsManager extends BaseManager<PostsManager> {
             });
         } else {
             // Если ownerId указан, используем его напрямую
-            createPostInternal(ownerId, message, fromGroup, signed, callback);
+            createPostInternal(ownerId, message, fromGroup, signed, explicit, callback);
         }
     }
 
-    private void createPostInternal(int ownerId, String message, boolean fromGroup, boolean signed, CreatePostCallback callback) {
+    private void createPostInternal(int ownerId, String message, boolean fromGroup, boolean signed, boolean explicit, CreatePostCallback callback) {
         Map<String, String> params = new HashMap<>();
         params.put("owner_id", String.valueOf(ownerId));
         params.put("message", message);
@@ -122,7 +126,11 @@ public class PostsManager extends BaseManager<PostsManager> {
             }
         }
 
-        Logger.d(TAG, "Creating post on wall: owner_id=" + ownerId + ", from_group=" + fromGroup + ", signed=" + signed + ", message length=" + message.length());
+        if (explicit) {
+            params.put("explicit", "1");
+        }
+
+        Logger.d(TAG, "Creating post on wall: owner_id=" + ownerId + ", from_group=" + fromGroup + ", signed=" + signed + ", explicit=" + explicit + ", message length=" + message.length());
 
         api.callMethod("wall.post", params, new OpenVKApi.ApiCallback() {
             @Override
@@ -473,23 +481,27 @@ public class PostsManager extends BaseManager<PostsManager> {
     }
 
     public void createPostWithImages(String message, List<android.net.Uri> imageUris, CreatePostCallback callback) {
-        createPostWithImages(0, message, imageUris, false, false, callback); // 0 означает свою стену
+        createPostWithImages(0, message, imageUris, false, false, false, callback); // 0 означает свою стену
     }
 
     public void createPostWithImages(int ownerId, String message, List<android.net.Uri> imageUris, CreatePostCallback callback) {
-        createPostWithImages(ownerId, message, imageUris, false, false, callback);
+        createPostWithImages(ownerId, message, imageUris, false, false, false, callback);
     }
 
     public void createPostWithImages(int ownerId, String message, List<android.net.Uri> imageUris, boolean fromGroup, boolean signed, CreatePostCallback callback) {
+        createPostWithImages(ownerId, message, imageUris, fromGroup, signed, false, callback);
+    }
+
+    public void createPostWithImages(int ownerId, String message, List<android.net.Uri> imageUris, boolean fromGroup, boolean signed, boolean explicit, CreatePostCallback callback) {
         if (imageUris.isEmpty()) {
-            createPost(ownerId, message, fromGroup, signed, callback);
+            createPost(ownerId, message, fromGroup, signed, explicit, callback);
             return;
         }
 
         uploadImages(imageUris, new UploadImagesCallback() {
             @Override
             public void onSuccess(List<String> attachments) {
-                createPostWithAttachments(ownerId, message, attachments, fromGroup, signed, callback);
+                createPostWithAttachments(ownerId, message, attachments, fromGroup, signed, explicit, callback);
             }
 
             @Override
@@ -544,7 +556,7 @@ public class PostsManager extends BaseManager<PostsManager> {
         });
     }
     
-    private void createPostWithAttachments(int ownerId, String message, List<String> attachments, boolean fromGroup, boolean signed, CreatePostCallback callback) {
+    private void createPostWithAttachments(int ownerId, String message, List<String> attachments, boolean fromGroup, boolean signed, boolean explicit, CreatePostCallback callback) {
         // Если ownerId не указан (0), получаем ID текущего пользователя
         if (ownerId == 0 && !fromGroup) {
             ProfileManager profileManager = ProfileManager.getInstance(context);
@@ -552,7 +564,7 @@ public class PostsManager extends BaseManager<PostsManager> {
                 @Override
                 public void onSuccess(UserProfile profile) {
                     int userId = profile.getId();
-                    createPostWithAttachmentsInternal(userId, message, attachments, fromGroup, signed, callback);
+                    createPostWithAttachmentsInternal(userId, message, attachments, fromGroup, signed, explicit, callback);
                 }
 
                 @Override
@@ -562,11 +574,11 @@ public class PostsManager extends BaseManager<PostsManager> {
             });
         } else {
             // Если ownerId указан, используем его напрямую
-            createPostWithAttachmentsInternal(ownerId, message, attachments, fromGroup, signed, callback);
+            createPostWithAttachmentsInternal(ownerId, message, attachments, fromGroup, signed, explicit, callback);
         }
     }
 
-    private void createPostWithAttachmentsInternal(int ownerId, String message, List<String> attachments, boolean fromGroup, boolean signed, CreatePostCallback callback) {
+    private void createPostWithAttachmentsInternal(int ownerId, String message, List<String> attachments, boolean fromGroup, boolean signed, boolean explicit, CreatePostCallback callback) {
         Map<String, String> params = new HashMap<>();
         params.put("owner_id", String.valueOf(ownerId));
         params.put("message", message);
@@ -578,6 +590,10 @@ public class PostsManager extends BaseManager<PostsManager> {
             }
         }
 
+        if (explicit) {
+            params.put("explicit", "1");
+        }
+
         StringBuilder attachmentsStr = new StringBuilder();
         for (int i = 0; i < attachments.size(); i++) {
             if (i > 0) attachmentsStr.append(",");
@@ -585,7 +601,7 @@ public class PostsManager extends BaseManager<PostsManager> {
         }
         params.put("attachments", attachmentsStr.toString());
 
-        Logger.d(TAG, "Создание поста с вложениями на стене owner_id=" + ownerId + ", from_group=" + fromGroup + ", signed=" + signed + ": " + attachmentsStr.toString());
+        Logger.d(TAG, "Создание поста с вложениями на стене owner_id=" + ownerId + ", from_group=" + fromGroup + ", signed=" + signed + ", explicit=" + explicit + ": " + attachmentsStr.toString());
 
         api.callMethod("wall.post", params, new OpenVKApi.ApiCallback() {
             @Override
