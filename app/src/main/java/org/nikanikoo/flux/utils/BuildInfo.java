@@ -12,18 +12,21 @@ public class BuildInfo {
         if (cachedVersion != null) {
             return cachedVersion;
         }
-        
+
         try {
             String packageName = context.getPackageName();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                var packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-                cachedVersion = "1.0." + packageInfo.getLongVersionCode();
+                var packageInfo = context.getPackageManager().getPackageInfo(
+                        packageName,
+                        PackageManager.PackageInfoFlags.of(0)
+                );
+                cachedVersion = packageInfo.versionName;
             } else {
                 var packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-                cachedVersion = "1.0." + packageInfo.versionCode;
+                cachedVersion = packageInfo.versionName;
             }
         } catch (PackageManager.NameNotFoundException e) {
-            cachedVersion = "1.0.?";
+            cachedVersion = "1.1.?";
         }
         
         return cachedVersion;
