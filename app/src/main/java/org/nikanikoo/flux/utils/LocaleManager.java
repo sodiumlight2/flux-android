@@ -16,6 +16,7 @@ public class LocaleManager {
     public static final int LANGUAGE_SYSTEM = 0;
     public static final int LANGUAGE_RUSSIAN = 1;
     public static final int LANGUAGE_ENGLISH = 2;
+    public static final int LANGUAGE_UKRAINIAN = 3;
 
     private static LocaleManager instance;
     private final SharedPreferences prefs;
@@ -69,6 +70,8 @@ public class LocaleManager {
                 return new Locale("ru", "RU");
             case LANGUAGE_ENGLISH:
                 return new Locale("en", "US");
+            case LANGUAGE_UKRAINIAN:
+                return new Locale("uk", "UA");
             case LANGUAGE_SYSTEM:
             default:
                 // For system language, get the current system locale
@@ -102,6 +105,8 @@ public class LocaleManager {
                 return context.getString(org.nikanikoo.flux.R.string.language_russian);
             case LANGUAGE_ENGLISH:
                 return context.getString(org.nikanikoo.flux.R.string.language_english);
+            case LANGUAGE_UKRAINIAN:
+                return context.getString(org.nikanikoo.flux.R.string.language_ukrainian);
             case LANGUAGE_SYSTEM:
             default:
                 return context.getString(org.nikanikoo.flux.R.string.language_system);
@@ -114,6 +119,10 @@ public class LocaleManager {
 
     public boolean isEnglish() {
         return getLanguage() == LANGUAGE_ENGLISH;
+    }
+
+    public boolean isUkrainian() {
+        return getLanguage() == LANGUAGE_UKRAINIAN;
     }
 
     public boolean isSystem() {

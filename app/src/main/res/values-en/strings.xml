@@ -470,7 +470,7 @@
     <string name="settings_language">App language</string>
     <string name="settings_language_desc">Interface language selection</string>
     <string name="language_system">System</string>
-    <string name="language_russian">Русский</string>
+    <string name="language_russian">Russian</string>
     <string name="language_english">English</string>
     <string name="language_select">Select language</string>
     <string name="language_applied">Language changed</string>
@@ -478,5 +478,6 @@
     <string name="language_translators">Translators</string>
     <string name="language_translator_ru">Nika Falaleeva (nikanikoo)</string>
     <string name="language_translator_en">Nika Falaleeva (nikanikoo)</string>
+    <string name="language_ukrainian">Ukrainian</string>
 
 </resources>

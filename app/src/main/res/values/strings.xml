@@ -299,7 +299,7 @@
     <string name="settings_data_desc">Автозагрузка и кэш</string>
     <string name="settings_other">ПРОЧЕЕ</string>
     <string name="settings_logout">Выйти из аккаунта</string>
-    <string name="settings_logout2">Выход их аккаунта</string>
+    <string name="settings_logout2">Выход из аккаунта</string>
     <string name="settings_logout_confirm">Выйти из аккаунта?</string>
     <string name="settings_logout_message">Вы уверены, что хотите выйти?</string>
     <string name="settings_logout_success">Вы вышли из аккаунта</string>
@@ -481,12 +481,14 @@
     <string name="settings_language_desc">Выбор языка интерфейса</string>
     <string name="language_system">Системный</string>
     <string name="language_russian">Русский</string>
-    <string name="language_english">English</string>
+    <string name="language_english">Английский</string>
     <string name="language_select">Выберите язык</string>
     <string name="language_applied">Язык изменён</string>
     <string name="language_restart">Приложение будет перезапущено для применения языка</string>
     <string name="language_translators">Переводчики</string>
     <string name="language_translator_ru">Ника Фалалеева (nikanikoo)</string>
     <string name="language_translator_en">Ника Фалалеева (nikanikoo)</string>
+    <string name="language_ukrainian">Украинский</string>
+    <string name="language_translator_uk" translatable="false">Mykyta Serhieiev (Omisus)</string>
 
 </resources>

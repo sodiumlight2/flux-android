@@ -1,0 +1,488 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">OpenVK Flux</string>
+
+    <!-- Common -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading">Завантаження...</string>
+    <string name="error">Помилка</string>
+    <string name="closed">Закрито</string>
+    <string name="apply">Застосувати</string>
+    <string name="success">Успішно</string>
+    <string name="cancel">Відміна</string>
+    <string name="ok">ОК</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="save">Зберегти</string>
+    <string name="delete">Видалити</string>
+    <string name="edit">Редагувати</string>
+    <string name="pin">Закріпити</string>
+    <string name="close">Закрити</string>
+    <string name="back">Назад</string>
+    <string name="search">Пошук</string>
+    <string name="search_hint">Пошук...</string>
+    <string name="refresh">Оновити</string>
+    <string name="share">Поділитися</string>
+    <string name="copy">Копіювати</string>
+    <string name="link_copied">Посилання скопійовано</string>
+
+    <!-- toolbars -->
+    <string name="toolbar_subsfeed">Мої новини</string>
+    <string name="toolbar_globalfeed">Всі новини</string>
+
+    <!-- Navigation -->
+    <string name="open_drawer">Відкрити меню</string>
+    <string name="close_drawer">Закрити меню</string>
+    <string name="nav_news">Новини</string>
+    <string name="nav_messages">Повідомлення</string>
+    <string name="nav_friends">Друзі</string>
+    <string name="nav_groups">Спільноти</string>
+    <string name="nav_photos">Фотографії</string>
+    <string name="nav_videos">Відео</string>
+    <string name="nav_music">Музика</string>
+    <string name="nav_notes">Нотатки</string>
+    <string name="nav_notifications">Сповіщення</string>
+    <string name="nav_settings">Налаштування</string>
+
+    <!-- Login -->
+    <string name="login_title">Вхід</string>
+    <string name="login_welcome">Ласкаво просимо!</string>
+    <string name="instance_hint">Інстанс (наприклад, api.openvk.org)</string>
+    <string name="instance_helper">Укажіть адресу інстансу OpenVK</string>
+    <string name="instance_address_hint">Введіть адресу інстансу</string>
+    <string name="login_adress">Адреса: </string>
+    <string name="instance_display_names_custom">Ввести вручну</string>
+    <string name="login_hint">Email</string>
+    <string name="password_hint">Пароль</string>
+    <string name="forgot_password">Забули пароль?</string>
+    <string name="btn_login">Увійти</string>
+    <string name="btn_login_confirm">Все одно увійти</string>
+    <string name="btn_login_loading">Вхід...</string>
+    <string name="no_account">Нема акаунту?</string>
+    <string name="login_error1">Неправильна пошта чи пароль</string>
+    <string name="login_error2">Потребується двофакторна автентифікація</string>
+    <string name="login_error3">Помилка клієнта</string>
+    <string name="login_error4">Помилка автентификаії</string>
+    <string name="register">Зареєструватись</string>
+    <string name="login_success">Ви успішно увійшли в акаунт!</string>
+    <string name="login_enter_email">Введіть пошту</string>
+    <string name="login_enter_password">Введіть пароль</string>
+    <string name="select_instance">Оберіть інстанс</string>
+    <string name="instance_address">Адреса: %s</string>
+    <string name="app_openvk">OpenVK</string>
+    <string name="fa_length6">Введіть 6-значний код</string>
+    <string name="fa_error_numbers">Код має містити тільки цифри</string>
+    <string name="fa_error1">Помилка перевірки коду</string>
+    <string name="fa_error2">Неправильний код</string>
+    <string name="fa_error3">Помилка авторизації</string>
+    <string name="fa_error4">Не дані для входу</string>
+    <string name="fa_invalid_request">Неправильний формат запиту</string>
+    <string name="fa_code_expired">Код сплив, запросіть новий</string>
+    <string name="fa_success">Код підтвержено</string>
+
+    <!-- Two Factor -->
+    <string name="two_factor_title">Двофакторна аутентифікація</string>
+    <string name="two_factor_subtitle">підтверження входу</string>
+    <string name="two_factor_description">Введіть код з застосунку-аутентифікатора</string>
+    <string name="two_factor_code_hint">Код підтвердження</string>
+    <string name="btn_verify">підтвердити</string>
+    <string name="btn_verify_loading">Перевірка...</string>
+    <string name="resend_code">Відправити код повторно</string>
+    <string name="use_backup_code">Використати резервний код</string>
+    <string name="two_factor_verified">Код підтвержено</string>
+
+    <!-- Instance Settings -->
+    <string name="instance_settings">Налаштування інстансу</string>
+    <string name="current_instance_loading">Завантаження...</string>
+    <string name="current_instance_format">Поточний інстанс: %s</string>
+    <string name="current_instance_hint">Новий інстанс</string>
+    <string name="instance_change_helper">Зміна інстансу вимагатиме повторного входу</string>
+    <string name="save_instance">Зберегти інстанс</string>
+    <string name="instance_saved">Інстанс збережено</string>
+    <string name="instance_changed_logout">Інстанс змінено. Необхідно ввійти заново</string>
+    <string name="about_instance">Про инстанцію</string>
+    <string name="instance_id">ID: %d</string>
+    <string name="instance_version">Версія: %s</string>
+    <string name="instance_users">Користувачі</string>
+    <string name="instance_online">Онлайн</string>
+    <string name="instance_active">Активні</string>
+    <string name="instance_groups">Спільнот</string>
+    <string name="instance_info">ІНФОРМАЦІЯ</string>
+    <string name="instance_rules">Правила інстанції</string>
+    <string name="instance_policy">Політика конфіденційності</string>
+    <string name="instance_admins">АДМІНІСТРАТОРИ</string>
+    <string name="instance_links">ПОСИЛАННЯ</string>
+
+    <!-- Posts -->
+    <string name="post_author">Автор посту</string>
+    <string name="post_content">Текст посту</string>
+    <string name="post_original_author">Автор оригінального посту</string>
+    <string name="post_original_content">Текст оригінального посту</string>
+    <string name="post_time_ago">%s тому</string>
+    <string name="post_likes">Лайки</string>
+    <string name="post_comments">Коментарі</string>
+    <string name="post_shares">Поділитися</string>
+    <string name="post_share">Поділитися постом</string>
+    <string name="copy_link">Скопіювати посилання</string>
+    <string name="copied_link">Посилання скопійовано</string>
+    <string name="post_share_from">Поділитися постом від %s</string>
+    <string name="post_like_error">Неможливо поставити лайк цьому посту</string>
+    <string name="post_edit_not_supported">Редагування посту поки не реалізовано</string>
+    <string name="post_delete_not_supported">Видалення посту поки не реалізовано</string>
+    <string name="post_pin_not_supported">Закріплення посту поки не реалізовано</string>
+    <string name="post_delete_confirm">Видалити пост?</string>
+    <string name="post_error_like">Неможливо поставити лайк цьому посту</string>
+    <string name="post_delete_message">Цю дію не можна відмінити</string>
+    <string name="post_published">Пост опубліковано!</string>
+    <string name="post_publish_error">"Помилка публикації: "</string>
+    <string name="post_publishing">Публікація...</string>
+
+    <!-- Create Post -->
+    <string name="post_create_title">Створити</string>
+    <string name="create_post_whats_new">Як ся маєте?</string>
+    <string name="create_post_photo">Фото</string>
+    <string name="create_post_publish">Опублікувати</string>
+    <string name="create_post_group">Від імені спільноти</string>
+    <string name="create_post_author_loading">Завантаження...</string>
+
+    <!-- Comments -->
+    <string name="comments_title">Коментарі</string>
+    <string name="comments_write">Написати коментар</string>
+    <string name="comments_loading_error">Помилка завантаження коментарів: </string>
+    <string name="comments_send_error">Помилка відправки коментаря: </string>
+    <string name="comments_add_error">Введіть коментар</string>
+    <string name="comments_cannot_load">Неможливо завантажити коментарі</string>
+    <string name="comments_updated">Коментарі оновлено</string>
+    <string name="comments_added">Коментар відправлено</string>
+    <string name="comments_image_selected">Зображення обрано</string>
+    <string name="comments_post_not_found">Помилка: пост не знайдено</string>
+
+    <!-- News -->
+    <string name="news_loading_error">Помилка завантаження новин: </string>
+    <string name="news_refresh_error">Не вдалося завантажити нові пости</string>
+    <string name="news_public_loading_error">Помилка завантаження публічних постів: </string>
+    <string name="news_select_type">Оберіть тип новин</string>
+    <string name="news_create_post">Створити пост</string>
+
+    <!-- Messages -->
+    <string name="messages_title">Повідомлення</string>
+    <string name="messages_loading_error">Помилка завантаження діалогів: </string>
+    <string name="chat_title">Чат</string>
+    <string name="chat_message_hint">Введіть повідомлення</string>
+    <string name="chat_send">Надіслати</string>
+    <string name="chat_loading_error">Помилка завантаження повідомлень: </string>
+    <string name="chat_send_error">Помилка надсилання: </string>
+    <string name="message_incoming">Вхідне повідомлення</string>
+    <string name="message_outgoing">Вихідне повідомлення</string>
+    <string name="message_time">%s</string>
+
+    <!-- Friends -->
+    <string name="friends_title">Друзі</string>
+    <string name="friends_title2">Друзі </string>
+    <string name="friends_all">Всі друзі</string>
+    <string name="friends_requests">Заявки</string>
+    <string name="friends_search">Пошук друзів</string>
+    <string name="friends_loading_error">Помилка завантаження друзів: </string>
+    <string name="friends_not_found">Друзів не знайдено</string>
+    <string name="friends_not_found_info">У користувача поки нема друзів :(</string>
+    <string name="friends_common">%d спільних друзів</string>
+    <string name="friend_request_title">Заявка у друзі</string>
+    <string name="friend_accept">Прийняти</string>
+    <string name="friend_decline">Відхилити</string>
+    <string name="friend_request_accepted">Заявку прийнято</string>
+    <string name="friend_request_declined">Заявку відхилено</string>
+    <string name="friend_request_none">Немає заявок у друзі</string>
+    <string name="friend_request_none_desc">"Нові заявки з'являться тут"</string>
+    <string name="friend_requests_loading_error">Помилка завантаження заявок: %s</string>
+    <string name="friend_send_message">Написати повідомлення</string>
+    <string name="friend_1_follower">1 учасник</string>
+    <string name="friend_5_followers"> учасника</string>
+    <string name="friend_followers6"> учасників</string>
+
+    <string name="groups_title">Спільноти</string>
+    <string name="groups_search">Пошук спільнот</string>
+    <string name="groups_loading_error">Помилка завантаження спільнот: %s</string>
+    <string name="group_name">Назва спільноти</string>
+    <string name="group_type">Спільнота</string>
+    <string name="group_none">Список спільнот порожній</string>
+    <string name="group_none_desc">Йой! Ви не є учасником жодної спільноти</string>
+    <string name="group_admin">Керовані</string>
+    <string name="group_members">%d учасників</string>
+    <string name="group_description">Опис спільноти</string>
+    <string name="group_members_search">Пошук учасників</string>
+    <string name="group_members_loading_error">Помилка завантаження учасників: </string>
+    <string name="group_members_not_found">Учасників не знайдено</string>
+    <string name="group_members2">Учасники </string>
+    <string name="group_members_none">У спільноті поки немає учасників</string>
+    <string name="search_none2">Спробуйте змінити параметри пошуку</string>
+    <string name="group_join">Вступити</string>
+    <string name="group_leave">Залишити</string>
+    <string name="group_joined">Ви вступили до спільноти</string>
+    <string name="group_left">Ви залишили спільноту</string>
+    <string name="group_load_error">Помилка завантаження спільноти: </string>
+
+    <!-- Photos -->
+    <string name="photos_title">Фотографії</string>
+    <string name="photo_viewer">Фотографія</string>
+    <string name="photo_more_images">+%d</string>
+
+    <!-- Videos -->
+    <string name="videos_title">Відео</string>
+    <string name="video_preview">"Прев'ю відео"</string>
+    <string name="video_play">Відтворити</string>
+    <string name="video_url_not_found">URL відео не знайдено</string>
+    <string name="video_error">Помилка відтворення: </string>
+    <string name="video_search">Пошук відео</string>
+    <string name="video_forward">%d »</string>
+    <string name="video_back">« %d</string>
+
+    <!-- Audio -->
+    <string name="audio_title">Назва треку</string>
+    <string name="audio_artist">Виконавець</string>
+    <string name="audio_playlist">Плейлист</string>
+    <string name="audio_track_name">Назва</string>
+    <string name="audio_no_tracks">У вас поки нема аудіозаписів</string>
+    <string name="audio_search_error">Помилка пошуку: </string>
+    <string name="audio_nothing_found">Нічого не знайдено</string>
+    <string name="audio_removed">Видалено з аудіозаписів</string>
+    <string name="audio_loading_error">Помилка завантаження: </string>
+    <string name="audio_remove_error">Помилка видалення: </string>
+    <string name="audio_added">Додано в аудіозаписи</string>
+    <string name="audio_add_error">Помилка додавання: </string>
+    <string name="audio_dob">Додаткові опції</string>
+    <string name="audio_search">Пошук музики</string>
+    <string name="audio_add">Додати</string>
+    <string name="audio_more">Ще</string>
+    <string name="audio_no_title">Без назви</string>
+
+    <!-- Music Player -->
+    <string name="player_previous">Попередній трек</string>
+    <string name="player_play_pause">Відтворити/Пауза</string>
+    <string name="player_next">Наступний трек</string>
+    <string name="player_fullscreen">Повноекранний режим</string>
+    <string name="mini_player_music">Музика</string>
+    <string name="playlist">Плейлист</string>
+    <string name="player_time_current">0:00</string>
+    <string name="player_time_total">0:00</string>
+    <string name="player_track_duration">%s</string>
+
+    <!-- Notifications -->
+    <string name="notifications_title">Сповіщення</string>
+    <string name="notifications_loading_error">Помилка завантаження архівних сповіщень: </string>
+    <string name="notifications_all_read">Всі повідомлення відмічено як прочитані</string>
+    <string name="notifications_mark_all_read">Відмітити всі як прочитані</string>
+    <string name="notifications_error_user">Не вдалося визначити користувача</string>
+    <string name="notification_action">Користувач виконав дію</string>
+    <string name="notification_time_ago">%s тому</string>
+
+    <string name="notification_like_post">сподобався ваш пост</string>
+    <string name="notification_comment_post">залишив(ла) коментар під вашим постом</string>
+    <string name="notification_comment_photo">залишив(ла) коментар под вашим фото</string>
+    <string name="notification_sent_gift">надіслав(ла) вам подарунок</string>
+    <string name="notification_wall">написав(ла) на вашій стіні пост</string>
+    <string name="notification_mention">згадав вас у пості або в одній з гілок його обговорення</string>
+    <string name="notification_copy_post">поділився(-ась) вашим постом</string>
+    <string name="notification_default">щось зробив</string>
+
+
+    <!-- Settings -->
+    <string name="settings_title">Налаштування</string>
+    <string name="settings_accounts">Керування акаунтами</string>
+    <string name="settings_accounts_desc">Перемикання між акаунтами</string>
+    <string name="settings_appearance">Зовнішній вигляд</string>
+    <string name="settings_appearance_desc">Теми, кольори і констрастність</string>
+    <string name="settings_notifications">Сповіщення</string>
+    <string name="settings_notifications_desc">Налаштування сповіщень</string>
+    <string name="settings_data">Дані і сховище</string>
+    <string name="settings_data_desc">Автозавантаження і кеш</string>
+    <string name="settings_other">ІНШЕ</string>
+    <string name="settings_logout">Вийти з акаунта</string>
+    <string name="settings_logout2">Вихід з акаунта</string>
+    <string name="settings_logout_confirm">Вийти з акаунта?</string>
+    <string name="settings_logout_message">Ви упевнені, що хочете вийти?</string>
+    <string name="settings_logout_success">Ви вийшли з акаунта</string>
+    <string name="settings_app_version">Про застосунок</string>
+    <string name="settings_app_version_value">1.0.0</string>
+    <string name="settings_instance">Про інстанцію</string>
+    <string name="settings_version_unknown">Невідомо</string>
+
+    <!-- Notification Settings -->
+    <string name="notification_settings_messages">Повідомлення</string>
+    <string name="notification_settings_messages_desc">Сповіщення про нові повідомлення</string>
+    <string name="notification_settings_likes">Лайки</string>
+    <string name="notification_settings_likes_desc">Сповіщення про лайки</string>
+    <string name="notification_settings_comments">Коментарі</string>
+    <string name="notification_settings_comments_desc">Сповіщення про коментарі</string>
+    <string name="notification_enabled">Сповіщення про повідомлення: </string>
+    <string name="notification_likes_enabled">Сповіщення про лайки: </string>
+    <string name="notification_comments_enabled">Сповіщення про коментарі: </string>
+    <string name="notification_on">увімк</string>
+    <string name="notification_off">вимк</string>
+
+    <!-- Appearance Settings -->
+    <string name="appearance_theme_mode">Режим теми</string>
+    <string name="appearance_theme_system">Системна</string>
+    <string name="appearance_theme_light">Світла</string>
+    <string name="appearance_theme_dark">Темна</string>
+    <string name="appearance_color_scheme">Колірна схема</string>
+    <string name="appearance_color_blue">Синя</string>
+    <string name="appearance_color_material_you">Material You (динамічна)</string>
+    <string name="appearance_color_green">Зелена</string>
+    <string name="appearance_color_purple">Фіолетова</string>
+    <string name="appearance_color_red">Червона</string>
+    <string name="appearance_material_you_info">Material You доступний тільки на Android 12+</string>
+    <string name="appearance_select_theme">Вибір теми</string>
+
+    <!-- Contrast Settings -->
+    <string name="contrast_title">Контрастність</string>
+    <string name="contrast_normal">Звичайна</string>
+    <string name="contrast_medium">Середня</string>
+    <string name="contrast_high">Висока</string>
+
+    <!-- Data Settings -->
+    <string name="data_clear_cache">Очистити кеш</string>
+    <string name="data_clear_cache_confirm">Очистити кеш?</string>
+    <string name="data_clear_btn_clear">Очистити</string>
+    <string name="data_clear_cache_message">Ви упевнені, що хочете очистити кеш застосунку?</string>
+    <string name="data_cache_cleared">Кеш очищено</string>
+    <string name="data_cache_clear_error">Помилка під час очищення кешу</string>
+    <string name="data_cache_calculating">Обчислення...</string>
+    <string name="data_cache_size_unknown">Невідомо</string>
+
+    <!-- Account Manager -->
+    <string name="account_manager_title">Керування акаунтами</string>
+    <string name="account_manager_add">Додати акаунт</string>
+    <string name="account_delete_confirm">Видалити аккаунт?</string>
+    <string name="account_delete_message1">Акаунт </string>
+    <string name="account_delete_message2">буде видалено з застосунку.\n\nЦю дію не можна відмінити.</string>
+    <string name="account_switched">Переключено на </string>
+    <string name="account_encryption_error">Помилка шифрування. Спробуйте перевстановити застосунок.</string>
+
+    <!-- SSL / Connection -->
+    <string name="connection_insecure_title">"Небезпечне з'єданання"</string>
+    <string name="connection_insecure_message">Ви підключаєтесь до серверу без шифрування (HTTP). Ваші дані, включаючи пароль, будуть передані у відкритому вигляді.</string>
+    <string name="connection_insecure_warning">Це може бути небезпечно:</string>
+    <string name="connection_insecure_list1">Пароль може бути перехоплений</string>
+    <string name="connection_insecure_list2">Дані не захищено</string>
+    <string name="connection_insecure_list3">Можлива атака посередника</string>
+    <string name="connection_insecure_recom">Рекомендуємо використовувати HTTPS</string>
+    <string name="ssl_certificate_title">SSL сертифікат</string>
+
+    <string name="ssl_error_title">⚠️ Помилка сертифіката безпеки</string>
+    <string name="ssl_error_desc">Не вдалося перевірити справжність сервера. Це може означати:</string>
+    <string name="ssl_error_list1">• Використовується самопідписаний сертифікат\n• Сертифікат протерміновано\n• Можлива спроба атаки (MITM)</string>
+    <string name="ssl_error_info_title">Інформація про сертификат:</string>
+    <string name="ssl_error_info_host">Хост:</string>
+    <string name="ssl_error_info_subject">"Суб'єкт:"</string>
+    <string name="ssl_error_info_CA">Видавець:</string>
+    <string name="ssl_error_confirm">Продовжити вхід на власний ризик?</string>
+    <string name="ssl_error_btn_confirm">Так, я розумію ризик</string>
+    <string name="ssl_error_btn_no">Ні, відміна</string>
+
+    <!-- About App -->
+    <string name="about_app_title">Про застосунок</string>
+    <string name="about_app_version">Версія: </string>
+    <string name="about_app_commit">Комміт: </string>
+    <string name="about_app_github">Вихідний код на Github</string>
+    <string name="about_app_team">КОМАНДА РОЗРОБКИ</string>
+    <string name="about_app_author">Автор</string>
+    <string name="about_app_author_name">Ніка Фалалєєва (nikanikoo)</string>
+    <string name="about_app_thanks">Дяка цим людям за допомогу:</string>
+    <string name="about_app_translates">ПЕРЕКЛАДИ</string>
+    <string name="about_app_thanks_names">"Спільнота OpenVK, Нікіта (skippi), koke228, Руся Дуся, В'ячеслав Петров (Вепур), Аліса Фоксівна, Georg Nation, chelka0, Олексій Чащін, Ліна Іванова (hikeri)"</string>
+    <string name="about_app_open_link">Не вдалося відкрити посилання</string>
+    <string name="about_app_ru">🇷🇺 Російська</string>
+    <string name="about_app_ru_author">Ніка Фалалєєва</string>
+    <string name="about_app_en">🇬🇧 Англійська</string>
+    <string name="about_app_en_author">Ніка Фалалєєва</string>
+    <string name="about_app_ua">🇺🇦 Україснька</string>
+    <string name="about_app_ua_author">Микита Сергєєв "Omisus"</string>
+    <string name="about_app_license">ЛІЦЕНЗІЯ</string>
+    <string name="about_app_license_desc">Ця програма є вільним програмним забезпеченням: ви можете поширювати її та/або змінювати її відповідно до умов ліцензії GNU Affero General Public License версії 3.0 або пізнішої версії, опублікованої Фондом вільного програмного забезпечення.</string>
+    <string name="about_app_disclaimer">ДИСКЛЕЙМЕР</string>
+    <string name="about_app_disclaimer_desc">"OpenVK ніяк не пов'язана з російським ТОВ \'ВК\' або не схвалена ним. Застосунок призначений для роботи тільки с інстанціями OpenVK."</string>
+
+    <!-- Instance About -->
+    <string name="about_instance_open_profile">Відкриття профілю ID: %d</string>
+    <string name="about_instance_desc">Опис інстанції</string>
+    <string name="about_instance_stats">СТАТИСТИКА</string>
+    <string name="about_instance_users">КОРИСТУВАЧІВ</string>
+    <string name="about_instance_https">"HTTPS (Захищене з'єданання)"</string>
+    <string name="about_instance_http">"HTTP (Незахищене з'єданання)"</string>
+    <string name="about_instance_version">Версія: </string>
+    <string name="about_instance_error">Помилка під час обробки даних: </string>
+
+    <!-- Errors -->
+    <string name="error_loading_profile">Помилка завантаження профілю</string>
+    <string name="error_loading">Помилка: </string>
+    <string name="error_generic">Сталася помилка</string>
+    <string name="error_network">Помилка мережі</string>
+    <string name="error_unknown">Невідома помилка</string>
+
+    <!-- Empty States -->
+    <string name="empty_no_results">Нічого не знайдено</string>
+    <string name="empty_loading">Завантаження...</string>
+    <string name="empty_default">Пусто</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Профіль</string>
+    <string name="profile_sex_male">Чоловіча</string>
+    <string name="profile_sex_female">Жіноча</string>
+    <string name="profile_username">"Ім'я користувача: "</string>
+    <string name="profile_status_online">У мережі</string>
+    <string name="profile_gender">Стать:</string>
+    <string name="profile_date_registered">Дата реєстрації:</string>
+    <string name="profile_status_offline">Не в мережі</string>
+    <string name="profile_last_activity">Остання активність:</string>
+    <string name="profile_city">Місто:</string>
+    <string name="profile_email">Мрія:</string>
+    <string name="profile_telegram">Телеграм:</string>
+    <string name="profile_about">Про себе:</string>
+    <string name="profile_hobby">Інтереси:</string>
+    <string name="profile_favorite_music">Улюблена музика:</string>
+    <string name="profile_favorite_film">Улюблений фільм:</string>
+    <string name="profile_favorite_book">Улюблена книга:</string>
+    <string name="profile_favorite_quote">Улюблені цитати:</string>
+    <string name="profile_info_desc">Детальна інформація</string>
+    <string name="profile_status">Статус</string>
+    <string name="profile_posts">Всі записи</string>
+    <string name="profile_friends">друзів</string>
+    <string name="profile_photos">фотографій</string>
+    <string name="profile_videos">відео</string>
+    <string name="profile_audios">аудіозаписів</string>
+    <string name="profile_subs">підписників</string>
+    <string name="profile_groups">спільноти</string>
+    <string name="profile_create_post">Створити пост</string>
+    <string name="profile_posts_loading_error">Помилка завантаження постів: </string>
+    <string name="profile_posts_refresh_error">Не вдалося завантажити нові пости</string>
+    <string name="profile_photo_title">Фото профілю</string>
+
+    <!-- Links -->
+    <string name="link_title">Посилання</string>
+    <string name="create_post_sign_group">Підпис автора</string>
+    <string name="create_post_nsfw">Містить NSFW-контент (скоро)</string>
+
+    <!-- прочая херня -->
+    <string name="open_photo">Відкрити фото</string>
+    <string name="upload_new_photo">Завантажити нове фото</string>
+    <string name="appearance_color_flux_blue">Синя</string>
+    <string name="choose_image">Оберіть зображення</string>
+    <string name="choosed_image">Зображення обрано</string>
+    <string name="request_server_error">Неправильний формат відповіді від сервера</string>
+    <string name="link_error">Не вдалося відкрити посилання</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language">Мова застосунку</string>
+    <string name="settings_language_desc">Вибір мови інтерфейсу</string>
+    <string name="language_system">Системна</string>
+    <string name="language_russian">Російська</string>
+    <string name="language_english">Англійська</string>
+    <string name="language_select">Оберіть мову</string>
+    <string name="language_applied">Мову змінено</string>
+    <string name="language_restart">Застосунок буде перезапущено для застосування мови</string>
+    <string name="language_translators">Перекладачі</string>
+    <string name="language_translator_ru">Ніка Фалалєєва (nikanikoo)</string>
+    <string name="language_translator_en">Ніка Фалалєєва (nikanikoo)</string>
+    <string name="language_ukrainian">Українська</string>
+
+</resources>
