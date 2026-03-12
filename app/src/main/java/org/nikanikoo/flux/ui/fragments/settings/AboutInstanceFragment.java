@@ -295,7 +295,7 @@ public class AboutInstanceFragment extends Fragment {
         String baseUrl = OpenVKApi.getInstance(requireContext()).getBaseUrl();
         
         itemRules.setOnClickListener(v -> {
-            String rulesUrl = baseUrl + "/privacy";
+            String rulesUrl = baseUrl + "/terms";
             openUrl(rulesUrl);
         });
         
