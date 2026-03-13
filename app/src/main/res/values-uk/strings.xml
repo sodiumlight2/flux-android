@@ -45,6 +45,7 @@
     <string name="nav_settings">Налаштування</string>
 
     <!-- Login -->
+    <string name="nav_profile">Профіль</string>
     <string name="login_title">Вхід</string>
     <string name="login_welcome">Ласкаво просимо!</string>
     <string name="instance_hint">Інстанс (наприклад, api.openvk.org)</string>
@@ -302,7 +303,6 @@
     <string name="settings_logout_message">Ви упевнені, що хочете вийти?</string>
     <string name="settings_logout_success">Ви вийшли з акаунта</string>
     <string name="settings_app_version">Про застосунок</string>
-    <string name="settings_app_version_value">1.0.0</string>
     <string name="settings_instance">Про інстанцію</string>
     <string name="settings_version_unknown">Невідомо</string>
 
@@ -353,9 +353,8 @@
     <string name="account_manager_title">Керування акаунтами</string>
     <string name="account_manager_add">Додати акаунт</string>
     <string name="account_delete_confirm">Видалити аккаунт?</string>
-    <string name="account_delete_message1">Акаунт </string>
-    <string name="account_delete_message2">буде видалено з застосунку.\n\nЦю дію не можна відмінити.</string>
-    <string name="account_switched">Переключено на </string>
+    <string name="account_delete_message1">%1$s (%2$s) буде видалено з застосунку.\n\nЦю дію не можна відмінити.</string>
+    <string name="account_switched">Переключено на %s</string>
     <string name="account_encryption_error">Помилка шифрування. Спробуйте перевстановити застосунок.</string>
 
     <!-- SSL / Connection -->
@@ -396,7 +395,7 @@
     <string name="about_app_en">🇬🇧 Англійська</string>
     <string name="about_app_en_author">Ніка Фалалєєва</string>
     <string name="about_app_ua">🇺🇦 Україснька</string>
-    <string name="about_app_ua_author">Микита Сергєєв "Omisus"</string>
+    <string name="about_app_ua_author">У розробці</string>
     <string name="about_app_license">ЛІЦЕНЗІЯ</string>
     <string name="about_app_license_desc">Ця програма є вільним програмним забезпеченням: ви можете поширювати її та/або змінювати її відповідно до умов ліцензії GNU Affero General Public License версії 3.0 або пізнішої версії, опублікованої Фондом вільного програмного забезпечення.</string>
     <string name="about_app_disclaimer">ДИСКЛЕЙМЕР</string>
@@ -484,5 +483,10 @@
     <string name="language_translator_ru">Ніка Фалалєєва (nikanikoo)</string>
     <string name="language_translator_en">Ніка Фалалєєва (nikanikoo)</string>
     <string name="language_ukrainian">Українська</string>
+    <string name="about_app_kk_latin">🇰🇿 Казахська мова (Латинська)</string>
+    <string name="about_app_kk_latin_author">У розробці</string>
+    <string name="language_kazakh_cyrillic">Kazakh (Cyrillic)</string>
+    <string name="language_kazakh_latin">Kazakh (Latin)</string>
+    <string name="about_app_kk_cyrillic">🇰🇿 Казахська мова (Кирилична)</string>
 
 </resources>

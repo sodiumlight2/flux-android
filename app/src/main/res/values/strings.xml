@@ -304,7 +304,6 @@
     <string name="settings_logout_message">Вы уверены, что хотите выйти?</string>
     <string name="settings_logout_success">Вы вышли из аккаунта</string>
     <string name="settings_app_version">О приложении</string>
-    <string name="settings_app_version_value">1.0.0</string>
     <string name="settings_instance">Об инстанции</string>
     <string name="settings_version_unknown">Неизвестно</string>
 
@@ -355,9 +354,8 @@
     <string name="account_manager_title">Управление аккаунтами</string>
     <string name="account_manager_add">Добавить аккаунт</string>
     <string name="account_delete_confirm">Удалить аккаунт?</string>
-    <string name="account_delete_message1">Аккаунт </string>
-    <string name="account_delete_message2">будет удален из приложения.\n\nЭто действие нельзя отменить.</string>
-    <string name="account_switched">Переключено на </string>
+    <string name="account_delete_message1">%1$s (%2$s) будет удален из приложения.\n\nЭто действие нельзя отменить.</string>
+    <string name="account_switched">Переключено на %s</string>
     <string name="account_encryption_error">Ошибка шифрования. Попробуйте переустановить приложение.</string>
 
     <!-- SSL / Connection -->
@@ -490,5 +488,13 @@
     <string name="language_translator_en">Ника Фалалеева (nikanikoo)</string>
     <string name="language_ukrainian">Украинский</string>
     <string name="language_translator_uk" translatable="false">Mykyta Serhieiev (Omisus)</string>
+    <string name="about_app_kk_cyrillic">🇰🇿 Казахский язык (Кириллица)</string>
+    <string name="about_app_kk_cyrillic_author" translatable="false">Таңғай (tangai)</string>
+    <string name="about_app_kk_latin">🇰🇿 Казахский язык (Латиница)</string>
+    <string name="about_app_kk_latin_author">В разработке</string>
+    <string name="language_kazakh_cyrillic">Казахский (Кириллица)</string>
+    <string name="language_translator_kk_cyrillic" translatable="false">Таңғай (tangai)</string>
+    <string name="language_translator_kk_latin" translatable="false">Таңғай (tangai)</string>
+    <string name="language_kazakh_latin">Казахский (Латиница)</string>
 
 </resources>

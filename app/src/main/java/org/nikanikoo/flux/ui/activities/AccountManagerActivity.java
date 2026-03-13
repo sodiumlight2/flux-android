@@ -94,7 +94,7 @@ public class AccountManagerActivity extends BaseSettingsActivity {
 
                     android.util.Log.d("AccountManagerActivity", "Switched to account: " + account.fullName);
 
-                    Toast.makeText(this, getString(R.string.account_switched) + account.fullName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.account_switched, account.fullName), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -122,9 +122,10 @@ public class AccountManagerActivity extends BaseSettingsActivity {
     }
 
     private void showRemoveAccountConfirmation(AccountManager.Account account, Runnable onConfirm) {
+        String message = getString(R.string.account_delete_message1, account.fullName, account.instance);
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.account_delete_confirm))
-                .setMessage(getString(R.string.account_delete_message1) + account.fullName + " (" + account.instance + ") " + getString(R.string.account_delete_message2))
+                .setMessage(message)
                 .setPositiveButton(getString(R.string.delete), (dialog, which) -> onConfirm.run())
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
