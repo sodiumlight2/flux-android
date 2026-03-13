@@ -171,7 +171,7 @@
                         <TextView
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:text="Адрес:"
+                            android:text="@string/instance_address"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -197,7 +197,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Описание:"
+                            android:text="@string/group_description"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp" />
@@ -326,7 +326,7 @@
                             android:id="@+id/btn_join_leave"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Вступить"
+                            android:text="@string/group_join"
                             style="@style/Widget.Material3.Button" />
 
                     </LinearLayout>
@@ -387,7 +387,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="участников"
+                            android:text="@string/profile_subs"
                             android:textSize="12sp"
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -424,7 +424,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="фото"
+                                android:text="@string/profile_photos"
                                 android:textSize="12sp"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -460,7 +460,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="видео"
+                                android:text="@string/profile_videos"
                                 android:textSize="12sp"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -508,7 +508,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="аудио"
+                                android:text="@string/profile_audios"
                                 android:textSize="12sp"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -545,7 +545,7 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Создать пост"
+                android:text="@string/post_create_title"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="12sp"
                 android:visibility="gone"

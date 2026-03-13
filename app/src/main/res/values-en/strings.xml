@@ -131,8 +131,8 @@
     <!-- Comments -->
     <string name="comments_title">Comments</string>
     <string name="comments_write">Write a comment...</string>
-    <string name="comments_loading_error">Error loading comments: %s</string>
-    <string name="comments_send_error">Error sending comment: %s</string>
+    <string name="comments_loading_error">"Error loading comments: "</string>
+    <string name="comments_send_error">"Error sending comment: "</string>
     <string name="comments_add_error">Enter comment text or select an image</string>
     <string name="comments_cannot_load">Cannot load comments</string>
     <string name="comments_updated">Comments updated</string>
@@ -141,19 +141,19 @@
     <string name="comments_post_not_found">Error: post not found</string>
 
     <!-- News -->
-    <string name="news_loading_error">Error loading news: %s</string>
+    <string name="news_loading_error">"Error loading news: "</string>
     <string name="news_refresh_error">Could not load new posts</string>
-    <string name="news_public_loading_error">Error loading public posts: %s</string>
+    <string name="news_public_loading_error">"Error loading public posts: "</string>
     <string name="news_select_type">Select news type</string>
     <string name="news_create_post">Create post</string>
 
     <!-- Messages -->
     <string name="messages_title">Messages</string>
-    <string name="messages_loading_error">Error loading dialogues: %s</string>
+    <string name="messages_loading_error">"Error loading dialogues: "</string>
     <string name="chat_title">Chat</string>
     <string name="chat_message_hint">Enter message...</string>
     <string name="chat_send">Send</string>
-    <string name="chat_loading_error">Error loading messages: %s</string>
+    <string name="chat_loading_error">"Error loading messages: "</string>
     <string name="chat_send_error">Error sending: %s</string>
     <string name="message_incoming">Incoming message</string>
     <string name="message_outgoing">Outgoing message</string>
@@ -187,14 +187,14 @@
     <string name="group_members">%d members</string>
     <string name="group_description">Group description</string>
     <string name="group_members_search">Search members</string>
-    <string name="group_members_loading_error">Error loading members: %s</string>
+    <string name="group_members_loading_error">"Error loading members: "</string>
     <string name="group_members_not_found">No members found</string>
     <string name="group_members2">"Followers "</string>
     <string name="group_members_none">There are no followers in the group yet</string>
     <string name="group_leave">Leave</string>
     <string name="group_joined">You joined the group</string>
     <string name="group_left">You left the group</string>
-    <string name="group_load_error">Error loading group: %s</string>
+    <string name="group_load_error">"Error loading group: "</string>
 
     <!-- Photos -->
     <string name="photos_title">Photos</string>
@@ -217,7 +217,7 @@
     <string name="audio_playlist">Playlist</string>
     <string name="audio_track_name">Title</string>
     <string name="audio_no_tracks">You have no audio tracks yet</string>
-    <string name="audio_search_error">Search error: %s</string>
+    <string name="audio_search_error">"Search error: "</string>
     <string name="audio_nothing_found">Nothing found</string>
     <string name="audio_removed">Removed from audio</string>
     <string name="audio_loading_error">"Loading error: "</string>
@@ -266,7 +266,6 @@
     <string name="settings_logout_message">Are you sure you want to sign out?</string>
     <string name="settings_logout_success">You have signed out</string>
     <string name="settings_app_version">About app</string>
-    <string name="settings_app_version_value">1.0.0</string>
     <string name="settings_instance">About instance</string>
     <string name="settings_version_unknown">Unknown</string>
 
@@ -277,9 +276,9 @@
     <string name="notification_settings_likes_desc">Like notifications</string>
     <string name="notification_settings_comments">Comments</string>
     <string name="notification_settings_comments_desc">Comment notifications</string>
-    <string name="notification_enabled">Message notifications: %s</string>
-    <string name="notification_likes_enabled">Like notifications: %s</string>
-    <string name="notification_comments_enabled">Comment notifications: %s</string>
+    <string name="notification_enabled">"Message notifications: "</string>
+    <string name="notification_likes_enabled">"Like notifications: "</string>
+    <string name="notification_comments_enabled">"Comment notifications: "</string>
     <string name="notification_on">on</string>
     <string name="notification_off">off</string>
 
@@ -318,7 +317,7 @@
     <string name="account_manager_title">Account management</string>
     <string name="account_manager_add">Add account</string>
     <string name="account_delete_confirm">Delete account?</string>
-    <string name="account_delete_message2">will be deleted from the application.\n\nThis action cannot be undone.</string>
+    <string name="account_delete_message1">%1$s (%2$s) will be deleted from the application.\n\nThis action cannot be undone.</string>
     <string name="account_switched">Switched to %s</string>
     <string name="account_encryption_error">Encryption error. Try reinstalling the app.</string>
 
@@ -346,8 +345,8 @@
     <string name="about_instance_stats">STATISTICS</string>
     <string name="about_instance_users">USERS</string>
     <string name="about_instance_error">"Error in data processing: "</string>
-    <string name="error_loading_profile">Error loading profile: %s</string>
-    <string name="error_loading">Error: %s</string>
+    <string name="error_loading_profile">Error loading profile</string>
+    <string name="error_loading">"Error: "</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_network">Network error</string>
     <string name="error_unknown">Unknown error</string>
@@ -370,7 +369,7 @@
     <string name="profile_info_desc">Detailed information</string>
     <string name="profile_status">Status</string>
     <string name="profile_create_post">Create post</string>
-    <string name="profile_posts_loading_error">Error loading posts: %s</string>
+    <string name="profile_posts_loading_error">"Error loading posts: "</string>
     <string name="profile_posts_refresh_error">Could not load new posts</string>
 
     <!-- Links -->
@@ -429,7 +428,6 @@
     <string name="connection_insecure_list3">Man-in-the-middle attack is possible</string>
     <string name="ssl_error_title">⚠️ Security certificate error</string>
     <string name="ssl_error_desc">Could not verify the authenticity of the server. This may mean:</string>
-    <string name="account_delete_message1">"The account "</string>
     <string name="choose_image">Choose Image</string>
     <string name="toolbar_subsfeed">My news</string>
     <string name="closed">Closed</string>
@@ -479,5 +477,10 @@
     <string name="language_translator_ru">Nika Falaleeva (nikanikoo)</string>
     <string name="language_translator_en">Nika Falaleeva (nikanikoo)</string>
     <string name="language_ukrainian">Ukrainian</string>
+    <string name="about_app_kk_latin">🇰🇿 Kazakh language (Latin)</string>
+    <string name="about_app_kk_latin_author">In development</string>
+    <string name="language_kazakh_cyrillic">Казахська (Кирилиця)</string>
+    <string name="language_kazakh_latin">Казахська (Латиниця)</string>
+    <string name="about_app_kk_cyrillic">🇰🇿 Kazakh language (Cyrillic)</string>
 
 </resources>

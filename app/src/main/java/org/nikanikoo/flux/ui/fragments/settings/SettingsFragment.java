@@ -247,13 +247,13 @@ public class SettingsFragment extends Fragment {
             // Clear cache and reset API instance
             ProfileManager.getInstance(requireContext()).clearCache();
             MessageNotificationManager.getInstance(requireContext()).clearCache();
-            
+
             // Reset OpenVKApi to use new token
             org.nikanikoo.flux.data.managers.api.OpenVKApi.resetInstance();
-            
+
             android.util.Log.d("SettingsFragment", "Switched to account: " + nextAccount.fullName + " (id: " + nextAccount.id + ")");
-            
-            Toast.makeText(requireContext(), getString(R.string.account_switched) + nextAccount.fullName, Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(requireContext(), getString(R.string.account_switched, nextAccount.fullName), Toast.LENGTH_SHORT).show();
             
             // Restart MainActivity
             Intent intent = new Intent(requireActivity(), MainActivity.class);
