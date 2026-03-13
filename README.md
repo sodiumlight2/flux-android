@@ -12,6 +12,8 @@
 
 ---
 
+[RU](https://github.com/nikanikoo/flux-android/blob/main/README_RU.md)
+
 **OpenVK Flux** is mobile client for devices running Android 5.0 and higher.
 
 > [!WARNING]
