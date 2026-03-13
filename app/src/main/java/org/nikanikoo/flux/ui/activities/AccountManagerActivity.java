@@ -89,6 +89,11 @@ public class AccountManagerActivity extends BaseSettingsActivity {
                         return;
                     }
 
+                    org.nikanikoo.flux.data.managers.ProfileManager.getInstance(this).clearCache();
+                    org.nikanikoo.flux.data.managers.api.OpenVKApi.resetInstance();
+
+                    android.util.Log.d("AccountManagerActivity", "Switched to account: " + account.fullName);
+
                     Toast.makeText(this, getString(R.string.account_switched) + account.fullName, Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(this, MainActivity.class);
