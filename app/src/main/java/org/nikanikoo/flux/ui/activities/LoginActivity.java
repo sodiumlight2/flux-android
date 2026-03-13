@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private AutoCompleteTextView spinnerInstance;
     private TextInputLayout layoutCustomInstance;
+    private TextInputLayout inputPassword;
     private TextInputEditText editCustomInstance;
     private TextInputEditText editLogin;
     private TextInputEditText editPassword;
@@ -92,8 +93,12 @@ public class LoginActivity extends AppCompatActivity {
         editLogin = findViewById(R.id.edit_login);
         editPassword = findViewById(R.id.edit_password);
         btnLogin = findViewById(R.id.btn_login);
+        inputPassword = findViewById(R.id.input_password);
 
         setupInstanceSpinner();
+
+        editPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        inputPassword.setPasswordVisibilityToggleEnabled(true);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
