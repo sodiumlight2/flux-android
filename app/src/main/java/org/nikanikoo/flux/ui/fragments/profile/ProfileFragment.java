@@ -142,12 +142,27 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.attachView(this);
-        
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.profile_title));
+        setToolbarTitleSafe(getString(R.string.profile_title));
+        presenter.loadProfile();
+    }
+
+    private void setToolbarTitleSafe(String title) {
+        if (getActivity() == null) {
+            return;
         }
         
-        presenter.loadProfile();
+        try {
+            java.lang.reflect.Method method = getActivity().getClass().getMethod("setToolbarTitle", String.class);
+            method.invoke(getActivity(), title);
+        } catch (Exception e) {
+            if (getActivity() instanceof androidx.appcompat.app.AppCompatActivity) {
+                androidx.appcompat.app.AppCompatActivity appCompatActivity = 
+                    (androidx.appcompat.app.AppCompatActivity) getActivity();
+                if (appCompatActivity.getSupportActionBar() != null) {
+                    appCompatActivity.getSupportActionBar().setTitle(title);
+                }
+            }
+        }
     }
 
     @Override
@@ -238,13 +253,11 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
     @Override
     public void displayProfile(UserProfile profile) {
         // Обновление заголовка
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setToolbarTitle(profile.getFullName());
-        }
-        
+        setToolbarTitleSafe(profile.getFullName());
+
         // Обновление информации через Controller
         infoController.updateProfileInfo(profile);
-        
+
         // Загружаем посты после загрузки профиля
         loadPosts(true);
     }

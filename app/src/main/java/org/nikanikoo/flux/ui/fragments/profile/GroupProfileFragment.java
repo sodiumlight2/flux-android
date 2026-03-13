@@ -181,7 +181,26 @@ public class GroupProfileFragment extends BaseProfileFragment {
             });
         }
     }
-    
+
+    private void setToolbarTitleSafe(String title) {
+        if (getActivity() == null) {
+            return;
+        }
+        
+        try {
+            java.lang.reflect.Method method = getActivity().getClass().getMethod("setToolbarTitle", String.class);
+            method.invoke(getActivity(), title);
+        } catch (Exception e) {
+            if (getActivity() instanceof androidx.appcompat.app.AppCompatActivity) {
+                androidx.appcompat.app.AppCompatActivity appCompatActivity = 
+                    (androidx.appcompat.app.AppCompatActivity) getActivity();
+                if (appCompatActivity.getSupportActionBar() != null) {
+                    appCompatActivity.getSupportActionBar().setTitle(title);
+                }
+            }
+        }
+    }
+
     @Override
     protected void loadData() {
         loadGroupData();
@@ -250,11 +269,8 @@ public class GroupProfileFragment extends BaseProfileFragment {
 
     private void updateUI(Group group) {
         hideLoadingState();
-        
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setToolbarTitle(group.getName());
-        }
-        
+        setToolbarTitleSafe(group.getName());
+
         if (groupNameLarge != null) {
             groupNameLarge.setText(group.getName());
         }

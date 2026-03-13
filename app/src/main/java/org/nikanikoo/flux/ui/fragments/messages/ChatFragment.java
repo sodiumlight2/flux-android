@@ -23,6 +23,7 @@ import org.nikanikoo.flux.ui.adapters.messages.MessagesAdapter;
 import org.nikanikoo.flux.data.managers.MessagesManager;
 import org.nikanikoo.flux.data.models.Conversation;
 import org.nikanikoo.flux.R;
+import org.nikanikoo.flux.ui.activities.ChatActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
@@ -422,22 +423,31 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
     
     @Override
     public void onAvatarClick(int userId, String userName) {
-        if (getActivity() != null) {
-            if (userId > 0) {
-                // Пользователь
-                ProfileFragment profileFragment = ProfileFragment.newInstanceWithId(userId, userName);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, profileFragment)
-                        .addToBackStack("profile_" + userId)
-                        .commit();
-            } else if (userId < 0) {
-                // Группа (отрицательный ID)
-                GroupProfileFragment groupProfileFragment = GroupProfileFragment.newInstance(-userId, userName);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, groupProfileFragment)
-                        .addToBackStack("group_" + (-userId))
-                        .commit();
-            }
+        if (getActivity() == null) {
+            return;
+        }
+
+        int containerId;
+        if (getActivity() instanceof ChatActivity) {
+            containerId = R.id.chat_container;
+        } else {
+            containerId = R.id.fragment_container;
+        }
+
+        if (userId > 0) {
+            // Пользователь
+            ProfileFragment profileFragment = ProfileFragment.newInstanceWithId(userId, userName);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(containerId, profileFragment)
+                    .addToBackStack("profile_" + userId)
+                    .commit();
+        } else if (userId < 0) {
+            // Группа (отрицательный ID)
+            GroupProfileFragment groupProfileFragment = GroupProfileFragment.newInstance(-userId, userName);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(containerId, groupProfileFragment)
+                    .addToBackStack("group_" + (-userId))
+                    .commit();
         }
     }
     
