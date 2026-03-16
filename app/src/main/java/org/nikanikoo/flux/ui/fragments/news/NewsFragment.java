@@ -19,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.custom.EndlessScrollListener;
-import org.nikanikoo.flux.ui.custom.PaginationHelper;
+import org.nikanikoo.flux.ui.custom.FeedPaginationHelper;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
 import org.nikanikoo.flux.Constants;
 import org.nikanikoo.flux.data.managers.api.OpenVKApi;
@@ -53,7 +53,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     private ProgressBar progressLoading;
     private LinearLayoutManager layoutManager;
     private EndlessScrollListener scrollListener;
-    private PaginationHelper paginationHelper;
+    private FeedPaginationHelper paginationHelper;
     
     // Тип новостей: true = подписки, false = все новости
     private boolean isSubscriptionMode = true;
@@ -143,11 +143,11 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
 
     private void setupEndlessScroll() {
-        paginationHelper = new PaginationHelper(Constants.Api.POSTS_PER_PAGE);
+        paginationHelper = new FeedPaginationHelper(Constants.Api.POSTS_PER_PAGE);
         scrollListener = new EndlessScrollListener(layoutManager, paginationHelper) {
             @Override
             public void onLoadMore(int offset, int totalItemsCount, RecyclerView view) {
-                Logger.d(TAG, " Loading more posts, offset: " + offset);
+                Logger.d(TAG, " Loading more posts, next_from: " + paginationHelper.getNextFromCursor());
                 loadPosts(false);
             }
         };
@@ -155,40 +155,41 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
 
     private void loadPosts(boolean isRefresh) {
-        Logger.d(TAG, " loadPosts called, isRefresh=" + isRefresh + 
-            ", canLoadMore=" + paginationHelper.canLoadMore() + 
-            ", currentOffset=" + paginationHelper.getCurrentOffset());
-        
+        Logger.d(TAG, " loadPosts called, isRefresh=" + isRefresh +
+            ", canLoadMore=" + paginationHelper.canLoadMore() +
+            ", nextFrom=" + paginationHelper.getNextFromCursor());
+
         if (!paginationHelper.canLoadMore() && !isRefresh) {
             Logger.d(TAG, " Cannot load more, skipping request");
             return;
         }
-        
-        int offset = isRefresh ? 0 : paginationHelper.getCurrentOffset();
-        
+
+        String nextFrom = isRefresh ? null : paginationHelper.getNextFromCursor();
+
         // Показываем прогрессбар при первой загрузке или обновлении
         if (isRefresh && posts.isEmpty()) {
             progressLoading.setVisibility(View.VISIBLE);
             recyclerPosts.setVisibility(View.GONE);
         }
-        
+
         // Показываем индикатор загрузки только при загрузке новых постов
         if (!isRefresh && postAdapter.getPostsCount() > 0) {
             postAdapter.showLoading();
         }
-        
-        Logger.d(TAG, " Loading posts with offset: " + offset + ", isRefresh: " + isRefresh + ", mode: " + (isSubscriptionMode ? "subscriptions" : "global"));
-        
+
+        Logger.d(TAG, " Loading posts with next_from: " + nextFrom + ", isRefresh: " + isRefresh + 
+            ", mode: " + (isSubscriptionMode ? "subscriptions" : "global"));
+
         // Вызываем startLoading ПОСЛЕ проверки canLoadMore
         paginationHelper.startLoading();
-        
+
         // Выбираем метод загрузки в зависимости от режима
         if (isSubscriptionMode) {
-            postsManager.loadSubscriptionNewsFeed(offset, new PostsManager.PostsCallback() {
+            postsManager.loadSubscriptionNewsFeed(nextFrom, new PostsManager.FeedPostsCallback() {
                 @Override
-                public void onSuccess(List<Post> loadedPosts) {
-                    Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " subscription posts");
-                    handlePostsLoaded(loadedPosts, isRefresh);
+                public void onSuccess(List<Post> loadedPosts, String nextFrom) {
+                    Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " subscription posts, next_from: " + nextFrom);
+                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh);
                 }
 
                 @Override
@@ -198,11 +199,11 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                 }
             });
         } else {
-            postsManager.loadGlobalNewsFeed(offset, new PostsManager.PostsCallback() {
+            postsManager.loadGlobalNewsFeed(nextFrom, new PostsManager.FeedPostsCallback() {
                 @Override
-                public void onSuccess(List<Post> loadedPosts) {
-                    Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " global posts");
-                    handlePostsLoaded(loadedPosts, isRefresh);
+                public void onSuccess(List<Post> loadedPosts, String nextFrom) {
+                    Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " global posts, next_from: " + nextFrom);
+                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh);
                 }
 
                 @Override
@@ -214,15 +215,15 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         }
     }
     
-    private void handlePostsLoaded(List<Post> loadedPosts, boolean isRefresh) {
+    private void handlePostsLoaded(List<Post> loadedPosts, String nextFrom, boolean isRefresh) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 swipeRefresh.setRefreshing(false);
-                
+
                 // Скрываем прогрессбар и показываем список
                 progressLoading.setVisibility(View.GONE);
                 recyclerPosts.setVisibility(View.VISIBLE);
-                
+
                 int postsBeforeAdd = postAdapter.getPostsCount();
 
                 if (isRefresh) {
@@ -242,7 +243,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
                     actuallyAdded + " actually added after duplicate filtering");
 
                 // Уведомляем PaginationHelper о РЕАЛЬНОМ количестве добавленных постов
-                paginationHelper.onDataLoaded(actuallyAdded);
+                paginationHelper.onDataLoaded(actuallyAdded, nextFrom);
 
                 if (loadedPosts.isEmpty() && postAdapter.getPostsCount() == 0) {
                     Logger.d(TAG, " No posts received, trying alternative method...");

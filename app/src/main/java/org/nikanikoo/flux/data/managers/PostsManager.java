@@ -32,6 +32,11 @@ public class PostsManager extends BaseManager<PostsManager> {
         void onSuccess(List<Post> posts);
         void onError(String error);
     }
+
+    public interface FeedPostsCallback {
+        void onSuccess(List<Post> posts, String nextFrom);
+        void onError(String error);
+    }
     
     public interface PostCallback {
         void onSuccess(Post post);
@@ -224,9 +229,62 @@ public class PostsManager extends BaseManager<PostsManager> {
     public void loadNewsFeed(PostsCallback callback) {
         loadNewsFeed(0, callback);
     }
-    
+
     public void loadNewsFeed(int offset, PostsCallback callback) {
         loadGlobalNewsFeed(offset, callback);
+    }
+
+    public void loadGlobalNewsFeed(String nextFrom, FeedPostsCallback callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("count", String.valueOf(Constants.Api.POSTS_PER_PAGE));
+        params.put("extended", "1");
+        params.put("fields", "verified");
+
+        if (nextFrom != null && !nextFrom.isEmpty()) {
+            params.put("start_from", nextFrom);
+        }
+
+        Logger.d(TAG, "Загрузка глобальной новостной ленты с next_from: " + nextFrom);
+
+        api.callMethod("newsfeed.getGlobal", params, new OpenVKApi.ApiCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                AsyncTaskHelper.executeAsync(() -> {
+                    Logger.apiResponse(TAG, response.toString());
+
+                    JSONObject responseObj = response.getJSONObject("response");
+                    JSONArray items = responseObj.getJSONArray("items");
+                    JSONArray profiles = responseObj.optJSONArray("profiles");
+                    JSONArray groups = responseObj.optJSONArray("groups");
+                    
+                    String newNextFrom = responseObj.optString("next_from", null);
+
+                    Logger.d(TAG, "Items кол-во: " + items.length() + ", next_from: " + newNextFrom);
+
+                    List<Post> posts = org.nikanikoo.flux.utils.PostParser.parsePostsFromNewsfeed(items, profiles, groups);
+                    Logger.d(TAG, "Кол-во постов: " + posts.size());
+
+                    return new FeedPostsResult(posts, newNextFrom);
+                }, new AsyncTaskHelper.AsyncCallback<FeedPostsResult>() {
+                    @Override
+                    public void onSuccess(FeedPostsResult result) {
+                        callback.onSuccess(result.posts, result.nextFrom);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Logger.e(TAG, "Ошибка парсинга новостей: " + error);
+                        callback.onError("Не удалось загрузить новости");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Logger.e(TAG, "Ошибка глобал. ленты: " + error);
+                callback.onError("Не удалось загрузить новости");
+            }
+        });
     }
 
     public void loadGlobalNewsFeed(int offset, PostsCallback callback) {
@@ -282,6 +340,62 @@ public class PostsManager extends BaseManager<PostsManager> {
     }
     
     public void loadSubscriptionNewsFeed(int offset, PostsCallback callback) {
+        loadSubscriptionNewsFeedLegacy(offset, callback);
+    }
+
+    public void loadSubscriptionNewsFeed(String nextFrom, FeedPostsCallback callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("count", String.valueOf(Constants.Api.POSTS_PER_PAGE));
+        params.put("extended", "1");
+        params.put("fields", "verified");
+
+        if (nextFrom != null && !nextFrom.isEmpty()) {
+            params.put("start_from", nextFrom);
+        }
+
+        api.callMethod("newsfeed.get", params, new OpenVKApi.ApiCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                // Parse posts in background thread to avoid UI blocking
+                AsyncTaskHelper.executeAsync(() -> {
+                    Logger.apiResponse(TAG, response.toString());
+
+                    JSONObject responseObj = response.getJSONObject("response");
+                    JSONArray items = responseObj.getJSONArray("items");
+                    JSONArray profiles = responseObj.optJSONArray("profiles");
+                    JSONArray groups = responseObj.optJSONArray("groups");
+                    
+                    String newNextFrom = responseObj.optString("next_from", null);
+
+                    Logger.d(TAG, "Subscription items count: " + items.length() + ", next_from: " + newNextFrom);
+
+                    List<Post> posts = org.nikanikoo.flux.utils.PostParser.parsePostsFromNewsfeed(items, profiles, groups);
+                    Logger.d(TAG, "Parsed subscription posts count: " + posts.size());
+
+                    return new FeedPostsResult(posts, newNextFrom);
+                }, new AsyncTaskHelper.AsyncCallback<FeedPostsResult>() {
+                    @Override
+                    public void onSuccess(FeedPostsResult result) {
+                        callback.onSuccess(result.posts, result.nextFrom);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Logger.e(TAG, "Subscription parse error: " + error);
+                        callback.onError("Не удалось загрузить новости подписок");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Logger.e(TAG, "Subscription newsfeed error: " + error);
+                callback.onError("Не удалось загрузить новости подписок");
+            }
+        });
+    }
+
+    private void loadSubscriptionNewsFeedLegacy(int offset, PostsCallback callback) {
         Map<String, String> params = new HashMap<>();
         params.put("count", String.valueOf(Constants.Api.POSTS_PER_PAGE));
         params.put("extended", "1");
@@ -294,27 +408,26 @@ public class PostsManager extends BaseManager<PostsManager> {
         api.callMethod("newsfeed.get", params, new OpenVKApi.ApiCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                // Parse posts in background thread to avoid UI blocking
                 AsyncTaskHelper.executeAsync(() -> {
                     Logger.apiResponse(TAG, response.toString());
-                    
+
                     JSONObject responseObj = response.getJSONObject("response");
                     JSONArray items = responseObj.getJSONArray("items");
                     JSONArray profiles = responseObj.optJSONArray("profiles");
                     JSONArray groups = responseObj.optJSONArray("groups");
 
                     Logger.d(TAG, "Subscription items count: " + items.length());
-                    
+
                     List<Post> posts = org.nikanikoo.flux.utils.PostParser.parsePostsFromNewsfeed(items, profiles, groups);
                     Logger.d(TAG, "Parsed subscription posts count: " + posts.size());
-                    
+
                     return posts;
                 }, new AsyncTaskHelper.AsyncCallback<List<Post>>() {
                     @Override
                     public void onSuccess(List<Post> posts) {
                         callback.onSuccess(posts);
                     }
-                    
+
                     @Override
                     public void onError(String error) {
                         Logger.e(TAG, "Subscription parse error: " + error);
@@ -749,5 +862,18 @@ public class PostsManager extends BaseManager<PostsManager> {
                 callback.onError("Не удалось загрузить пост");
             }
         });
+    }
+
+    /**
+     * Внутренний класс для хранения результатов загрузки ленты с next_from
+     */
+    private static class FeedPostsResult {
+        final List<Post> posts;
+        final String nextFrom;
+
+        FeedPostsResult(List<Post> posts, String nextFrom) {
+            this.posts = posts;
+            this.nextFrom = nextFrom;
+        }
     }
 }
