@@ -158,18 +158,12 @@ public class ImageUtils {
         }
 
         try {
-            String[] priorities = {"z", "y", "x"};
-            
-            for (String priority : priorities) {
-                for (int i = 0; i < sizes.length(); i++) {
-                    JSONObject size = sizes.getJSONObject(i);
-                    String type = size.optString("type", "");
-                    
-                    if (priority.equals(type)) {
-                        String url = size.optString("url", "");
-                        if (!url.isEmpty()) {
-                            return url;
-                        }
+            for (int i = 0; i < sizes.length(); i++) {
+                JSONObject size = sizes.getJSONObject(i);
+                if ("z".equals(size.optString("type", ""))) {
+                    String url = size.optString("url", "");
+                    if (!url.isEmpty()) {
+                        return url;
                     }
                 }
             }
