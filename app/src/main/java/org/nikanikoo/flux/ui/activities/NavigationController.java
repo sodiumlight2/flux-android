@@ -176,8 +176,11 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         
         if (drawerUsername != null) {
             String screenName = profile.getScreenName();
-            drawerUsername.setText(screenName != null && !screenName.isEmpty() 
-                    ? "@" + screenName : "");
+            if (screenName != null && !screenName.isEmpty()) {
+                drawerUsername.setText("@" + screenName);
+            } else {
+                drawerUsername.setText("@id" + profile.getId());
+            }
         }
         
         if (drawerVerifiedBadge != null) {
