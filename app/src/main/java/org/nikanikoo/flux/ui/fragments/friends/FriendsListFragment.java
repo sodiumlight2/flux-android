@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -29,6 +28,7 @@ import org.nikanikoo.flux.ui.adapters.friends.FriendsAdapter;
 import org.nikanikoo.flux.data.managers.FriendsManager;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.activities.MainActivity;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.ui.fragments.messages.ChatFragment;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFriendClickListener, FriendRequestsAdapter.OnRequestActionListener {
+public class FriendsListFragment extends BaseFragment implements FriendsAdapter.OnFriendClickListener, FriendRequestsAdapter.OnRequestActionListener {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
@@ -73,8 +73,16 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
         setupFilters();
         setupSwipeRefresh();
         setupToolbarTitle();
+        setupErrorView(view, R.id.recycler_view);
+        setRetryCallback(() -> {
+            if (showRequests) {
+                loadFriendRequests();
+            } else {
+                loadFriends();
+            }
+        });
         loadFriends();
-        
+
         return view;
     }
     
@@ -184,6 +192,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
             public void onSuccess(List<Friend> friends) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        hideError();
                         hideLoading();
                         allFriends.clear();
                         allFriends.addAll(friends);
@@ -199,7 +208,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         hideLoading();
-                        Toast.makeText(getContext(), "Ошибка загрузки друзей: " + error, Toast.LENGTH_SHORT).show();
+                        showErrorAuto(error);
                         updateEmptyState();
                     });
                 }
@@ -209,12 +218,13 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
 
     private void loadFriendRequests() {
         showLoading();
-        
+
         friendsManager.getFriendRequests(new FriendsManager.FriendRequestsCallback() {
             @Override
             public void onSuccess(List<FriendRequest> requests) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        hideError();
                         hideLoading();
                         friendRequests.clear();
                         friendRequests.addAll(requests);
@@ -229,7 +239,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnFr
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         hideLoading();
-                        Toast.makeText(getContext(), "Ошибка загрузки заявок: " + error, Toast.LENGTH_SHORT).show();
+                        showErrorAuto(error);
                         updateEmptyState();
                     });
                 }

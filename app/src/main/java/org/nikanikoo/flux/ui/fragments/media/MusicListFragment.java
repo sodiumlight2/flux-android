@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,11 +25,12 @@ import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.ui.adapters.audio.AudioAdapter;
 import org.nikanikoo.flux.ui.custom.EndlessScrollListener;
 import org.nikanikoo.flux.ui.custom.PaginationHelper;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioClickListener {
+public class MusicListFragment extends BaseFragment implements AudioAdapter.OnAudioClickListener {
 
     private static final String TAG = "MusicListFragment";
     private static final int AUDIOS_PER_PAGE = 20;
@@ -64,8 +64,16 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
         setupRecyclerView();
         setupSwipeRefresh();
         setupEndlessScroll();
+        setupErrorView(view, R.id.swipe_refresh);
+        setRetryCallback(() -> {
+            if (isSearchMode) {
+                searchAudios(currentSearchQuery, true);
+            } else {
+                loadAudios(true);
+            }
+        });
         loadUserProfile();
-        
+
         return view;
     }
 
@@ -118,7 +126,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
 
             @Override
             public void onError(String error) {
-                Toast.makeText(requireContext(), getString(R.string.error_loading_profile) + error, Toast.LENGTH_SHORT).show();
+                showErrorAuto(error);
             }
         });
     }
@@ -140,6 +148,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.onDataLoaded(newAudios.size());
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
+                hideError();
 
                 if (refresh) {
                     audios.clear();
@@ -157,7 +166,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(requireContext(), getString(R.string.audio_loading_error) + error, Toast.LENGTH_SHORT).show();
+                showErrorAuto(error);
             }
         });
     }
@@ -189,6 +198,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.onDataLoaded(newAudios.size());
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
+                hideError();
 
                 if (refresh) {
                     audios.clear();
@@ -206,7 +216,7 @@ public class MusicListFragment extends Fragment implements AudioAdapter.OnAudioC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(requireContext(), getString(R.string.audio_search_error) + error, Toast.LENGTH_SHORT).show();
+                showErrorAuto(error);
             }
         });
     }

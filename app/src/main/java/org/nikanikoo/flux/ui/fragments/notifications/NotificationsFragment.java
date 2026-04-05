@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -19,6 +18,7 @@ import org.nikanikoo.flux.data.managers.NotificationsManager;
 import org.nikanikoo.flux.data.models.Post;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.activities.MainActivity;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
@@ -26,7 +26,7 @@ import org.nikanikoo.flux.utils.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsFragment extends Fragment implements NotificationsAdapter.OnNotificationClickListener {
+public class NotificationsFragment extends BaseFragment implements NotificationsAdapter.OnNotificationClickListener {
     
     private static final String TAG = "NotificationsFragment";
     private static final int PAGE_SIZE = 10; // Загружаем по 10 уведомлений
@@ -59,9 +59,11 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
         setupRecyclerView();
         setupFab();
         setupToolbarTitle();
+        setupErrorView(view, R.id.swipe_refresh);
+        setRetryCallback(() -> loadNotifications());
 
         loadNotifications();
-        
+
         return view;
     }
     
@@ -238,9 +240,9 @@ public class NotificationsFragment extends Fragment implements NotificationsAdap
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), getString(R.string.notifications_loading_error) + error, Toast.LENGTH_SHORT).show();
+                        showErrorAuto(error);
                         hasMoreData = false; // Останавливаем дальнейшие попытки загрузки
-                        
+
                         isLoading = false;
                         swipeRefreshLayout.setRefreshing(false);
                     });

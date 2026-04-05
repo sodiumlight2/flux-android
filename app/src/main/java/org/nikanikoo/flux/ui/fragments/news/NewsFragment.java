@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.custom.EndlessScrollListener;
 import org.nikanikoo.flux.ui.custom.FeedPaginationHelper;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewsFragment extends Fragment implements PostAdapter.OnPostClickListener {
+public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClickListener {
     private static final String TAG = "NewsFragment";
 
     private RecyclerView recyclerPosts;
@@ -68,14 +69,21 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         postsManager = PostsManager.getInstance(requireContext());
         profileManager = ProfileManager.getInstance(requireContext());
         posts = new ArrayList<>();
-        
+
+        // Инициализация ErrorViewHandler
+        setupErrorView(view, R.id.swipe_refresh_news);
+        setRetryCallback(() -> {
+            scrollListener.resetState();
+            loadPosts(true);
+        });
+
         initViews(view);
         setupRecyclerView();
         setupSwipeRefresh();
         setupEndlessScroll();
         setupToolbarTitle();
         loadPosts(true);
-        
+
         return view;
     }
     
@@ -219,6 +227,7 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 swipeRefresh.setRefreshing(false);
+                hideError();
 
                 // Скрываем прогрессбар и показываем список
                 progressLoading.setVisibility(View.GONE);
@@ -258,19 +267,16 @@ public class NewsFragment extends Fragment implements PostAdapter.OnPostClickLis
             getActivity().runOnUiThread(() -> {
                 paginationHelper.stopLoading();
                 swipeRefresh.setRefreshing(false);
-                postAdapter.hideLoading(); // Скрываем индикатор при ошибке
-                
-                // Скрываем прогрессбар и показываем список
+                postAdapter.hideLoading();
+
                 progressLoading.setVisibility(View.GONE);
-                recyclerPosts.setVisibility(View.VISIBLE);
-                
+
                 if (posts.isEmpty()) {
-                    Toast.makeText(getContext(), getString(R.string.news_loading_error) + error, Toast.LENGTH_SHORT).show();
+                    showErrorAuto(error);
                     // Пробуем альтернативный метод только если нет постов
                     loadPublicPosts(isRefresh);
                 } else {
-                    // Если уже есть посты, просто показываем ошибку
-                    Toast.makeText(getContext(), R.string.news_refresh_error, Toast.LENGTH_SHORT).show();
+                    showErrorAuto(error);
                 }
             });
         }

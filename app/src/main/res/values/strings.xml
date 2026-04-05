@@ -497,4 +497,18 @@
     <string name="language_translator_kk_latin" translatable="false">Таңғай (tangai)</string>
     <string name="language_kazakh_latin">Казахский (Латиница)</string>
 
+    <!-- Error State View -->
+    <string name="error_occurred">Произошла ошибка</string>
+    <string name="error_retry">Повторить</string>
+    <string name="error_no_internet_title">Нет подключения к интернету</string>
+    <string name="error_no_internet_message">Проверьте подключение к сети и попробуйте снова</string>
+    <string name="error_api_title">Ошибка сервера</string>
+    <string name="error_api_message">Произошла ошибка при запросе к серверу. Попробуйте позже</string>
+    <string name="error_generic_title">Что-то пошло не так</string>
+    <string name="error_generic_message">Произошла неизвестная ошибка. Попробуйте обновить</string>
+    <string name="error_timeout_title">Истекло время ожидания</string>
+    <string name="error_timeout_message">Сервер не ответил вовремя. Проверьте интернет и попробуйте снова</string>
+    <string name="error_unauthorized_title">Требуется авторизация</string>
+    <string name="error_unauthorized_message">Сессия истекла. Войдите в аккаунт заново</string>
+
 </resources>

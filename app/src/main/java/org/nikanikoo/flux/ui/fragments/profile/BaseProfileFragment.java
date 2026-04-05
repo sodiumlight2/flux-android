@@ -21,6 +21,7 @@ import org.nikanikoo.flux.data.models.Post;
 import org.nikanikoo.flux.ui.adapters.posts.PostAdapter;
 import org.nikanikoo.flux.ui.custom.EndlessScrollListener;
 import org.nikanikoo.flux.ui.custom.PaginationHelper;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.utils.Logger;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
  * Базовый класс для фрагментов профилей (пользователь и группа).
  * Содержит общую логику для работы с постами, пагинацией и RecyclerView.
  */
-public abstract class BaseProfileFragment extends Fragment implements PostAdapter.OnPostClickListener {
+public abstract class BaseProfileFragment extends BaseFragment implements PostAdapter.OnPostClickListener {
     
     private static final String TAG = "BaseProfileFragment";
     
@@ -61,17 +62,25 @@ public abstract class BaseProfileFragment extends Fragment implements PostAdapte
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         postsManager = PostsManager.getInstance(requireContext());
         likesManager = LikesManager.getInstance(requireContext());
-        
+
         // Инициализируем paginationHelper всегда
         paginationHelper = new PaginationHelper(Constants.Api.POSTS_PER_PAGE);
-        
+
         initViews(view);
+        int contentId = swipeRefresh != null ? swipeRefresh.getId() : (recyclerPosts != null ? recyclerPosts.getId() : android.R.id.content);
+        setupErrorView(view, contentId);
+        setRetryCallback(() -> {
+            paginationHelper.reset();
+            posts.clear();
+            loadPosts(true);
+        });
+
         setupSwipeRefresh();
         setupRecyclerView();
-        
+
         loadData();
     }
     
@@ -202,10 +211,11 @@ public abstract class BaseProfileFragment extends Fragment implements PostAdapte
      */
     protected void onPostsLoaded(List<Post> loadedPosts, boolean isRefresh) {
         if (getActivity() == null) return;
-        
+
         getActivity().runOnUiThread(() -> {
             hideLoading();
-            
+            hideError();
+
             if (postAdapter == null) {
                 Logger.e(TAG, "postAdapter is null, cannot update posts");
                 return;
@@ -241,17 +251,13 @@ public abstract class BaseProfileFragment extends Fragment implements PostAdapte
      */
     protected void onPostsError(String error, boolean isRefresh) {
         if (getActivity() == null) return;
-        
+
         getActivity().runOnUiThread(() -> {
             Logger.e(TAG, "Error loading posts: " + error);
             paginationHelper.stopLoading();
             hideLoading();
-            
-            if (posts.isEmpty()) {
-                Toast.makeText(getContext(), getString(R.string.profile_posts_loading_error) + error, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), getString(R.string.profile_posts_refresh_error), Toast.LENGTH_SHORT).show();
-            }
+
+            showErrorAuto(error);
         });
     }
     

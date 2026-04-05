@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.nikanikoo.flux.data.models.Conversation;
 import org.nikanikoo.flux.ui.adapters.messages.ConversationsAdapter;
@@ -13,17 +12,17 @@ import org.nikanikoo.flux.data.managers.MessagesManager;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.activities.ChatActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessagesListFragment extends Fragment implements ConversationsAdapter.OnConversationClickListener {
+public class MessagesListFragment extends BaseFragment implements ConversationsAdapter.OnConversationClickListener {
     
     private RecyclerView recyclerView;
     private ConversationsAdapter adapter;
@@ -53,7 +52,9 @@ public class MessagesListFragment extends Fragment implements ConversationsAdapt
         initViews(view);
         setupRecyclerView();
         setupToolbarTitle();
-        
+        setupErrorView(view, R.id.swipe_refresh);
+        setRetryCallback(() -> refreshConversations());
+
         isViewCreated = true;
         
         // Загружаем диалоги
@@ -116,6 +117,7 @@ public class MessagesListFragment extends Fragment implements ConversationsAdapt
             public void onSuccess(List<Conversation> loadedConversations) {
                 if (getActivity() != null && isViewCreated) {
                     getActivity().runOnUiThread(() -> {
+                        hideError();
                         conversations.clear();
                         conversations.addAll(loadedConversations);
                         if (adapter != null) {
@@ -131,7 +133,7 @@ public class MessagesListFragment extends Fragment implements ConversationsAdapt
             public void onError(String error) {
                 if (getActivity() != null && isViewCreated) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), getString(R.string.messages_loading_error) + error, Toast.LENGTH_SHORT).show();
+                        showErrorAuto(error);
                         swipeRefreshLayout.setRefreshing(false);
                     });
                 }

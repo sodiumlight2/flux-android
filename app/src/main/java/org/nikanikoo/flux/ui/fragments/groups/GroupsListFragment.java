@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -21,13 +19,14 @@ import org.nikanikoo.flux.ui.adapters.groups.GroupsAdapter;
 import org.nikanikoo.flux.data.managers.GroupsManager;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.activities.MainActivity;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class GroupsListFragment extends Fragment implements GroupsAdapter.OnGroupClickListener {
+public class GroupsListFragment extends BaseFragment implements GroupsAdapter.OnGroupClickListener {
     
     private RecyclerView recyclerView;
     private GroupsAdapter adapter;
@@ -53,8 +52,10 @@ public class GroupsListFragment extends Fragment implements GroupsAdapter.OnGrou
         setupSearch();
         setupFilters();
         setupToolbarTitle();
+        setupErrorView(view, R.id.recycler_view);
+        setRetryCallback(() -> loadGroups());
         loadGroups();
-        
+
         return view;
     }
     
@@ -131,6 +132,7 @@ public class GroupsListFragment extends Fragment implements GroupsAdapter.OnGrou
             public void onSuccess(List<Group> groups) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        hideError();
                         System.out.println("GroupsListFragment: Received " + groups.size() + " groups");
                         allGroups.clear();
                         allGroups.addAll(groups);
@@ -145,7 +147,7 @@ public class GroupsListFragment extends Fragment implements GroupsAdapter.OnGrou
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         System.err.println("GroupsListFragment: Error loading groups: " + error);
-                        Toast.makeText(getContext(), "Ошибка загрузки групп: " + error, Toast.LENGTH_SHORT).show();
+                        showErrorAuto(error);
                         swipeRefreshLayout.setRefreshing(false);
                         updateEmptyState();
                     });

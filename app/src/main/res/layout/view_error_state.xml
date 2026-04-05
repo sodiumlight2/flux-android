@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/error_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <ImageView
+        android:id="@+id/error_image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:contentDescription="@string/error_occurred"
+        android:src="@drawable/veselcraft" />
+
+    <TextView
+        android:id="@+id/error_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        tools:text="Упс, сервер упал..." />
+
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:maxLines="5"
+        android:ellipsize="end"
+        tools:text="Произошла ошибка со стороны сервера инстанции. Повторите попытку позже." />
+
+    <Button
+        android:id="@+id/error_retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:minWidth="160dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/error_retry"
+        android:textSize="14sp"
+        style="@style/Widget.Material3.Button" />
+</LinearLayout>

@@ -8,11 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,12 +24,13 @@ import org.nikanikoo.flux.ui.activities.VideoPlayerActivity;
 import org.nikanikoo.flux.ui.adapters.video.VideoAdapter;
 import org.nikanikoo.flux.ui.custom.EndlessScrollListener;
 import org.nikanikoo.flux.ui.custom.PaginationHelper;
+import org.nikanikoo.flux.ui.fragments.BaseFragment;
 import org.nikanikoo.flux.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoClickListener {
+public class VideoListFragment extends BaseFragment implements VideoAdapter.OnVideoClickListener {
 
     private static final String TAG = "VideoListFragment";
     private static final int VIDEOS_PER_PAGE = 20;
@@ -65,8 +64,16 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
         setupRecyclerView();
         setupSwipeRefresh();
         setupEndlessScroll();
+        setupErrorView(view, R.id.swipe_refresh);
+        setRetryCallback(() -> {
+            if (isSearchMode) {
+                searchVideos(currentSearchQuery, true);
+            } else {
+                loadVideos(true);
+            }
+        });
         loadUserProfile();
-        
+
         return view;
     }
 
@@ -124,7 +131,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
             @Override
             public void onError(String error) {
                 Logger.e(TAG, "Error loading profile: " + error);
-                showError(getString(R.string.error_loading_profile));
+                showErrorAuto(error);
             }
         });
     }
@@ -146,14 +153,15 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
                 paginationHelper.onDataLoaded(loadedVideos.size());
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
+                hideError();
 
                 if (isRefresh) {
                     videos.clear();
                 }
-                
+
                 videos.addAll(loadedVideos);
                 videoAdapter.notifyDataSetChanged();
-                
+
                 Logger.d(TAG, "Loaded " + loadedVideos.size() + " videos, total: " + videos.size());
             }
 
@@ -162,7 +170,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                showError(error);
+                showErrorAuto(error);
             }
         });
     }
@@ -194,14 +202,15 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
                 paginationHelper.onDataLoaded(loadedVideos.size());
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
+                hideError();
 
                 if (isRefresh) {
                     videos.clear();
                 }
-                
+
                 videos.addAll(loadedVideos);
                 videoAdapter.notifyDataSetChanged();
-                
+
                 Logger.d(TAG, "Found " + loadedVideos.size() + " videos for query: " + query);
             }
 
@@ -210,7 +219,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
                 paginationHelper.stopLoading();
                 progressLoading.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
-                showError(error);
+                showErrorAuto(error);
             }
         });
     }
@@ -267,11 +276,5 @@ public class VideoListFragment extends Fragment implements VideoAdapter.OnVideoC
     @Override
     public void onVideoClick(Video video, int position) {
         VideoPlayerActivity.start(requireContext(), video);
-    }
-
-    private void showError(String message) {
-        if (getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        }
     }
 }
