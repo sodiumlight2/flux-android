@@ -127,6 +127,11 @@ public class LongPollManager {
         onlineEventListener = null;
     }
 
+    public void clearProcessedEventsCache() {
+        processedEvents.clear();
+        Logger.d(TAG, "Processed events cache cleared");
+    }
+
     public void shutdown() {
         Logger.d(TAG, "Остановка LongPollManager");
         stop();
@@ -538,25 +543,20 @@ public class LongPollManager {
             
             // Добавляем в кеш обработанных событий
             processedEvents.put(messageId, timestamp);
-            
+
             // Очищаем кеш если он стал слишком большим
             if (processedEvents.size() > MAX_PROCESSED_EVENTS) {
-                // Удаляем 50 самых старых записей
-                // Используем TreeMap для сортировки по значению (API 21 compatible)
-                java.util.TreeMap<Integer, Long> sorted = new java.util.TreeMap<>(new java.util.Comparator<Integer>() {
+                java.util.List<java.util.Map.Entry<Integer, Long>> entries =
+                    new java.util.ArrayList<>(processedEvents.entrySet());
+                java.util.Collections.sort(entries, new java.util.Comparator<java.util.Map.Entry<Integer, Long>>() {
                     @Override
-                    public int compare(Integer k1, Integer k2) {
-                        Long v1 = processedEvents.get(k1);
-                        Long v2 = processedEvents.get(k2);
-                        return v1.compareTo(v2);
+                    public int compare(java.util.Map.Entry<Integer, Long> o1, java.util.Map.Entry<Integer, Long> o2) {
+                        return o1.getValue().compareTo(o2.getValue());
                     }
                 });
-                sorted.putAll(processedEvents);
-                int count = 0;
-                for (Integer key : sorted.keySet()) {
-                    if (count >= 50) break;
-                    processedEvents.remove(key);
-                    count++;
+                int toRemove = Math.min(50, entries.size());
+                for (int i = 0; i < toRemove; i++) {
+                    processedEvents.remove(entries.get(i).getKey());
                 }
             }
             

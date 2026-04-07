@@ -2,6 +2,9 @@ package org.nikanikoo.flux.security;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +21,32 @@ public class AccountManager {
     private static final String PREF_NAME = "accounts_prefs";
     private static final String KEY_ACCOUNTS = "accounts";
     private static final String KEY_CURRENT_ACCOUNT_ID = "current_account_id";
-    
+
     private final SharedPreferences prefs;
     private static AccountManager instance;
-    
+
     private AccountManager(Context context) {
-        prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences tempPrefs;
+
+        try {
+            MasterKey masterKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            tempPrefs = EncryptedSharedPreferences.create(
+                    context,
+                    PREF_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+            Logger.d(TAG, "AccountManager using EncryptedSharedPreferences");
+        } catch (Exception e) {
+            Logger.e(TAG, "Failed to initialize encrypted storage for accounts, falling back to plain SharedPreferences", e);
+            tempPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        }
+
+        this.prefs = tempPrefs;
     }
     
     public static synchronized AccountManager getInstance(Context context) {

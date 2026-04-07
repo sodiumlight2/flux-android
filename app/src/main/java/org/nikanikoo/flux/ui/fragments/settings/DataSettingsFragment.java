@@ -14,24 +14,26 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.nikanikoo.flux.R;
-
-import java.io.File;
+import org.nikanikoo.flux.data.coordinators.CacheCoordinator;
 
 public class DataSettingsFragment extends Fragment {
 
     private TextView cacheSizeValue;
     private View settingsAutoDownload;
     private View settingsClearCache;
+    private CacheCoordinator cacheCoordinator;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_data_settings, container, false);
-        
+
+        cacheCoordinator = new CacheCoordinator(requireContext());
+
         initViews(view);
         calculateCacheSize();
         setupClickListeners();
-        
+
         return view;
     }
     
@@ -55,10 +57,9 @@ public class DataSettingsFragment extends Fragment {
     private void calculateCacheSize() {
         new Thread(() -> {
             try {
-                File cacheDir = requireContext().getCacheDir();
-                long size = getDirSize(cacheDir);
-                String sizeStr = formatSize(size);
-                
+                CacheCoordinator.CacheStats stats = cacheCoordinator.getCacheStats();
+                String sizeStr = CacheCoordinator.CacheStats.formatSize(stats.totalCacheDirSizeBytes);
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> cacheSizeValue.setText(sizeStr));
                 }
@@ -69,37 +70,12 @@ public class DataSettingsFragment extends Fragment {
             }
         }).start();
     }
-    
-    private long getDirSize(File dir) {
-        long size = 0;
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile()) {
-                        size += file.length();
-                    } else {
-                        size += getDirSize(file);
-                    }
-                }
-            }
-        }
-        return size;
-    }
-    
-    private String formatSize(long size) {
-        if (size < 1024) return size + " B";
-        if (size < 1024 * 1024) return String.format("%.1f KB", size / 1024.0);
-        if (size < 1024 * 1024 * 1024) return String.format("%.1f MB", size / (1024.0 * 1024));
-        return String.format("%.1f GB", size / (1024.0 * 1024 * 1024));
-    }
-    
+
     private void clearCache() {
         new Thread(() -> {
             try {
-                File cacheDir = requireContext().getCacheDir();
-                deleteDir(cacheDir);
-                
+                cacheCoordinator.clearAllCaches();
+
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), getString(R.string.data_cache_cleared), Toast.LENGTH_SHORT).show();
@@ -114,20 +90,5 @@ public class DataSettingsFragment extends Fragment {
                 }
             }
         }).start();
-    }
-    
-    private void deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isDirectory()) {
-                        deleteDir(file);
-                    } else {
-                        file.delete();
-                    }
-                }
-            }
-        }
     }
 }

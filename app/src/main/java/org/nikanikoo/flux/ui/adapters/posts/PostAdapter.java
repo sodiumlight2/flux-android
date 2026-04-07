@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -31,7 +30,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_POST = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
-    private final List<Post> posts = new CopyOnWriteArrayList<>();
+    private final List<Post> posts = Collections.synchronizedList(new ArrayList<>());
+    private final Object postsLock = new Object();
     private Context context;
     private OnPostClickListener clickListener;
     private volatile boolean isLoading = false;
@@ -60,11 +60,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     private void updatePostIds() {
         postIds.clear();
-        for (Post post : posts) {
-            if (post != null) {
-                String postKey = generatePostKey(post);
-                if (postKey != null) {
-                    postIds.add(postKey);
+        synchronized (postsLock) {
+            for (Post post : posts) {
+                if (post != null) {
+                    String postKey = generatePostKey(post);
+                    if (postKey != null) {
+                        postIds.add(postKey);
+                    }
                 }
             }
         }
@@ -111,7 +113,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void bindPostViewHolder(@NonNull PostViewHolder holder, int position) {
-        Post post = posts.get(position);
+        Post post;
+        synchronized (postsLock) {
+            post = posts.get(position);
+        }
         
         // Валидация данных поста
         if (post == null) {
@@ -460,9 +465,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void updatePost(int position, Post updatedPost) {
-        if (position >= 0 && position < posts.size()) {
-            posts.set(position, updatedPost);
-            notifyItemChanged(position);
+        synchronized (postsLock) {
+            if (position >= 0 && position < posts.size()) {
+                posts.set(position, updatedPost);
+                notifyItemChanged(position);
+            }
         }
     }
 
@@ -475,7 +482,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         Logger.d(TAG, "Adding " + newPosts.size() + " new posts to existing " + posts.size() + " posts");
-        
+
         // Оптимизированная фильтрация дубликатов
         List<Post> uniquePosts = new ArrayList<>();
         for (Post newPost : newPosts) {
@@ -487,12 +494,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         }
-        
+
         if (!uniquePosts.isEmpty()) {
-            int startPosition = posts.size();
-            posts.addAll(uniquePosts);
+            int startPosition;
+            synchronized (postsLock) {
+                startPosition = posts.size();
+                posts.addAll(uniquePosts);
+            }
             notifyItemRangeInserted(startPosition, uniquePosts.size());
-            Logger.d(TAG, "Successfully added " + uniquePosts.size() + " unique posts, filtered " + 
+            Logger.d(TAG, "Successfully added " + uniquePosts.size() + " unique posts, filtered " +
                      (newPosts.size() - uniquePosts.size()) + " duplicates");
         } else {
             Logger.d(TAG, "All " + newPosts.size() + " posts were duplicates, nothing added");
@@ -514,25 +524,25 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // Старый метод проверки дубликатов (fallback)
     private boolean isDuplicateLegacy(Post newPost) {
-        for (Post existingPost : posts) {
-            if (existingPost == null) continue;
-            
-            // Проверяем по ID поста и владельца (если они есть)
-            if (ValidationUtils.isValidPostOwnerId(newPost.getPostId()) && ValidationUtils.isValidPostOwnerId(newPost.getOwnerId()) &&
-                ValidationUtils.isValidPostOwnerId(existingPost.getPostId()) && ValidationUtils.isValidPostOwnerId(existingPost.getOwnerId())) {
-                if (existingPost.getPostId() == newPost.getPostId() && 
-                    existingPost.getOwnerId() == newPost.getOwnerId()) {
-                    return true;
-                }
-            } else {
-                // Если нет ID, проверяем по содержимому и автору
-                if (existingPost.getAuthorName() != null && newPost.getAuthorName() != null &&
-                    existingPost.getContent() != null && newPost.getContent() != null &&
-                    existingPost.getTimestamp() != null && newPost.getTimestamp() != null &&
-                    existingPost.getAuthorName().equals(newPost.getAuthorName()) &&
-                    existingPost.getContent().equals(newPost.getContent()) &&
-                    existingPost.getTimestamp().equals(newPost.getTimestamp())) {
-                    return true;
+        synchronized (postsLock) {
+            for (Post existingPost : posts) {
+                if (existingPost == null) continue;
+
+                if (ValidationUtils.isValidPostOwnerId(newPost.getPostId()) && ValidationUtils.isValidPostOwnerId(newPost.getOwnerId()) &&
+                    ValidationUtils.isValidPostOwnerId(existingPost.getPostId()) && ValidationUtils.isValidPostOwnerId(existingPost.getOwnerId())) {
+                    if (existingPost.getPostId() == newPost.getPostId() &&
+                        existingPost.getOwnerId() == newPost.getOwnerId()) {
+                        return true;
+                    }
+                } else {
+                    if (existingPost.getAuthorName() != null && newPost.getAuthorName() != null &&
+                        existingPost.getContent() != null && newPost.getContent() != null &&
+                        existingPost.getTimestamp() != null && newPost.getTimestamp() != null &&
+                        existingPost.getAuthorName().equals(newPost.getAuthorName()) &&
+                        existingPost.getContent().equals(newPost.getContent()) &&
+                        existingPost.getTimestamp().equals(newPost.getTimestamp())) {
+                        return true;
+                    }
                 }
             }
         }
@@ -542,12 +552,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // Очистка и установка новых постов (для обновления)
     public void setPosts(List<Post> newPosts) {
         hideLoading(); // Скрываем индикатор загрузки
-        posts.clear();
-        postIds.clear(); // Очищаем кеш ID
-        
-        if (newPosts != null) {
-            posts.addAll(newPosts);
-            updatePostIds(); // Обновляем кеш ID
+        synchronized (postsLock) {
+            posts.clear();
+            postIds.clear();
+
+            if (newPosts != null) {
+                posts.addAll(newPosts);
+                updatePostIds();
+            }
         }
         notifyDataSetChanged();
         Logger.d(TAG, "Set " + (newPosts != null ? newPosts.size() : 0) + " posts");
@@ -556,23 +568,29 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // Обновление постов с использованием DiffUtil для эффективных обновлений
     public void updatePostsWithDiff(List<Post> newPosts) {
         hideLoading();
-        
+
         if (newPosts == null) {
             newPosts = new ArrayList<>();
         }
 
         // Create DiffUtil callback
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(posts, newPosts), false);
-        
+        List<Post> oldList;
+        synchronized (postsLock) {
+            oldList = new ArrayList<>(posts);
+        }
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldList, newPosts), false);
+
         // Clear and add new posts
-        posts.clear();
-        postIds.clear();
-        posts.addAll(newPosts);
-        updatePostIds();
-        
+        synchronized (postsLock) {
+            posts.clear();
+            postIds.clear();
+            posts.addAll(newPosts);
+            updatePostIds();
+        }
+
         // Apply diff result
         diffResult.dispatchUpdatesTo(this);
-        
+
         Logger.d(TAG, "Updated " + newPosts.size() + " posts with DiffUtil");
     }
 
@@ -621,23 +639,29 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     
     // Получение поста по позиции
     public Post getPost(int position) {
-        if (position >= 0 && position < posts.size()) {
-            return posts.get(position);
+        synchronized (postsLock) {
+            if (position >= 0 && position < posts.size()) {
+                return posts.get(position);
+            }
         }
         return null;
     }
 
     // Получение количества постов (реальных, без loading item)
     public int getPostsCount() {
-        return posts.size();
+        synchronized (postsLock) {
+            return posts.size();
+        }
     }
 
     // Поиск позиции поста по ID
     public int findPostPosition(int postId, int ownerId) {
-        for (int i = 0; i < posts.size(); i++) {
-            Post post = posts.get(i);
-            if (post.getPostId() == postId && post.getOwnerId() == ownerId) {
-                return i;
+        synchronized (postsLock) {
+            for (int i = 0; i < posts.size(); i++) {
+                Post post = posts.get(i);
+                if (post.getPostId() == postId && post.getOwnerId() == ownerId) {
+                    return i;
+                }
             }
         }
         return -1;
@@ -645,27 +669,35 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return (isLoading && position == posts.size()) ? VIEW_TYPE_LOADING : VIEW_TYPE_POST;
+        synchronized (postsLock) {
+            return (isLoading && position == posts.size()) ? VIEW_TYPE_LOADING : VIEW_TYPE_POST;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return posts.size() + (isLoading ? 1 : 0);
+        synchronized (postsLock) {
+            return posts.size() + (isLoading ? 1 : 0);
+        }
     }
 
     // Показать индикатор загрузки
     public void showLoading() {
-        if (!isLoading) {
-            isLoading = true;
-            notifyItemInserted(posts.size());
+        synchronized (postsLock) {
+            if (!isLoading) {
+                isLoading = true;
+                notifyItemInserted(posts.size());
+            }
         }
     }
 
     // Скрыть индикатор загрузки
     public void hideLoading() {
-        if (isLoading) {
-            isLoading = false;
-            notifyItemRemoved(posts.size());
+        synchronized (postsLock) {
+            if (isLoading) {
+                isLoading = false;
+                notifyItemRemoved(posts.size());
+            }
         }
     }
 

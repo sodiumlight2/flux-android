@@ -1,6 +1,8 @@
 package org.nikanikoo.flux.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import org.nikanikoo.flux.Constants;
 
@@ -15,6 +17,13 @@ import okhttp3.Response;
 public class CacheManager {
     private static final String TAG = "CacheManager";
     private static final int CACHE_SIZE_BYTES = (int) (Constants.Cache.HTTP_CACHE_SIZE_MB * 1024 * 1024);
+
+    private static Context appContext;
+
+
+    public static void setApplicationContext(Context context) {
+        appContext = context.getApplicationContext();
+    }
 
     private final Cache cache;
 
@@ -69,7 +78,19 @@ public class CacheManager {
     }
 
     private static boolean isNetworkAvailable() {
-        return true;
+        if (appContext == null) {
+            return true;
+        }
+        try {
+            ConnectivityManager cm = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+                return networkInfo != null && networkInfo.isConnectedOrConnecting();
+            }
+        } catch (Exception e) {
+            Logger.w(TAG, "Error checking network availability", e);
+        }
+        return false;
     }
 
     public void evictAll() {

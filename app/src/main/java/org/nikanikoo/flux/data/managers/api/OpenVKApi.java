@@ -22,16 +22,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.nikanikoo.flux.utils.CacheManager;
 
 public class OpenVKApi {
     private static final String TAG = "OpenVKApi";
     private static final int THREAD_POOL_SIZE = 4;
-    private static final int CACHE_SIZE_BYTES = (int) (Constants.Cache.HTTP_CACHE_SIZE_MB * 1024 * 1024);
 
     private final AtomicLong lastRequestTime = new AtomicLong(0);
 
     private static OpenVKApi instance;
     private final OkHttpClient client;
+    private final CacheManager cacheManager;
     private final TokenManager tokenManager;
     private final ExecutorService executor;
     private final Handler mainHandler;
@@ -39,10 +40,14 @@ public class OpenVKApi {
 
 
     private OpenVKApi(Context context) {
+        cacheManager = new CacheManager(context.getApplicationContext());
+
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .connectTimeout(Constants.Api.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.Api.READ_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(Constants.Api.WRITE_TIMEOUT, TimeUnit.SECONDS);
+                .writeTimeout(Constants.Api.WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .cache(cacheManager.getCache())
+                .addInterceptor(CacheManager.getCacheInterceptor());
 
         SSLHelper.configureToIgnoreSSL(clientBuilder);
 
@@ -73,9 +78,14 @@ public class OpenVKApi {
 
     public static synchronized void resetInstance() {
         if (instance != null) {
+            instance.cacheManager.evictAll();
             instance = null;
-            Logger.d(TAG, "OpenVKApi instance reset");
+            Logger.d(TAG, "OpenVKApi instance reset, cache evicted");
         }
+    }
+
+    public CacheManager getCacheManager() {
+        return cacheManager;
     }
 
     public String getBaseUrl() {

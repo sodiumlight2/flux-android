@@ -137,16 +137,14 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
         }
         
         Logger.d(TAG, "setupRecyclerView: setting up adapter and scroll listener");
-        
+
         layoutManager = new LinearLayoutManager(getContext());
         recyclerPosts.setLayoutManager(layoutManager);
-        
+
         // RecyclerView optimizations
         recyclerPosts.setHasFixedSize(true);
         recyclerPosts.setItemViewCacheSize(20);
-        recyclerPosts.setDrawingCacheEnabled(true);
-        recyclerPosts.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        
+
         // Enable item animator for smooth animations
         recyclerPosts.setItemAnimator(null);
         

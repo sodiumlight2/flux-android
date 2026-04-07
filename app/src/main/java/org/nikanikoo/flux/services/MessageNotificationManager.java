@@ -20,6 +20,7 @@ import org.nikanikoo.flux.ui.custom.CircularImageTransformation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,9 +55,27 @@ public class MessageNotificationManager {
     public static int getCurrentOpenChat() {
         return currentOpenChatPeerId;
     }
-    
-    // Кеш для информации о пользователях
-    private final Map<Integer, UserInfo> userInfoCache = new ConcurrentHashMap<>();
+
+    private static final int MAX_USER_INFO_CACHE = 200;
+    private static final long USER_INFO_TTL_MS = 30 * 60 * 1000; // 30 минут
+
+    private final Map<Integer, CachedUserInfo> userInfoCache = new LinkedHashMap<Integer, CachedUserInfo>(MAX_USER_INFO_CACHE, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Integer, CachedUserInfo> eldest) {
+            return size() > MAX_USER_INFO_CACHE ||
+                   (System.currentTimeMillis() - eldest.getValue().timestamp) > USER_INFO_TTL_MS;
+        }
+    };
+
+    private static class CachedUserInfo {
+        final UserInfo info;
+        final long timestamp;
+
+        CachedUserInfo(UserInfo info) {
+            this.info = info;
+            this.timestamp = System.currentTimeMillis();
+        }
+    }
     private final Map<Integer, List<String>> pendingMessages = new ConcurrentHashMap<>();
     
     // Кеш для отслеживания уже обработанных сообщений (messageId -> timestamp)
@@ -186,12 +205,18 @@ public class MessageNotificationManager {
     
     private void getUserInfo(int userId, UserInfoCallback callback) {
         Log.d(TAG, "getUserInfo called for userId: " + userId);
-        
-        // Проверяем кеш
+
         if (userInfoCache.containsKey(userId)) {
-            Log.d(TAG, "Found user info in cache for " + userId);
-            callback.onUserInfoReceived(userInfoCache.get(userId));
-            return;
+            CachedUserInfo cached = userInfoCache.get(userId);
+            if (cached != null && (System.currentTimeMillis() - cached.timestamp) < USER_INFO_TTL_MS) {
+                Log.d(TAG, "Found valid user info in cache for " + userId);
+                callback.onUserInfoReceived(cached.info);
+                return;
+            } else {
+                // Запись устарела, удаляем
+                userInfoCache.remove(userId);
+                Log.d(TAG, "Expired user info removed from cache for " + userId);
+            }
         }
         
         Log.d(TAG, "Requesting user info from API for " + userId);
@@ -216,7 +241,7 @@ public class MessageNotificationManager {
                         Log.d(TAG, "Parsed user info - name: " + firstName + " " + lastName + ", photo: " + photoUrl);
                         
                         UserInfo userInfo = new UserInfo(firstName, lastName, photoUrl);
-                        userInfoCache.put(userId, userInfo);
+                        userInfoCache.put(userId, new CachedUserInfo(userInfo));
                         
                         // Загружаем аватарку
                         if (!photoUrl.isEmpty()) {
