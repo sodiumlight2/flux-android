@@ -266,6 +266,19 @@ public class ProfileManager extends BaseManager<ProfileManager> {
         return getCachedProfile();
     }
 
+    public UserProfile getCachedProfileEvenIfExpired() {
+        try {
+            String jsonString = prefs.getString(KEY_PROFILE_DATA, null);
+            if (jsonString != null) {
+                JSONObject json = new JSONObject(jsonString);
+                return UserProfile.fromJson(json);
+            }
+        } catch (Exception e) {
+            Logger.e(TAG, "Error loading expired profile from cache", e);
+        }
+        return null;
+    }
+
     private boolean isCacheValid() {
         long lastUpdate = prefs.getLong(KEY_LAST_UPDATE, 0);
         long currentTime = System.currentTimeMillis();

@@ -19,6 +19,7 @@ import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.custom.CircularImageTransformation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,13 +60,15 @@ public class MessageNotificationManager {
     private static final int MAX_USER_INFO_CACHE = 200;
     private static final long USER_INFO_TTL_MS = 30 * 60 * 1000; // 30 минут
 
-    private final Map<Integer, CachedUserInfo> userInfoCache = new LinkedHashMap<Integer, CachedUserInfo>(MAX_USER_INFO_CACHE, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<Integer, CachedUserInfo> eldest) {
-            return size() > MAX_USER_INFO_CACHE ||
-                   (System.currentTimeMillis() - eldest.getValue().timestamp) > USER_INFO_TTL_MS;
+    private final Map<Integer, CachedUserInfo> userInfoCache = Collections.synchronizedMap(
+        new LinkedHashMap<Integer, CachedUserInfo>(MAX_USER_INFO_CACHE, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, CachedUserInfo> eldest) {
+                return size() > MAX_USER_INFO_CACHE ||
+                       (System.currentTimeMillis() - eldest.getValue().timestamp) > USER_INFO_TTL_MS;
+            }
         }
-    };
+    );
 
     private static class CachedUserInfo {
         final UserInfo info;
@@ -206,13 +209,13 @@ public class MessageNotificationManager {
     private void getUserInfo(int userId, UserInfoCallback callback) {
         Log.d(TAG, "getUserInfo called for userId: " + userId);
 
-        if (userInfoCache.containsKey(userId)) {
+        synchronized (userInfoCache) {
             CachedUserInfo cached = userInfoCache.get(userId);
             if (cached != null && (System.currentTimeMillis() - cached.timestamp) < USER_INFO_TTL_MS) {
                 Log.d(TAG, "Found valid user info in cache for " + userId);
                 callback.onUserInfoReceived(cached.info);
                 return;
-            } else {
+            } else if (cached != null) {
                 // Запись устарела, удаляем
                 userInfoCache.remove(userId);
                 Log.d(TAG, "Expired user info removed from cache for " + userId);

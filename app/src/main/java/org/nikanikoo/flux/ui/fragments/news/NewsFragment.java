@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.nikanikoo.flux.ui.fragments.BaseFragment;
@@ -47,7 +49,6 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     private PostAdapter postAdapter;
     private PostsManager postsManager;
     private ProfileManager profileManager;
-    private List<Post> posts;
     private SwipeRefreshLayout swipeRefresh;
     private ImageView arrow;
     private FloatingActionButton fabCreatePost;
@@ -55,6 +56,12 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     private LinearLayoutManager layoutManager;
     private EndlessScrollListener scrollListener;
     private FeedPaginationHelper paginationHelper;
+
+    private boolean hasLoadedPosts = false;
+    private volatile boolean isLoadingPosts = false;
+    private volatile int loadRequestCounter = 0;
+    private List<Post> savedPosts = new ArrayList<>();
+    private String savedNextFrom;
     
     // Тип новостей: true = подписки, false = все новости
     private boolean isSubscriptionMode = true;
@@ -68,12 +75,21 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         newsTypes = new String[] { getString(R.string.toolbar_subsfeed), getString(R.string.toolbar_globalfeed) };
         postsManager = PostsManager.getInstance(requireContext());
         profileManager = ProfileManager.getInstance(requireContext());
-        posts = new ArrayList<>();
+
+        boolean restoringFromBundle = savedInstanceState != null;
+        if (restoringFromBundle) {
+            hasLoadedPosts = savedInstanceState.getBoolean("has_loaded_posts", false);
+            savedNextFrom = savedInstanceState.getString("saved_next_from");
+        }
 
         // Инициализация ErrorViewHandler
         setupErrorView(view, R.id.swipe_refresh_news);
         setRetryCallback(() -> {
             scrollListener.resetState();
+            savedPosts.clear();
+            savedNextFrom = null;
+            hasLoadedPosts = false;
+            isLoadingPosts = false;
             loadPosts(true);
         });
 
@@ -82,9 +98,26 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         setupSwipeRefresh();
         setupEndlessScroll();
         setupToolbarTitle();
-        loadPosts(true);
+
+        if (hasLoadedPosts && !savedPosts.isEmpty()) {
+            postAdapter.setPosts(new ArrayList<>(savedPosts));
+            if (savedNextFrom != null) {
+                paginationHelper.onDataLoaded(savedPosts.size(), savedNextFrom);
+            }
+            progressLoading.setVisibility(View.GONE);
+            recyclerPosts.setVisibility(View.VISIBLE);
+        } else {
+            isLoadingPosts = false;
+            loadPosts(true);
+        }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("has_loaded_posts", hasLoadedPosts);
     }
     
     private void setupToolbarTitle() {
@@ -97,23 +130,34 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     
     private void showNewsTypeDialog() {
         if (getContext() == null) return;
-        
+
+        if (isLoadingPosts) {
+            Toast.makeText(getContext(), getString(R.string.news_wait_for_load), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.news_select_type));
-        
+
         int currentSelection = isSubscriptionMode ? 0 : 1;
-        
+
         builder.setSingleChoiceItems(newsTypes, currentSelection, (dialog, which) -> {
             boolean newMode = (which == 0);
             if (newMode != isSubscriptionMode) {
                 isSubscriptionMode = newMode;
                 setupToolbarTitle();
+
+                savedPosts.clear();
+                savedNextFrom = null;
+                hasLoadedPosts = false;
+                isLoadingPosts = false;
+
                 scrollListener.resetState();
                 loadPosts(true);
             }
             dialog.dismiss();
         });
-        
+
         builder.setNegativeButton(getString(R.string.cancel), null);
         builder.show();
     }
@@ -137,7 +181,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     private void setupRecyclerView() {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerPosts.setLayoutManager(layoutManager);
-        postAdapter = new PostAdapter(getContext(), posts);
+        postAdapter = new PostAdapter(getContext(), null);
         postAdapter.setOnPostClickListener(this);
         recyclerPosts.setAdapter(postAdapter);
     }
@@ -146,6 +190,10 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         swipeRefresh.setOnRefreshListener(() -> {
             Logger.d(TAG, " Refreshing posts...");
             scrollListener.resetState();
+            savedPosts.clear();
+            savedNextFrom = null;
+            hasLoadedPosts = false;
+            isLoadingPosts = false;
             loadPosts(true);
         });
     }
@@ -163,6 +211,13 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     }
 
     private void loadPosts(boolean isRefresh) {
+        if (isLoadingPosts) {
+            Logger.d(TAG, " loadPosts called but already loading, skipping");
+            return;
+        }
+
+        int currentRequest = ++loadRequestCounter;
+
         Logger.d(TAG, " loadPosts called, isRefresh=" + isRefresh +
             ", canLoadMore=" + paginationHelper.canLoadMore() +
             ", nextFrom=" + paginationHelper.getNextFromCursor());
@@ -172,10 +227,12 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
             return;
         }
 
+        isLoadingPosts = true;
+
         String nextFrom = isRefresh ? null : paginationHelper.getNextFromCursor();
 
         // Показываем прогрессбар при первой загрузке или обновлении
-        if (isRefresh && posts.isEmpty()) {
+        if (isRefresh && postAdapter.getPostsCount() == 0) {
             progressLoading.setVisibility(View.VISIBLE);
             recyclerPosts.setVisibility(View.GONE);
         }
@@ -197,13 +254,13 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 @Override
                 public void onSuccess(List<Post> loadedPosts, String nextFrom) {
                     Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " subscription posts, next_from: " + nextFrom);
-                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh);
+                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh, currentRequest);
                 }
 
                 @Override
                 public void onError(String error) {
                     Logger.d(TAG, " Error loading subscription newsfeed: " + error);
-                    handlePostsError(error, isRefresh);
+                    handlePostsError(error, isRefresh, currentRequest);
                 }
             });
         } else {
@@ -211,21 +268,32 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 @Override
                 public void onSuccess(List<Post> loadedPosts, String nextFrom) {
                     Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " global posts, next_from: " + nextFrom);
-                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh);
+                    handlePostsLoaded(loadedPosts, nextFrom, isRefresh, currentRequest);
                 }
 
                 @Override
                 public void onError(String error) {
                     Logger.d(TAG, " Error loading global newsfeed: " + error);
-                    handlePostsError(error, isRefresh);
+                    handlePostsError(error, isRefresh, currentRequest);
                 }
             });
         }
     }
     
-    private void handlePostsLoaded(List<Post> loadedPosts, String nextFrom, boolean isRefresh) {
+    private void handlePostsLoaded(List<Post> loadedPosts, String nextFrom, boolean isRefresh, int requestNumber) {
+        if (requestNumber != loadRequestCounter) {
+            Logger.d(TAG, " Ignoring stale handlePostsLoaded from request " + requestNumber +
+                ", current is " + loadRequestCounter);
+            return;
+        }
+
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
+                if (requestNumber != loadRequestCounter) {
+                    Logger.d(TAG, " Ignoring stale handlePostsLoaded (UI thread check)");
+                    return;
+                }
+
                 swipeRefresh.setRefreshing(false);
                 hideError();
 
@@ -237,11 +305,8 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
 
                 if (isRefresh) {
                     postAdapter.setPosts(loadedPosts);
-                    posts.clear();
-                    posts.addAll(loadedPosts);
                 } else {
                     postAdapter.addPosts(loadedPosts);
-                    posts.addAll(loadedPosts);
                 }
 
                 // Вычисляем сколько постов реально добавилось (после фильтрации дубликатов)
@@ -254,27 +319,47 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 // Уведомляем PaginationHelper о РЕАЛЬНОМ количестве добавленных постов
                 paginationHelper.onDataLoaded(actuallyAdded, nextFrom);
 
+                hasLoadedPosts = true;
+                savedPosts.clear();
+                for (int i = 0; i < postAdapter.getPostsCount(); i++) {
+                    Post p = postAdapter.getPost(i);
+                    if (p != null) savedPosts.add(p);
+                }
+                savedNextFrom = nextFrom;
+                isLoadingPosts = false;
                 if (loadedPosts.isEmpty() && postAdapter.getPostsCount() == 0) {
                     Logger.d(TAG, " No posts received, trying alternative method...");
-                    loadPublicPosts(isRefresh);
+                    loadPublicPosts(isRefresh, requestNumber);
                 }
             });
         }
     }
-    
-    private void handlePostsError(String error, boolean isRefresh) {
+
+    private void handlePostsError(String error, boolean isRefresh, int requestNumber) {
+        if (requestNumber != loadRequestCounter) {
+            Logger.d(TAG, " Ignoring stale handlePostsError from request " + requestNumber);
+            return;
+        }
+
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
+                if (requestNumber != loadRequestCounter) {
+                    Logger.d(TAG, " Ignoring stale handlePostsError (UI thread check)");
+                    return;
+                }
+
+                isLoadingPosts = false;
+
                 paginationHelper.stopLoading();
                 swipeRefresh.setRefreshing(false);
                 postAdapter.hideLoading();
 
                 progressLoading.setVisibility(View.GONE);
 
-                if (posts.isEmpty()) {
+                if (postAdapter.getPostsCount() == 0) {
                     showErrorAuto(error);
                     // Пробуем альтернативный метод только если нет постов
-                    loadPublicPosts(isRefresh);
+                    loadPublicPosts(isRefresh, requestNumber);
                 } else {
                     showErrorAuto(error);
                 }
@@ -282,22 +367,36 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         }
     }
 
-    private void loadPublicPosts(boolean isRefresh) {
+    private void loadPublicPosts(boolean isRefresh, int requestNumber) {
         Logger.d(TAG, " Trying public posts...");
-        
+
         postsManager.loadPublicPosts(new PostsManager.PostsCallback() {
             @Override
             public void onSuccess(List<Post> loadedPosts) {
                 Logger.d(TAG, " Successfully loaded " + loadedPosts.size() + " public posts");
+                if (requestNumber != loadRequestCounter) {
+                    Logger.d(TAG, " Ignoring stale loadPublicPosts success");
+                    return;
+                }
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        if (requestNumber != loadRequestCounter) return;
+                        isLoadingPosts = false;
+
                         if (isRefresh) {
                             postAdapter.setPosts(loadedPosts);
                         } else {
                             postAdapter.addPosts(loadedPosts);
                         }
-                        
-                        if (loadedPosts.isEmpty() && posts.isEmpty()) {
+                        hasLoadedPosts = true;
+
+                        savedPosts.clear();
+                        for (int i = 0; i < postAdapter.getPostsCount(); i++) {
+                            Post p = postAdapter.getPost(i);
+                            if (p != null) savedPosts.add(p);
+                        }
+
+                        if (loadedPosts.isEmpty() && postAdapter.getPostsCount() == 0) {
                             Logger.d(TAG, " Still no posts, loading test data...");
                             loadTestPosts();
                         }
@@ -310,7 +409,9 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 Logger.d(TAG, " Error loading public posts: " + error);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        if (posts.isEmpty()) {
+                        if (requestNumber != loadRequestCounter) return;
+                        isLoadingPosts = false;
+                        if (postAdapter.getPostsCount() == 0) {
                             Toast.makeText(getContext(), getString(R.string.news_public_loading_error) + error, Toast.LENGTH_SHORT).show();
                             loadTestPosts();
                         }
@@ -321,16 +422,17 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     }
 
     private void loadTestPosts() {
-        // Тестовые посты удалены - используем только реальные данные из API
+        isLoadingPosts = false;
         List<Post> testPosts = new ArrayList<>();
         postAdapter.setPosts(testPosts);
     }
 
-    private void checkLikeStatusForPosts(List<Post> postsToCheck) {
-        for (int i = 0; i < postsToCheck.size(); i++) {
-            Post post = postsToCheck.get(i);
+    private void checkLikeStatusForPosts(int count) {
+        for (int i = 0; i < count; i++) {
+            final Post post = postAdapter.getPost(i);
+            if (post == null) continue;
             final int position = i;
-            
+
             // Проверяем статус лайка только если есть необходимые данные
             if (post.getPostId() != 0 && post.getOwnerId() != 0) {
                 postsManager.checkLikeStatus(post, new LikesManager.LikeStatusCallback() {
@@ -338,8 +440,9 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                     public void onSuccess(boolean isLiked) {
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
-                                if (position < posts.size()) {
-                                    posts.get(position).setLiked(isLiked);
+                                Post currentPost = postAdapter.getPost(position);
+                                if (currentPost != null) {
+                                    currentPost.setLiked(isLiked);
                                     postAdapter.notifyItemChanged(position);
                                 }
                             });
@@ -385,40 +488,40 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
             return;
         }
 
+        int position = postAdapter.findPostPosition(post.getPostId(), post.getOwnerId());
+        if (position < 0) {
+            Logger.w(TAG, "Could not find post position for like click");
+            return;
+        }
+
         // Сохраняем текущее состояние для возможного отката
-        final boolean originalLikedState = post.isLiked();
-        final int originalLikeCount = post.getLikeCount();
-        
+        Post adapterPost = postAdapter.getPost(position);
+        if (adapterPost == null) return;
+
+        final boolean originalLikedState = adapterPost.isLiked();
+        final int originalLikeCount = adapterPost.getLikeCount();
+
         // Сразу обновляем UI (optimistic update)
         final boolean newLikedState = !originalLikedState;
         final int newLikeCount = originalLikedState ? originalLikeCount - 1 : originalLikeCount + 1;
-        
-        post.setLiked(newLikedState);
-        post.setLikeCount(newLikeCount);
-        
-        // Находим позицию поста и обновляем UI
-        for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getPostId() == post.getPostId() && 
-                posts.get(i).getOwnerId() == post.getOwnerId()) {
-                postAdapter.notifyItemChanged(i);
-                break;
-            }
-        }
+
+        adapterPost.setLiked(newLikedState);
+        adapterPost.setLikeCount(newLikeCount);
+        postAdapter.notifyItemChanged(position);
 
         // Отправляем запрос на сервер
-        postsManager.toggleLikeOptimistic(post, originalLikedState, new PostsManager.LikeToggleCallback() {
+        postsManager.toggleLikeOptimistic(adapterPost, originalLikedState, new PostsManager.LikeToggleCallback() {
             @Override
             public void onSuccess(int serverLikesCount, boolean serverIsLiked) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        // Обновляем с данными от сервера (на случай расхождений)
-                        for (int i = 0; i < posts.size(); i++) {
-                            if (posts.get(i).getPostId() == post.getPostId() && 
-                                posts.get(i).getOwnerId() == post.getOwnerId()) {
-                                posts.get(i).setLikeCount(serverLikesCount);
-                                posts.get(i).setLiked(serverIsLiked);
-                                postAdapter.notifyItemChanged(i);
-                                break;
+                        int pos = postAdapter.findPostPosition(post.getPostId(), post.getOwnerId());
+                        if (pos >= 0) {
+                            Post p = postAdapter.getPost(pos);
+                            if (p != null) {
+                                p.setLikeCount(serverLikesCount);
+                                p.setLiked(serverIsLiked);
+                                postAdapter.notifyItemChanged(pos);
                             }
                         }
                     });
@@ -430,19 +533,16 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         // Откатываем изменения при ошибке
-                        post.setLiked(originalLikedState);
-                        post.setLikeCount(originalLikeCount);
-                        
-                        for (int i = 0; i < posts.size(); i++) {
-                            if (posts.get(i).getPostId() == post.getPostId() && 
-                                posts.get(i).getOwnerId() == post.getOwnerId()) {
-                                posts.get(i).setLiked(originalLikedState);
-                                posts.get(i).setLikeCount(originalLikeCount);
-                                postAdapter.notifyItemChanged(i);
-                                break;
+                        int pos = postAdapter.findPostPosition(post.getPostId(), post.getOwnerId());
+                        if (pos >= 0) {
+                            Post p = postAdapter.getPost(pos);
+                            if (p != null) {
+                                p.setLiked(originalLikedState);
+                                p.setLikeCount(originalLikeCount);
+                                postAdapter.notifyItemChanged(pos);
                             }
                         }
-                        
+
                         Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }

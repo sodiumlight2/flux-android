@@ -38,6 +38,7 @@ public class ImageUtils {
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .resize(POST_IMAGE_WIDTH, POST_IMAGE_HEIGHT)
+                .onlyScaleDown()
                 .centerInside()
                 .into(imageView);
     }

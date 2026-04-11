@@ -264,7 +264,7 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
     @Override
     public void showProfileError(String error) {
-        Toast.makeText(getContext(), getString(R.string.error_loading_profile) + error, Toast.LENGTH_SHORT).show();
+        showErrorAuto(error);
     }
 
     @Override

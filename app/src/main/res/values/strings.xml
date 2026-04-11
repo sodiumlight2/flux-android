@@ -163,6 +163,7 @@
     <string name="news_refresh_error">Не удалось загрузить новые посты</string>
     <string name="news_public_loading_error">Ошибка загрузки публичных постов: </string>
     <string name="news_select_type">Выберите тип новостей</string>
+    <string name="news_wait_for_load">Дождитесь окончания загрузки</string>
     <string name="news_create_post">Создать пост</string>
 
     <!-- Messages -->

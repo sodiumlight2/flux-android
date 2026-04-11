@@ -317,12 +317,13 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
                         }
                         
                         swipeRefreshLayout.setRefreshing(false);
-                        
-                        // Прокручиваем к последнему сообщению только при первой загрузке
-                        if (shouldScrollToBottom && !messages.isEmpty()) {
-                            recyclerView.scrollToPosition(messages.size() - 1);
+
+                        if (shouldScrollToBottom && adapter.getItemCount() > 0) {
+                            recyclerView.post(() ->
+                                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1)
+                            );
                         }
-                        
+
                         // Помечаем сообщения как прочитанные только при первой загрузке
                         if (isRefresh) {
                             messagesManager.markAsRead(peerId);
@@ -499,11 +500,13 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
                     }
                     
                     // Прокручиваем к последнему сообщению
-                    if (recyclerView != null) {
-                        Log.d("ChatFragment", "Scrolling to position: " + (messages.size() - 1));
-                        recyclerView.scrollToPosition(messages.size() - 1);
+                    if (recyclerView != null && adapter.getItemCount() > 0) {
+                        Log.d("ChatFragment", "Scrolling to position: " + (adapter.getItemCount() - 1));
+                        recyclerView.post(() ->
+                            recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1)
+                        );
                     } else {
-                        Log.w("ChatFragment", "RecyclerView is null!");
+                        Log.w("ChatFragment", "RecyclerView is null or no items to scroll");
                     }
                 } else {
                     Log.w("ChatFragment", "Adapter is null!");

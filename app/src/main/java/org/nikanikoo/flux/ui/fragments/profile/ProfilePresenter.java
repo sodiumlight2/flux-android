@@ -102,20 +102,12 @@ public class ProfilePresenter implements ProfileContract.Presenter {
                     view.setCreatePostButtonVisible(true);
                 }
             }
-            
+
             @Override
             public void onError(String error) {
                 isLoading = false;
                 Logger.e(TAG, "Error loading own profile: " + error);
-                
-                // Пробуем загрузить из кэша
-                UserProfile cached = profileManager.getCachedProfileSync();
-                if (cached != null && view != null) {
-                    currentProfile = cached;
-                    view.hideProfileLoading();
-                    view.displayProfile(cached);
-                    view.setCreatePostButtonVisible(true);
-                } else if (view != null) {
+                if (view != null) {
                     view.hideProfileLoading();
                     view.showProfileError(error);
                 }
