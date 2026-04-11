@@ -47,6 +47,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/btnMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="12dp"
+            android:src="@drawable/ic_more_vert"
+            app:tint="@android:color/white" />
+
     </LinearLayout>
 
     <!-- Нижняя панель -->

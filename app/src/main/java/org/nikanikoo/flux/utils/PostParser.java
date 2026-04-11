@@ -143,6 +143,7 @@ public class PostParser {
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
             
             post.setImageUrls(attachmentResult.getImageUrls());
+            post.setImageMaxResUrls(attachmentResult.getImageMaxResUrls());
             post.setAudioAttachments(attachmentResult.getAudioAttachments());
             post.setVideoAttachments(attachmentResult.getVideoAttachments());
             post.setUnsupportedElementsText(attachmentResult.getUnsupportedElementsText());
@@ -211,6 +212,7 @@ public class PostParser {
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
             
             post.setImageUrls(attachmentResult.getImageUrls());
+            post.setImageMaxResUrls(attachmentResult.getImageMaxResUrls());
             post.setAudioAttachments(attachmentResult.getAudioAttachments());
             post.setVideoAttachments(attachmentResult.getVideoAttachments());
             post.setUnsupportedElementsText(attachmentResult.getUnsupportedElementsText());

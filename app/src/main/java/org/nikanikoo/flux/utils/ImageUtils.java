@@ -37,9 +37,6 @@ public class ImageUtils {
         createPicassoRequest(url)
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
-                .resize(POST_IMAGE_WIDTH, POST_IMAGE_HEIGHT)
-                .onlyScaleDown()
-                .centerInside()
                 .into(imageView);
     }
 
@@ -158,18 +155,85 @@ public class ImageUtils {
             return "";
         }
 
+        String zUrl = "";
+        String yUrl = "";
+        String xUrl = "";
+
         try {
             for (int i = 0; i < sizes.length(); i++) {
                 JSONObject size = sizes.getJSONObject(i);
-                if ("z".equals(size.optString("type", ""))) {
-                    String url = size.optString("url", "");
-                    if (!url.isEmpty()) {
-                        return url;
-                    }
+                String type = size.optString("type", "");
+                String url = size.optString("url", "");
+
+                if (url.isEmpty()) continue;
+
+                switch (type) {
+                    case "z":
+                        zUrl = url;
+                        break;
+                    case "y":
+                        yUrl = url;
+                        break;
+                    case "x":
+                        xUrl = url;
+                        break;
                 }
             }
+
+            if (!zUrl.isEmpty()) return zUrl;
+            if (!yUrl.isEmpty()) return yUrl;
+            if (!xUrl.isEmpty()) return xUrl;
+
         } catch (Exception e) {
             Logger.e("ImageUtils", "Error extracting from sizes", e);
+        }
+
+        return "";
+    }
+
+    public static String extractMaxResImageUrl(JSONObject photo) {
+        if (photo == null) {
+            return "";
+        }
+
+        try {
+            if (photo.has("sizes")) {
+                JSONArray sizes = photo.getJSONArray("sizes");
+                String maxResUrl = "";
+                String zUrl = "";
+                String yUrl = "";
+                String xUrl = "";
+
+                for (int i = 0; i < sizes.length(); i++) {
+                    JSONObject size = sizes.getJSONObject(i);
+                    String type = size.optString("type", "");
+                    String url = size.optString("url", "");
+
+                    if (url.isEmpty()) continue;
+
+                    switch (type) {
+                        case "UPLOADED_MAXRES":
+                            maxResUrl = url;
+                            break;
+                        case "z":
+                            zUrl = url;
+                            break;
+                        case "y":
+                            yUrl = url;
+                            break;
+                        case "x":
+                            xUrl = url;
+                            break;
+                    }
+                }
+
+                if (!maxResUrl.isEmpty()) return maxResUrl;
+                if (!zUrl.isEmpty()) return zUrl;
+                if (!yUrl.isEmpty()) return yUrl;
+                if (!xUrl.isEmpty()) return xUrl;
+            }
+        } catch (Exception e) {
+            Logger.e("ImageUtils", "Error extracting max res URL", e);
         }
 
         return "";

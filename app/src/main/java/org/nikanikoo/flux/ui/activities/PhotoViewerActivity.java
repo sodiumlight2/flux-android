@@ -3,25 +3,37 @@ package org.nikanikoo.flux.ui.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.nikanikoo.flux.Constants;
 import org.nikanikoo.flux.ui.fragments.media.PhotoViewerPageFragment;
@@ -31,20 +43,27 @@ import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.custom.SwipeToCloseHelper;
 import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.Logger;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoViewerActivity extends AppCompatActivity {
-    
+
     private static final String TAG = "PhotoViewerActivity";
     private static final String EXTRA_IMAGE_URLS = "image_urls";
     private static final String EXTRA_CURRENT_POSITION = "current_position";
     private static final String EXTRA_POST = "post";
     private static final String EXTRA_AUTHOR_NAME = "author_name";
-    
+
     private static final int UI_HIDE_DELAY = 3000;
     private static final float DISMISS_THRESHOLD = 0.3f;
-    
+
     private ViewPager2 viewPager;
     private View rootContainer;
     private View topPanel;
@@ -54,21 +73,32 @@ public class PhotoViewerActivity extends AppCompatActivity {
     private ImageView btnLike;
     private ImageView btnComments;
     private ImageView btnShare;
+    private ImageView btnMore;
     
     private List<String> imageUrls;
     private int currentPosition;
     private Post post;
     private String authorName;
-    
+
     private boolean isUIVisible = true;
     private Handler uiHandler;
     private Runnable hideUIRunnable;
-    
+
     private GestureDetector gestureDetector;
     private SwipeToCloseHelper swipeHelper;
     private boolean isDragging = false;
     private float initialY = 0f;
     private float currentTranslationY = 0f;
+
+    private ActivityResultLauncher<String> storagePermissionLauncher;
+    private String pendingDownloadUrl;
+    private boolean downloadAllPending = false;
+    private List<String> downloadQueue = new ArrayList<>();
+    private int downloadIndex = 0;
+    private int downloadSuccessCount = 0;
+    private int downloadErrorCount = 0;
+    private Runnable pendingSuccessCallback;
+    private Runnable pendingErrorCallback;
     
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -102,19 +132,16 @@ public class PhotoViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setupTransparentWindow();
-        
         setContentView(R.layout.activity_photo_viewer);
-        
+        setupPermissionLauncher();
         extractIntentData();
         initViews();
         setupGestureDetector();
         setupViewPager();
         setupUI();
-
         animateEnter();
-        
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        
+
         Logger.d(TAG, "PhotoViewerActivity created with " + (imageUrls != null ? imageUrls.size() : 0) + " images");
     }
 
@@ -153,7 +180,8 @@ public class PhotoViewerActivity extends AppCompatActivity {
         btnLike = findViewById(R.id.btnLike);
         btnComments = findViewById(R.id.btnComments);
         btnShare = findViewById(R.id.btnShare);
-        
+        btnMore = findViewById(R.id.btnMore);
+
         uiHandler = new Handler(Looper.getMainLooper());
         hideUIRunnable = this::hideUI;
     }
@@ -199,6 +227,10 @@ public class PhotoViewerActivity extends AppCompatActivity {
         rootContainer.setOnTouchListener((v, event) -> {
             gestureDetector.onTouchEvent(event);
             return swipeHelper.onTouchEvent(event, rootContainer);
+        });
+
+        btnMore.setOnClickListener(v -> {
+            showPopupMenu();
         });
     }
 
@@ -266,9 +298,9 @@ public class PhotoViewerActivity extends AppCompatActivity {
     
     private void setupUI() {
         titleText.setText(authorName != null ? authorName : getString(R.string.photo_viewer));
-        
+
         btnBack.setOnClickListener(v -> animateExit());
-        
+
         btnLike.setOnClickListener(v -> {
             if (post != null) {
                 toggleLike();
@@ -431,13 +463,342 @@ public class PhotoViewerActivity extends AppCompatActivity {
         if (post != null) {
             btnLike.setImageResource(post.isLiked() ? R.drawable.ic_like_filled : R.drawable.ic_like);
 
-            int color = post.isLiked() ? 
-                androidx.core.content.ContextCompat.getColor(this, R.color.like_color) : 
+            int color = post.isLiked() ?
+                androidx.core.content.ContextCompat.getColor(this, R.color.like_color) :
                 androidx.core.content.ContextCompat.getColor(this, R.color.icon_color);
             btnLike.setColorFilter(color);
         }
     }
-    
+
+    private void showPopupMenu() {
+        cancelUIHide();
+        
+        PopupMenu popupMenu = new PopupMenu(this, btnMore);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_photo_viewer, popupMenu.getMenu());
+        
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_download) {
+                showDownloadChoiceDialog();
+                return true;
+            }
+            return false;
+        });
+        
+        popupMenu.setOnDismissListener(menu -> scheduleUIHide());
+        popupMenu.show();
+    }
+
+    private void showDownloadChoiceDialog() {
+        if (imageUrls == null || imageUrls.size() <= 1) {
+            downloadCurrentImage();
+            return;
+        }
+        
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.download_image)
+                .setItems(new String[]{
+                        getString(R.string.download_current_image),
+                        getString(R.string.download_all_images)
+                }, (dialog, which) -> {
+                    if (which == 0) {
+                        downloadCurrentImage();
+                    } else {
+                        downloadAllImages();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void downloadCurrentImage() {
+        if (imageUrls == null || imageUrls.isEmpty() || currentPosition >= imageUrls.size()) {
+            Toast.makeText(this, getString(R.string.download_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url;
+        List<String> maxResUrls = post != null ? post.getImageMaxResUrls() : null;
+        if (maxResUrls != null && !maxResUrls.isEmpty() && currentPosition < maxResUrls.size()) {
+            url = maxResUrls.get(currentPosition);
+        } else {
+            url = imageUrls.get(currentPosition);
+        }
+
+        downloadImageWithPermission(url,
+            () -> {
+                Toast.makeText(this, getString(R.string.download_success), Toast.LENGTH_SHORT).show();
+                scheduleUIHide();
+            },
+            () -> {
+                Toast.makeText(this, getString(R.string.download_error), Toast.LENGTH_SHORT).show();
+                scheduleUIHide();
+            }
+        );
+    }
+
+    private void downloadAllImages() {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            Toast.makeText(this, getString(R.string.download_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (imageUrls.size() == 1) {
+            downloadCurrentImage();
+            return;
+        }
+
+        // Initialize download queue with maxRes URLs if available
+        downloadQueue = new ArrayList<>();
+        List<String> maxResUrls = post != null ? post.getImageMaxResUrls() : null;
+
+        for (int i = 0; i < imageUrls.size(); i++) {
+            if (maxResUrls != null && !maxResUrls.isEmpty() && i < maxResUrls.size()) {
+                downloadQueue.add(maxResUrls.get(i));
+            } else {
+                downloadQueue.add(imageUrls.get(i));
+            }
+        }
+        downloadIndex = 0;
+        downloadSuccessCount = 0;
+        downloadErrorCount = 0;
+
+        Toast.makeText(this, getString(R.string.download_starting), Toast.LENGTH_SHORT).show();
+        scheduleUIHide();
+
+        downloadNextInQueue();
+    }
+
+    private void setupPermissionLauncher() {
+        storagePermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    if (pendingDownloadUrl != null) {
+                        String url = pendingDownloadUrl;
+                        pendingDownloadUrl = null;
+                        Runnable onSuccess = pendingSuccessCallback;
+                        Runnable onError = pendingErrorCallback;
+                        pendingSuccessCallback = null;
+                        pendingErrorCallback = null;
+                        startDownload(url, onSuccess, onError);
+                    }
+                } else {
+                    Toast.makeText(this, getString(R.string.download_permission_denied), Toast.LENGTH_SHORT).show();
+                    pendingDownloadUrl = null;
+                    pendingSuccessCallback = null;
+                    pendingErrorCallback = null;
+                    scheduleUIHide();
+                }
+            }
+        );
+    }
+
+    private void downloadNextInQueue() {
+        if (downloadIndex >= downloadQueue.size()) {
+            String message = getString(R.string.download_success) + ": " + downloadSuccessCount + "/" + downloadQueue.size();
+            if (downloadErrorCount > 0) {
+                message += " (" + downloadErrorCount + " " + getString(R.string.download_error) + ")";
+            }
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            scheduleUIHide();
+            return;
+        }
+
+        String url = downloadQueue.get(downloadIndex);
+        downloadImageWithPermission(url, () -> {
+            downloadIndex++;
+            downloadSuccessCount++;
+            downloadNextInQueue();
+        }, () -> {
+            downloadIndex++;
+            downloadErrorCount++;
+            downloadNextInQueue();
+        });
+    }
+
+    private void downloadImageWithPermission(String url) {
+        downloadImageWithPermission(url, null, null);
+    }
+
+    private void downloadImageWithPermission(String url, Runnable onSuccess, Runnable onError) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+
+            startDownload(url, onSuccess, onError);
+        } else {
+            // Android 9 and below
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                startDownload(url, onSuccess, onError);
+            } else {
+                pendingDownloadUrl = url;
+                pendingSuccessCallback = onSuccess;
+                pendingErrorCallback = onError;
+                storagePermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        }
+    }
+
+    private void startDownload(String url, Runnable onSuccess) {
+        startDownload(url, onSuccess, () -> {
+            if (onSuccess != null) {}
+        });
+    }
+
+    private void startDownload(String url, Runnable onSuccess, Runnable onError) {
+        try {
+            String folderName = getString(R.string.download_folder_name);
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10+
+                downloadWithMediaStoreApi(url, folderName, onSuccess, onError);
+            } else {
+                // Android 9 and below
+                downloadWithManualFolder(url, folderName, onSuccess, onError);
+            }
+        } catch (Exception e) {
+            Logger.e(TAG, "Download failed: " + e.getMessage());
+            if (onError != null) {
+                onError.run();
+            }
+        }
+    }
+
+    private void downloadWithMediaStoreApi(String url, String folderName, Runnable onSuccess, Runnable onError) {
+        new Thread(() -> {
+            try {
+                URL imageUrl = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
+                connection.setDoInput(true);
+                connection.setConnectTimeout(15000);
+                connection.setReadTimeout(30000);
+                connection.connect();
+                
+                int responseCode = connection.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    throw new RuntimeException("HTTP error: " + responseCode);
+                }
+                
+                InputStream inputStream = connection.getInputStream();
+                
+                String fileName = "IMG_" + System.currentTimeMillis() + "_" + downloadIndex + ".jpg";
+                
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/" + folderName);
+                values.put(MediaStore.Images.Media.IS_PENDING, 1);
+                
+                Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                
+                if (uri == null) {
+                    throw new RuntimeException("Failed to create MediaStore entry");
+                }
+                
+                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                int totalBytes = 0;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                    totalBytes += bytesRead;
+                }
+                
+                if (totalBytes == 0) {
+                    throw new RuntimeException("Downloaded file is empty");
+                }
+                
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+                connection.disconnect();
+                
+                values.clear();
+                values.put(MediaStore.Images.Media.IS_PENDING, 0);
+                getContentResolver().update(uri, values, null, null);
+                
+                Logger.d(TAG, "Image saved to: " + folderName + "/" + fileName + " (" + totalBytes + " bytes)");
+                
+                if (onSuccess != null) {
+                    runOnUiThread(onSuccess);
+                }
+                
+            } catch (Exception e) {
+                Logger.e(TAG, "Download failed: " + e.getMessage());
+                if (onError != null) {
+                    runOnUiThread(onError);
+                }
+            }
+        }).start();
+    }
+
+    private void downloadWithManualFolder(String url, String folderName, Runnable onSuccess, Runnable onError) {
+        new Thread(() -> {
+            try {
+                URL imageUrl = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
+                connection.setDoInput(true);
+                connection.setConnectTimeout(15000);
+                connection.setReadTimeout(30000);
+                connection.connect();
+                
+                int responseCode = connection.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    throw new RuntimeException("HTTP error: " + responseCode);
+                }
+                
+                InputStream inputStream = connection.getInputStream();
+                
+                File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File fluxFolder = new File(picturesDir, folderName);
+                
+                if (!fluxFolder.exists()) {
+                    if (!fluxFolder.mkdirs()) {
+                        throw new RuntimeException("Failed to create folder: " + fluxFolder.getAbsolutePath());
+                    }
+                }
+                
+                String fileName = "IMG_" + System.currentTimeMillis() + "_" + downloadIndex + ".jpg";
+                File outputFile = new File(fluxFolder, fileName);
+                
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                int totalBytes = 0;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                    totalBytes += bytesRead;
+                }
+                
+                if (totalBytes == 0) {
+                    outputStream.close();
+                    outputFile.delete();
+                    throw new RuntimeException("Downloaded file is empty");
+                }
+                
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+                connection.disconnect();
+                
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(Uri.fromFile(outputFile));
+                sendBroadcast(mediaScanIntent);
+                
+                Logger.d(TAG, "Image saved to: " + outputFile.getAbsolutePath() + " (" + totalBytes + " bytes)");
+                
+                if (onSuccess != null) {
+                    runOnUiThread(onSuccess);
+                }
+                
+            } catch (Exception e) {
+                Logger.e(TAG, "Download failed: " + e.getMessage());
+                if (onError != null) {
+                    runOnUiThread(onError);
+                }
+            }
+        }).start();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

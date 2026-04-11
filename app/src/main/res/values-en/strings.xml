@@ -200,6 +200,17 @@
     <string name="photos_title">Photos</string>
     <string name="photo_viewer">Photo</string>
     <string name="photo_more_images">+%d</string>
+    <string name="download_image">Download image</string>
+    <string name="download_current_image">Download image</string>
+    <string name="download_all_images">Download all images</string>
+    <string name="download_permission_required">Storage permission required to save images</string>
+    <string name="download_permission_denied">Storage permission denied</string>
+    <string name="download_starting">Downloading…</string>
+    <string name="download_success">Image saved</string>
+    <string name="download_error">Failed to save</string>
+    <string name="download_select_quality">Select quality</string>
+    <string name="download_quality_max">Original (maximum)</string>
+    <string name="download_folder_name">OpenVK Flux</string>
 
     <!-- Videos -->
     <string name="videos_title">Videos</string>

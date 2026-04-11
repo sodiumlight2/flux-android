@@ -228,6 +228,17 @@
     <string name="photos_title">Фотографии</string>
     <string name="photo_viewer">Фотография</string>
     <string name="photo_more_images">+%d</string>
+    <string name="download_image">Скачать изображение</string>
+    <string name="download_current_image">Скачать изображение</string>
+    <string name="download_all_images">Скачать все изображения</string>
+    <string name="download_permission_required">Требуется разрешение для сохранения изображений</string>
+    <string name="download_permission_denied">Разрешение на сохранение отклонено</string>
+    <string name="download_starting">Загрузка начата…</string>
+    <string name="download_success">Изображение сохранено</string>
+    <string name="download_error">Ошибка сохранения</string>
+    <string name="download_select_quality">Выберите качество</string>
+    <string name="download_quality_max">Оригинал (максимальное)</string>
+    <string name="download_folder_name">OpenVK Flux</string>
 
     <!-- Videos -->
     <string name="videos_title">Видео</string>

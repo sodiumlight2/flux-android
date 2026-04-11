@@ -12,6 +12,7 @@ public class Post implements Serializable {
     private int commentCount;
     private String imageUrl;
     private List<String> imageUrls;
+    private List<String> imageMaxResUrls;
     private List<Audio> audioAttachments;
     private List<Video> videoAttachments;
     private int authorId;
@@ -34,6 +35,7 @@ public class Post implements Serializable {
         this.commentCount = commentCount;
         this.isLiked = false;
         this.imageUrls = new ArrayList<>();
+        this.imageMaxResUrls = new ArrayList<>();
         this.audioAttachments = new ArrayList<>();
         this.videoAttachments = new ArrayList<>();
         this.isRepost = false;
@@ -47,6 +49,7 @@ public class Post implements Serializable {
     public int getCommentCount() { return commentCount; }
     public String getImageUrl() { return imageUrl; }
     public List<String> getImageUrls() { return imageUrls; }
+    public List<String> getImageMaxResUrls() { return imageMaxResUrls; }
     public List<Audio> getAudioAttachments() { return audioAttachments; }
     public List<Video> getVideoAttachments() { return videoAttachments; }
     public int getAuthorId() { return authorId; }
@@ -73,11 +76,14 @@ public class Post implements Serializable {
             imageUrls.add(imageUrl);
         }
     }
-    public void setImageUrls(List<String> imageUrls) { 
+    public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
         if (imageUrls != null && !imageUrls.isEmpty()) {
             this.imageUrl = imageUrls.get(0);
         }
+    }
+    public void setImageMaxResUrls(List<String> imageMaxResUrls) {
+        this.imageMaxResUrls = imageMaxResUrls != null ? imageMaxResUrls : new ArrayList<>();
     }
     public void addImageUrl(String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {

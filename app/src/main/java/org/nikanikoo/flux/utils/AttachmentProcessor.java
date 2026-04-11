@@ -12,12 +12,14 @@ public class AttachmentProcessor {
 
     public static class AttachmentResult {
         private final List<String> imageUrls;
+        private final List<String> imageMaxResUrls;
         private final List<Audio> audioAttachments;
         private final List<Video> videoAttachments;
         private final String unsupportedElementsText;
 
-        public AttachmentResult(List<String> imageUrls, List<Audio> audioAttachments, List<Video> videoAttachments, String unsupportedElementsText) {
+        public AttachmentResult(List<String> imageUrls, List<String> imageMaxResUrls, List<Audio> audioAttachments, List<Video> videoAttachments, String unsupportedElementsText) {
             this.imageUrls = imageUrls != null ? imageUrls : new ArrayList<>();
+            this.imageMaxResUrls = imageMaxResUrls != null ? imageMaxResUrls : new ArrayList<>();
             this.audioAttachments = audioAttachments != null ? audioAttachments : new ArrayList<>();
             this.videoAttachments = videoAttachments != null ? videoAttachments : new ArrayList<>();
             this.unsupportedElementsText = unsupportedElementsText != null ? unsupportedElementsText : "";
@@ -25,6 +27,10 @@ public class AttachmentProcessor {
 
         public List<String> getImageUrls() {
             return imageUrls;
+        }
+
+        public List<String> getImageMaxResUrls() {
+            return imageMaxResUrls;
         }
 
         public List<Audio> getAudioAttachments() {
@@ -42,12 +48,13 @@ public class AttachmentProcessor {
 
     public static AttachmentResult processAttachments(JSONArray attachments) {
         List<String> imageUrls = new ArrayList<>();
+        List<String> imageMaxResUrls = new ArrayList<>();
         List<Audio> audioAttachments = new ArrayList<>();
         List<Video> videoAttachments = new ArrayList<>();
         StringBuilder unsupportedElements = new StringBuilder();
 
         if (attachments == null || attachments.length() == 0) {
-            return new AttachmentResult(imageUrls, audioAttachments, videoAttachments, "");
+            return new AttachmentResult(imageUrls, imageMaxResUrls, audioAttachments, videoAttachments, "");
         }
 
         Logger.d("AttachmentProcessor", "Processing " + attachments.length() + " attachments");
@@ -56,7 +63,7 @@ public class AttachmentProcessor {
             for (int i = 0; i < attachments.length(); i++) {
                 JSONObject attachment = attachments.getJSONObject(i);
                 String type = attachment.optString("type", "");
-                
+
                 Logger.d("AttachmentProcessor", "Processing attachment " + i + " of type: " + type);
 
                 switch (type) {
@@ -64,9 +71,14 @@ public class AttachmentProcessor {
                         if (attachment.has("photo")) {
                             JSONObject photo = attachment.getJSONObject("photo");
                             String url = ImageUtils.extractOptimalImageUrl(photo);
+                            String maxResUrl = ImageUtils.extractMaxResImageUrl(photo);
                             if (!url.isEmpty()) {
                                 imageUrls.add(url);
-                                Logger.d("AttachmentProcessor", "Added photo: " + url);
+                                Logger.d("AttachmentProcessor", "Added photo (z): " + url);
+                            }
+                            if (!maxResUrl.isEmpty()) {
+                                imageMaxResUrls.add(maxResUrl);
+                                Logger.d("AttachmentProcessor", "Added photo (maxres): " + maxResUrl);
                             }
                         }
                         break;
@@ -111,10 +123,10 @@ public class AttachmentProcessor {
             Logger.e("AttachmentProcessor", "Error processing attachments", e);
         }
 
-        Logger.d("AttachmentProcessor", "Processed attachments: " + imageUrls.size() + " images, " + 
+        Logger.d("AttachmentProcessor", "Processed attachments: " + imageUrls.size() + " images, " +
                  audioAttachments.size() + " audio, " + videoAttachments.size() + " videos, unsupported: " + unsupportedElements.toString());
 
-        return new AttachmentResult(imageUrls, audioAttachments, videoAttachments, unsupportedElements.toString());
+        return new AttachmentResult(imageUrls, imageMaxResUrls, audioAttachments, videoAttachments, unsupportedElements.toString());
     }
 
     private static Audio parseAudio(JSONObject json) {
