@@ -22,6 +22,7 @@ import org.nikanikoo.flux.data.models.Post;
 import org.nikanikoo.flux.ui.activities.CreatePostActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
+import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.fragments.groups.GroupMembersFragment;
 import org.nikanikoo.flux.utils.Logger;
@@ -496,10 +497,9 @@ public class GroupProfileFragment extends BaseProfileFragment {
 
     @Override
     public void onShareClick(Post post) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, post.getContent());
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.post_share)));
+        RepostDialog.show(requireContext(), post, (repostedPost, comment) -> {
+            Logger.d(TAG, "Repost with comment: " + comment);
+        });
     }
 
     @Override

@@ -36,6 +36,7 @@ import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.ui.activities.CreatePostActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
+import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.utils.Logger;
 
 import java.util.ArrayList;
@@ -565,7 +566,9 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
 
     @Override
     public void onShareClick(Post post) {
-        Toast.makeText(getContext(), post.getAuthorName(), Toast.LENGTH_SHORT).show();
+        RepostDialog.show(requireContext(), post, (repostedPost, comment) -> {
+            Logger.d(TAG, "Repost with comment: " + comment);
+        });
     }
     
     @Override

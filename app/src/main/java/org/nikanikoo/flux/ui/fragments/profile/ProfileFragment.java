@@ -19,6 +19,7 @@ import org.nikanikoo.flux.data.models.UserProfile;
 import org.nikanikoo.flux.ui.activities.CreatePostActivity;
 import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
+import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.fragments.friends.UserFriendsFragment;
 import org.nikanikoo.flux.utils.Logger;
@@ -393,7 +394,9 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
     @Override
     public void onShareClick(Post post) {
-        Toast.makeText(getContext(), post.getAuthorName(), Toast.LENGTH_SHORT).show();
+        RepostDialog.show(requireContext(), post, (repostedPost, comment) -> {
+            Logger.d(TAG, "Repost with comment: " + comment);
+        });
     }
 
     @Override

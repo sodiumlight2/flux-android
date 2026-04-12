@@ -163,6 +163,34 @@
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:id="@+id/original_post_share_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:padding="8dp"
+                                android:layout_marginStart="16dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@android:drawable/ic_menu_share"
+                                    app:tint="@android:color/darker_gray" />
+
+                                <TextView
+                                    android:id="@+id/original_post_share_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/share"
+                                    android:textSize="12sp"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:layout_marginStart="4dp" />
+
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </LinearLayout>

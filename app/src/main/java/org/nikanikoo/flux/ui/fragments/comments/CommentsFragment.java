@@ -28,6 +28,7 @@ import org.nikanikoo.flux.data.managers.PostsManager;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.activities.MainActivity;
 import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
+import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
 import org.nikanikoo.flux.utils.ValidationUtils;
@@ -59,7 +60,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private ImageView originalPostLikeIcon;
     private TextView originalPostLikeCount;
     private TextView originalPostCommentCount;
-    
+    private View originalPostShareButton;
+
     // Views для ввода комментария
     private EditText editComment;
     private ImageView btnAttachImage;
@@ -120,6 +122,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostLikeIcon = view.findViewById(R.id.original_post_like_icon);
         originalPostLikeCount = view.findViewById(R.id.original_post_like_count);
         originalPostCommentCount = view.findViewById(R.id.original_post_comment_count);
+        originalPostShareButton = view.findViewById(R.id.original_post_share_button);
         
         // Комментарии
         recyclerComments = view.findViewById(R.id.recycler_comments);
@@ -298,6 +301,12 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                         });
                     }
                 }
+            });
+        });
+
+        originalPostShareButton.setOnClickListener(v -> {
+            RepostDialog.show(requireContext(), originalPost, (repostedPost, comment) -> {
+                System.out.println("Repost from CommentsFragment with comment: " + comment);
             });
         });
     }

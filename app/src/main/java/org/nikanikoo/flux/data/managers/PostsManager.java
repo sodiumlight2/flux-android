@@ -58,6 +58,11 @@ public class PostsManager extends BaseManager<PostsManager> {
         void onError(String error);
     }
 
+    public interface RepostCallback {
+        void onSuccess(int postId, int likeCount);
+        void onError(String error);
+    }
+
     public interface UserIdCallback {
         void onSuccess(int userId);
         void onError(String error);
@@ -860,6 +865,51 @@ public class PostsManager extends BaseManager<PostsManager> {
             public void onError(String error) {
                 Logger.e(TAG, "PostsManager: ошибка загрузки поста: " + error);
                 callback.onError("Не удалось загрузить пост");
+            }
+        });
+    }
+
+    public void repostPost(String object, String message, RepostCallback callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("object", object);
+        if (message != null && !message.isEmpty()) {
+            params.put("message", message);
+        }
+
+        Logger.d(TAG, "Репост поста: object=" + object + ", message=" + message);
+
+        api.callMethod("wall.repost", params, new OpenVKApi.ApiCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    Logger.apiResponse(TAG, response.toString());
+
+                    if (response.has("response")) {
+                        JSONObject responseObj = response.getJSONObject("response");
+                        int postId = responseObj.optInt("post_id", 0);
+                        int likesCount = responseObj.optInt("likes_count", 0);
+
+                        Logger.d(TAG, "Репост выполнен: post_id=" + postId + ", likes_count=" + likesCount);
+                        callback.onSuccess(postId, likesCount);
+                    } else if (response.has("error")) {
+                        JSONObject errorObj = response.getJSONObject("error");
+                        String errorMsg = errorObj.optString("error_msg", "Неизвестная ошибка");
+                        Logger.w(TAG, "API вернул ошибку при репосте: " + errorMsg);
+                        callback.onError(errorMsg);
+                    } else {
+                        Logger.w(TAG, "Неожиданный формат ответа при репосте: " + response.toString());
+                        callback.onError("Неожиданный формат ответа сервера");
+                    }
+                } catch (Exception e) {
+                    Logger.e(TAG, "Ошибка парсинга при репосте", e);
+                    callback.onError("Не удалось выполнить репост");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Logger.e(TAG, "Ошибка API репоста: " + error);
+                callback.onError("Не удалось выполнить репост");
             }
         });
     }

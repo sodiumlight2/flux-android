@@ -127,6 +127,19 @@
     <string name="copy_link">Скопировать ссылку</string>
     <string name="copied_link">Ссылка скопирована</string>
     <string name="post_share_from">Поделиться постом от %s</string>
+    
+    <!-- Репост диалог -->
+    <string name="repost_dialog_title">Поделиться постом</string>
+    <string name="repost_share_to_wall">На стену</string>
+    <string name="repost_share_to_group">В группу</string>
+    <string name="repost_share_to_dm">В личные сообщения</string>
+    <string name="repost_comment_hint">Добавить комментарий...</string>
+    <string name="repost_attach">Прикрепить</string>
+    <string name="repost_send">Отправить</string>
+    <string name="repost_success">Репост опубликован</string>
+    <string name="repost_error">Ошибка репоста</string>
+    <string name="feature_not_available">Пока недоступно</string>
+    
     <string name="post_like_error">Невозможно поставить лайк этому посту</string>
     <string name="post_edit_not_supported">Редактирование поста пока не реализовано</string>
     <string name="post_delete_not_supported">Удаление поста пока не реализовано</string>
