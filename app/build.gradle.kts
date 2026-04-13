@@ -32,8 +32,8 @@ android {
         applicationId = "org.nikanikoo.flux"
         minSdk = 21
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.2-dev.1"
+        versionCode = 5
+        versionName = "1.2-dev.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
