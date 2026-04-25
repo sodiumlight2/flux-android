@@ -25,7 +25,8 @@
         android:theme="@style/Theme.Flux"
         android:largeHeap="true"
         android:hardwareAccelerated="true"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true">

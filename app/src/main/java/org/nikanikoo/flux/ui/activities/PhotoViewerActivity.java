@@ -43,15 +43,19 @@ import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.custom.SwipeToCloseHelper;
 import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.SSLHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class PhotoViewerActivity extends AppCompatActivity {
 
@@ -663,24 +667,31 @@ public class PhotoViewerActivity extends AppCompatActivity {
         }
     }
 
+    private OkHttpClient createOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS);
+        SSLHelper.configureToIgnoreSSL(builder);
+        return builder.build();
+    }
+
     private void downloadWithMediaStoreApi(String url, String folderName, Runnable onSuccess, Runnable onError) {
         new Thread(() -> {
+            OkHttpClient client = createOkHttpClient();
             try {
-                URL imageUrl = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
-                connection.setDoInput(true);
-                connection.setConnectTimeout(15000);
-                connection.setReadTimeout(30000);
-                connection.connect();
-                
-                int responseCode = connection.getResponseCode();
-                if (responseCode != HttpURLConnection.HTTP_OK) {
-                    throw new RuntimeException("HTTP error: " + responseCode);
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new RuntimeException("HTTP error: " + response.code());
                 }
                 
-                InputStream inputStream = connection.getInputStream();
+                InputStream inputStream = response.body().byteStream();
                 
-                String fileName = "IMG_" + System.currentTimeMillis() + "_" + downloadIndex + ".jpg";
+                String fileName = "IMG_" + System.currentTimeMillis() + "_" +
+                                 (int)(Math.random() * 1000) + ".jpg";
                 
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
@@ -691,10 +702,18 @@ public class PhotoViewerActivity extends AppCompatActivity {
                 Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 
                 if (uri == null) {
-                    throw new RuntimeException("Failed to create MediaStore entry");
+                    values.remove(MediaStore.Images.Media.IS_PENDING);
+                    uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    if (uri == null) {
+                        throw new RuntimeException("Failed to create MediaStore entry. Check storage permissions.");
+                    }
                 }
                 
                 OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                if (outputStream == null) {
+                    throw new RuntimeException("Cannot open output stream for URI: " + uri);
+                }
+                
                 byte[] buffer = new byte[8192];
                 int bytesRead;
                 int totalBytes = 0;
@@ -704,26 +723,40 @@ public class PhotoViewerActivity extends AppCompatActivity {
                 }
                 
                 if (totalBytes == 0) {
+                    outputStream.close();
+                    getContentResolver().delete(uri, null, null);
                     throw new RuntimeException("Downloaded file is empty");
                 }
                 
                 outputStream.flush();
                 outputStream.close();
                 inputStream.close();
-                connection.disconnect();
+                response.close();
                 
                 values.clear();
                 values.put(MediaStore.Images.Media.IS_PENDING, 0);
-                getContentResolver().update(uri, values, null, null);
+                int updated = getContentResolver().update(uri, values, null, null);
+                if (updated == 0) {
+                    Logger.w(TAG, "Failed to update IS_PENDING flag for " + uri);
+                }
                 
-                Logger.d(TAG, "Image saved to: " + folderName + "/" + fileName + " (" + totalBytes + " bytes)");
+                Logger.d(TAG, "Image saved to MediaStore: " + folderName + "/" + fileName + " (" + totalBytes + " bytes)");
                 
                 if (onSuccess != null) {
                     runOnUiThread(onSuccess);
                 }
                 
+            } catch (SecurityException e) {
+                Logger.e(TAG, "SecurityException while saving image: " + e.getMessage(), e);
+                if (onError != null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(PhotoViewerActivity.this,
+                            getString(R.string.download_permission_denied), Toast.LENGTH_LONG).show();
+                        onError.run();
+                    });
+                }
             } catch (Exception e) {
-                Logger.e(TAG, "Download failed: " + e.getMessage());
+                Logger.e(TAG, "Download failed: " + e.getMessage(), e);
                 if (onError != null) {
                     runOnUiThread(onError);
                 }
@@ -733,20 +766,17 @@ public class PhotoViewerActivity extends AppCompatActivity {
 
     private void downloadWithManualFolder(String url, String folderName, Runnable onSuccess, Runnable onError) {
         new Thread(() -> {
+            OkHttpClient client = createOkHttpClient();
             try {
-                URL imageUrl = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
-                connection.setDoInput(true);
-                connection.setConnectTimeout(15000);
-                connection.setReadTimeout(30000);
-                connection.connect();
-                
-                int responseCode = connection.getResponseCode();
-                if (responseCode != HttpURLConnection.HTTP_OK) {
-                    throw new RuntimeException("HTTP error: " + responseCode);
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new RuntimeException("HTTP error: " + response.code());
                 }
                 
-                InputStream inputStream = connection.getInputStream();
+                InputStream inputStream = response.body().byteStream();
                 
                 File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                 File fluxFolder = new File(picturesDir, folderName);
@@ -757,7 +787,8 @@ public class PhotoViewerActivity extends AppCompatActivity {
                     }
                 }
                 
-                String fileName = "IMG_" + System.currentTimeMillis() + "_" + downloadIndex + ".jpg";
+                String fileName = "IMG_" + System.currentTimeMillis() + "_" +
+                                 (int)(Math.random() * 1000) + ".jpg";
                 File outputFile = new File(fluxFolder, fileName);
                 
                 FileOutputStream outputStream = new FileOutputStream(outputFile);
@@ -778,7 +809,7 @@ public class PhotoViewerActivity extends AppCompatActivity {
                 outputStream.flush();
                 outputStream.close();
                 inputStream.close();
-                connection.disconnect();
+                response.close();
                 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 mediaScanIntent.setData(Uri.fromFile(outputFile));
@@ -790,8 +821,17 @@ public class PhotoViewerActivity extends AppCompatActivity {
                     runOnUiThread(onSuccess);
                 }
                 
+            } catch (SecurityException e) {
+                Logger.e(TAG, "SecurityException while saving image: " + e.getMessage(), e);
+                if (onError != null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(PhotoViewerActivity.this,
+                            getString(R.string.download_permission_denied), Toast.LENGTH_LONG).show();
+                        onError.run();
+                    });
+                }
             } catch (Exception e) {
-                Logger.e(TAG, "Download failed: " + e.getMessage());
+                Logger.e(TAG, "Download failed: " + e.getMessage(), e);
                 if (onError != null) {
                     runOnUiThread(onError);
                 }
