@@ -56,6 +56,7 @@ jobs:
         with:
           tag_name: build-${{ steps.commit.outputs.hash }}
           name: Build ${{ steps.commit.outputs.hash }}
+          prerelease: true
           files: app/build/outputs/apk/debug/*.apk
           body: |
             ## ${{ steps.commit.outputs.title }}
