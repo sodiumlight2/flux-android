@@ -1,6 +1,7 @@
 package org.nikanikoo.flux.ui.adapters.posts;
 
 import android.content.Context;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
 import org.nikanikoo.flux.ui.views.AudioAttachmentView;
 import org.nikanikoo.flux.utils.ImageUtils;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.SafeLinkMovementMethod;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
 import java.util.ArrayList;
@@ -169,7 +171,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Показываем текст репоста (если есть)
         String repostText = post.getRepostText();
         if (ValidationUtils.isValidPostText(repostText)) {
-            holder.content.setText(ValidationUtils.SanitizeText(repostText));
+            String sanitizedText = ValidationUtils.SanitizeText(repostText);
+            holder.content.setText(sanitizedText);
+            Linkify.addLinks(holder.content, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.content.setMovementMethod(SafeLinkMovementMethod.getInstance());
             holder.content.setVisibility(View.VISIBLE);
         } else {
             holder.content.setVisibility(View.GONE);
@@ -187,7 +192,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Заполняем данные оригинального поста
         holder.originalPostAuthorName.setText(ValidationUtils.sanitizeUserInput(originalPost.getAuthorName()));
         holder.originalPostTimestamp.setText(originalPost.getTimestamp());
-        holder.originalPostContent.setText(ValidationUtils.SanitizeText(originalPost.getContent()));
+        String originalContent = ValidationUtils.SanitizeText(originalPost.getContent());
+        holder.originalPostContent.setText(originalContent);
+        Linkify.addLinks(holder.originalPostContent, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        holder.originalPostContent.setMovementMethod(SafeLinkMovementMethod.getInstance());
         
         // Отображение галочки верификации автора оригинального поста
         if (holder.originalPostAuthorVerified != null) {
@@ -263,7 +271,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void handleRegularPost(@NonNull PostViewHolder holder, Post post) {
         
         // Устанавливаем текст поста - sanitizeText обрабатывает переносы
-        holder.content.setText(ValidationUtils.SanitizeText(post.getContent()));
+        String sanitizedText = ValidationUtils.SanitizeText(post.getContent());
+        holder.content.setText(sanitizedText);
+        Linkify.addLinks(holder.content, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        holder.content.setMovementMethod(SafeLinkMovementMethod.getInstance());
         holder.content.setVisibility(View.VISIBLE);
         
         // Скрываем контейнер оригинального поста
@@ -343,7 +354,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void handleOriginalPostUnsupportedElements(@NonNull PostViewHolder holder, Post originalPost) {
         String unsupportedText = originalPost.getUnsupportedElementsText();
         if (ValidationUtils.isValidPostText(unsupportedText)) {
-            holder.originalPostUnsupportedElements.setText(ValidationUtils.SanitizeText(unsupportedText));
+            String sanitizedText = ValidationUtils.SanitizeText(unsupportedText);
+            holder.originalPostUnsupportedElements.setText(sanitizedText);
+            Linkify.addLinks(holder.originalPostUnsupportedElements, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.originalPostUnsupportedElements.setMovementMethod(SafeLinkMovementMethod.getInstance());
             holder.originalPostUnsupportedElements.setVisibility(View.VISIBLE);
         } else {
             holder.originalPostUnsupportedElements.setVisibility(View.GONE);
@@ -402,7 +416,10 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void handleUnsupportedElements(@NonNull PostViewHolder holder, Post post) {
         String unsupportedText = post.getUnsupportedElementsText();
         if (ValidationUtils.isValidPostText(unsupportedText)) {
-            holder.unsupportedElements.setText(ValidationUtils.SanitizeText(unsupportedText));
+            String sanitizedText = ValidationUtils.SanitizeText(unsupportedText);
+            holder.unsupportedElements.setText(sanitizedText);
+            Linkify.addLinks(holder.unsupportedElements, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.unsupportedElements.setMovementMethod(SafeLinkMovementMethod.getInstance());
             holder.unsupportedElements.setVisibility(View.VISIBLE);
         } else {
             holder.unsupportedElements.setVisibility(View.GONE);

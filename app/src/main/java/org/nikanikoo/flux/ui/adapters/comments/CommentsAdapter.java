@@ -1,6 +1,7 @@
 package org.nikanikoo.flux.ui.adapters.comments;
 
 import android.content.Context;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import org.nikanikoo.flux.data.models.Comment;
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.ui.views.AudioAttachmentView;
+import org.nikanikoo.flux.utils.SafeLinkMovementMethod;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
 import java.util.List;
@@ -57,6 +59,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         holder.content.setText(ValidationUtils.SanitizeText(comment.getText()));
         holder.likeCount.setText(String.valueOf(comment.getLikesCount()));
         
+        Linkify.addLinks(holder.content, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        holder.content.setMovementMethod(SafeLinkMovementMethod.getInstance());
+        
         // Отображение галочки верификации автора комментария
         if (holder.authorVerified != null) {
             holder.authorVerified.setVisibility(comment.isAuthorVerified() ? View.VISIBLE : View.GONE);
@@ -95,9 +100,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         // Обработка аудио вложений
         if (comment.getAudioAttachments() != null && !comment.getAudioAttachments().isEmpty()) {
             AudioAttachmentView.addAudioAttachments(
-                context, 
-                holder.audioContainer, 
-                comment.getAudioAttachments(), 
+                context,
+                holder.audioContainer,
+                comment.getAudioAttachments(),
                 null
             );
         } else {
@@ -115,6 +120,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         if (comment.getUnsupportedElementsText() != null && !comment.getUnsupportedElementsText().isEmpty()) {
             holder.unsupportedElements.setText(comment.getUnsupportedElementsText());
             holder.unsupportedElements.setVisibility(View.VISIBLE);
+            Linkify.addLinks(holder.unsupportedElements, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.unsupportedElements.setMovementMethod(SafeLinkMovementMethod.getInstance());
         } else {
             holder.unsupportedElements.setVisibility(View.GONE);
         }

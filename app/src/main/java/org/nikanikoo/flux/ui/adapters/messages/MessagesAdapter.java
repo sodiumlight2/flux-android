@@ -1,6 +1,7 @@
 package org.nikanikoo.flux.ui.adapters.messages;
 
 import android.content.Context;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import org.nikanikoo.flux.data.models.Message;
 import org.nikanikoo.flux.R;
+import org.nikanikoo.flux.utils.SafeLinkMovementMethod;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
 import java.text.SimpleDateFormat;
@@ -87,7 +89,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindOutgoingMessage(OutgoingMessageViewHolder holder, Message message) {
-        holder.messageText.setText(ValidationUtils.SanitizeText(message.getText()));
+        String sanitizedText = ValidationUtils.SanitizeText(message.getText());
+        holder.messageText.setText(sanitizedText);
+        Linkify.addLinks(holder.messageText, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        holder.messageText.setMovementMethod(SafeLinkMovementMethod.getInstance());
+        holder.messageText.setLinkTextColor(android.graphics.Color.WHITE);
         
         // Форматирование времени
         Date date = new Date(message.getDate() * 1000);
@@ -103,7 +109,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindIncomingMessage(IncomingMessageViewHolder holder, Message message) {
-        holder.messageText.setText(ValidationUtils.SanitizeText(message.getText()));
+        String sanitizedText = ValidationUtils.SanitizeText(message.getText());
+        holder.messageText.setText(sanitizedText);
+        Linkify.addLinks(holder.messageText, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+        holder.messageText.setMovementMethod(SafeLinkMovementMethod.getInstance());
         
         // Форматирование времени
         Date date = new Date(message.getDate() * 1000);

@@ -1,6 +1,7 @@
 package org.nikanikoo.flux.ui.fragments.profile;
 
 import android.content.Context;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -10,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.models.UserProfile;
+import org.nikanikoo.flux.utils.SafeLinkMovementMethod;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,6 +161,7 @@ public class ProfileInfoController {
         if (profileStatus != null) {
             String status = profile.getProfileStatus();
             profileStatus.setText(status);
+            setupLinkify(profileStatus);
             profileStatus.setVisibility(status != null && !status.isEmpty() ? View.VISIBLE : View.GONE);
         }
         
@@ -248,11 +251,18 @@ public class ProfileInfoController {
             textView.setText(String.valueOf(value));
         }
     }
-    
+
+    private void setupLinkify(TextView textView) {
+        if (textView != null) {
+            Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            textView.setMovementMethod(SafeLinkMovementMethod.getInstance());
+        }
+    }
+
     /**
      * Установить текст с проверкой на null/empty и управлением видимостью layout
      */
-    private void setTextWithLayout(TextView textView, LinearLayout layout, 
+    private void setTextWithLayout(TextView textView, LinearLayout layout,
                                    String value, TextFormatter formatter) {
         if (textView == null || layout == null) {
             return;
@@ -260,6 +270,7 @@ public class ProfileInfoController {
         
         if (value != null && !value.isEmpty() && !"null".equals(value)) {
             textView.setText(formatter != null ? formatter.format(value) : value);
+            setupLinkify(textView);
             layout.setVisibility(View.VISIBLE);
         } else {
             layout.setVisibility(View.GONE);
