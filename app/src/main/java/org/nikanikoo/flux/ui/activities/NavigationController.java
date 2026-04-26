@@ -50,6 +50,7 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
     // Header views
     private TextView drawerName;
     private TextView drawerUsername;
+    private TextView drawerInstance;
     private ImageView drawerVerifiedBadge;
     private ImageView drawerAvatar;
     private ImageView accountsExpandIcon;
@@ -123,6 +124,7 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         
         drawerName = headerView.findViewById(R.id.drawer_name);
         drawerUsername = headerView.findViewById(R.id.drawer_username);
+        drawerInstance = headerView.findViewById(R.id.drawer_instance);
         drawerVerifiedBadge = headerView.findViewById(R.id.drawer_verified_badge);
         drawerAvatar = headerView.findViewById(R.id.drawer_avatar);
         accountsExpandIcon = headerView.findViewById(R.id.accounts_expand_icon);
@@ -180,6 +182,21 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
                 drawerUsername.setText("@" + screenName);
             } else {
                 drawerUsername.setText("@id" + profile.getId());
+            }
+        }
+        
+        if (drawerInstance != null) {
+            AccountManager.Account currentAccount = accountManager.getCurrentAccount();
+            if (currentAccount != null && currentAccount.instance != null) {
+                String instance = currentAccount.instance;
+                if (instance.startsWith("https://")) {
+                    instance = instance.substring(8);
+                } else if (instance.startsWith("http://")) {
+                    instance = instance.substring(7);
+                }
+                drawerInstance.setText(instance);
+            } else {
+                drawerInstance.setText("");
             }
         }
         
@@ -251,10 +268,26 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         // Находим Views
         ImageView avatarView = accountView.findViewById(R.id.account_avatar);
         TextView nameView = accountView.findViewById(R.id.account_name);
+        TextView instanceView = accountView.findViewById(R.id.account_instance);
+        ImageView verifiedBadge = accountView.findViewById(R.id.account_verified_badge);
         
         // Устанавливаем данные
         if (nameView != null) {
             nameView.setText(account.fullName);
+        }
+        
+        if (instanceView != null && account.instance != null) {
+            String instance = account.instance;
+            if (instance.startsWith("https://")) {
+                instance = instance.substring(8);
+            } else if (instance.startsWith("http://")) {
+                instance = instance.substring(7);
+            }
+            instanceView.setText(instance);
+        }
+        
+        if (verifiedBadge != null) {
+            verifiedBadge.setVisibility(account.isVerified ? View.VISIBLE : View.GONE);
         }
         
         // Загружаем аватар
