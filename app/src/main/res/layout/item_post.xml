@@ -243,16 +243,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Изображения поста -->
-        <!-- Одиночное изображение (для обратной совместимости) -->
-        <ImageView
-            android:id="@+id/post_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitStart"
-            android:visibility="gone"
-            android:layout_marginBottom="12dp"/>
-
         <!-- Коллаж изображений -->
         <org.nikanikoo.flux.ui.adapters.posts.PostImagesCollage
             android:id="@+id/post_images_collage"

@@ -181,7 +181,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         
         // Скрываем изображения основного поста для репостов
-        holder.postImage.setVisibility(View.GONE);
         holder.imagesCollage.setVisibility(View.GONE);
         AudioAttachmentView.clearAudioAttachments(holder.audioContainer);
         clearVideoAttachments(holder.videoContainer);
@@ -192,10 +191,17 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Заполняем данные оригинального поста
         holder.originalPostAuthorName.setText(ValidationUtils.sanitizeUserInput(originalPost.getAuthorName()));
         holder.originalPostTimestamp.setText(originalPost.getTimestamp());
-        String originalContent = ValidationUtils.SanitizeText(originalPost.getContent());
-        holder.originalPostContent.setText(originalContent);
-        Linkify.addLinks(holder.originalPostContent, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
-        holder.originalPostContent.setMovementMethod(SafeLinkMovementMethod.getInstance());
+
+        String originalContent = originalPost.getContent();
+        if (ValidationUtils.isValidPostText(originalContent)) {
+            String sanitizedText = ValidationUtils.SanitizeText(originalContent);
+            holder.originalPostContent.setText(sanitizedText);
+            Linkify.addLinks(holder.originalPostContent, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.originalPostContent.setMovementMethod(SafeLinkMovementMethod.getInstance());
+            holder.originalPostContent.setVisibility(View.VISIBLE);
+        } else {
+            holder.originalPostContent.setVisibility(View.GONE);
+        }
         
         // Отображение галочки верификации автора оригинального поста
         if (holder.originalPostAuthorVerified != null) {
@@ -271,11 +277,16 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void handleRegularPost(@NonNull PostViewHolder holder, Post post) {
         
         // Устанавливаем текст поста - sanitizeText обрабатывает переносы
-        String sanitizedText = ValidationUtils.SanitizeText(post.getContent());
-        holder.content.setText(sanitizedText);
-        Linkify.addLinks(holder.content, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
-        holder.content.setMovementMethod(SafeLinkMovementMethod.getInstance());
-        holder.content.setVisibility(View.VISIBLE);
+        String postContent = post.getContent();
+        if (ValidationUtils.isValidPostText(postContent)) {
+            String sanitizedText = ValidationUtils.SanitizeText(postContent);
+            holder.content.setText(sanitizedText);
+            Linkify.addLinks(holder.content, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            holder.content.setMovementMethod(SafeLinkMovementMethod.getInstance());
+            holder.content.setVisibility(View.VISIBLE);
+        } else {
+            holder.content.setVisibility(View.GONE);
+        }
         
         // Скрываем контейнер оригинального поста
         holder.originalPostContainer.setVisibility(View.GONE);
@@ -372,7 +383,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         if (imageUrls == null || imageUrls.isEmpty()) {
             // Нет изображений
-            holder.postImage.setVisibility(View.GONE);
             holder.imagesCollage.setVisibility(View.GONE);
             return;
         }
@@ -386,28 +396,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         
         if (validUrls.isEmpty()) {
-            holder.postImage.setVisibility(View.GONE);
             holder.imagesCollage.setVisibility(View.GONE);
             return;
         }
         
-        if (validUrls.size() == 1) {
-            // Одно изображение
-            holder.postImage.setVisibility(View.VISIBLE);
-            holder.imagesCollage.setVisibility(View.GONE);
-            
-            ImageUtils.loadPostImage(validUrls.get(0), holder.postImage);
-            
-            holder.postImage.setOnClickListener(v -> openPhotoViewer(0, validUrls, post));
-        } else {
-            // Несколько изображений - коллаж
-            holder.postImage.setVisibility(View.GONE);
-            holder.imagesCollage.setVisibility(View.VISIBLE);
-            
-            holder.imagesCollage.setImages(validUrls);
-            holder.imagesCollage.setOnImageClickListener((imagePosition, urls) -> 
-                openPhotoViewer(imagePosition, urls, post));
-        }
+        holder.imagesCollage.setVisibility(View.VISIBLE);
+        
+        holder.imagesCollage.setImages(validUrls);
+        holder.imagesCollage.setOnImageClickListener((imagePosition, urls) ->
+            openPhotoViewer(imagePosition, urls, post));
     }
     
     /**
@@ -723,7 +720,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView authorName;
         TextView timestamp;
         TextView content;
-        ImageView postImage;
         PostImagesCollage imagesCollage;
         android.widget.LinearLayout audioContainer;
         android.widget.LinearLayout videoContainer;
@@ -758,7 +754,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             authorName = itemView.findViewById(R.id.post_author_name);
             timestamp = itemView.findViewById(R.id.post_timestamp);
             content = itemView.findViewById(R.id.post_content);
-            postImage = itemView.findViewById(R.id.post_image);
             imagesCollage = itemView.findViewById(R.id.post_images_collage);
             audioContainer = itemView.findViewById(R.id.post_audio_container);
             videoContainer = itemView.findViewById(R.id.post_video_container);
