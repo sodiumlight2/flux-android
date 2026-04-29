@@ -317,8 +317,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 Logger.d(TAG, " Loaded " + loadedPosts.size() + " posts from API, " +
                     actuallyAdded + " actually added after duplicate filtering");
 
-                // Уведомляем PaginationHelper о РЕАЛЬНОМ количестве добавленных постов
-                paginationHelper.onDataLoaded(actuallyAdded, nextFrom);
+                paginationHelper.onDataLoaded(loadedPosts.size(), nextFrom);
 
                 hasLoadedPosts = true;
                 savedPosts.clear();
