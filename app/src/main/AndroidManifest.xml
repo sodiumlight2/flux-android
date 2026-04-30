@@ -29,7 +29,8 @@
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".ui.activities.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,29 +41,35 @@
             android:name=".ui.activities.CreatePostActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.TwoFactorActivity"
             android:exported="false"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.PhotoViewerActivity"
             android:exported="false"
-            android:theme="@style/Theme.PhotoViewer" />
+            android:theme="@style/Theme.PhotoViewer"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.AudioPlayerActivity"
             android:exported="false"
             android:theme="@style/Theme.Flux"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.VideoPlayerActivity"
             android:exported="false"
             android:theme="@style/Theme.Flux"
-            android:supportsPictureInPicture="true" />
+            android:supportsPictureInPicture="true"
+            android:configChanges="orientation|screenSize" />
         
         <!-- Chat and Comments Activities -->
         <activity
@@ -70,49 +77,58 @@
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/Theme.Flux"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.CommentsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         
         <!-- Settings Activities -->
         <activity
             android:name=".ui.activities.AppearanceSettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.AccountManagerActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.NotificationsSettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.DataSettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.AboutAppActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.AboutInstanceActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.LanguageSettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/Theme.Flux" />
+            android:theme="@style/Theme.Flux"
+            android:configChanges="orientation|screenSize" />
 
         <service
             android:name=".services.LongPollService"
