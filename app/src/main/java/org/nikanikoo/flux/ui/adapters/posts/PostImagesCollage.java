@@ -167,13 +167,19 @@ public class PostImagesCollage extends FrameLayout {
     
     private void loadImageIntoView(ImageView imageView, String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            Picasso.get()
+            com.squareup.picasso.RequestCreator requestCreator = Picasso.get()
                     .load(imageUrl)
                     .placeholder(android.R.drawable.ic_menu_gallery)
                     .error(android.R.drawable.ic_menu_gallery)
-                    .fit()
-                    .centerCrop()
-                    .into(imageView);
+                    .fit();
+            
+            if (imageView == image1Of1) {
+                requestCreator.centerInside();
+            } else {
+                requestCreator.centerCrop();
+            }
+            
+            requestCreator.into(imageView);
         } else {
             imageView.setImageResource(android.R.drawable.ic_menu_gallery);
         }
