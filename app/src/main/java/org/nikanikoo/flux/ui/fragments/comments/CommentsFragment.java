@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import org.nikanikoo.flux.data.models.Comment;
 import org.nikanikoo.flux.ui.adapters.comments.CommentsAdapter;
+import org.nikanikoo.flux.ui.adapters.posts.PostImagesCollage;
 import org.nikanikoo.flux.data.managers.CommentsManager;
 import org.nikanikoo.flux.data.managers.api.OpenVKApi;
 import org.nikanikoo.flux.data.models.Post;
@@ -55,7 +56,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private TextView originalPostAuthorName;
     private TextView originalPostTimestamp;
     private TextView originalPostContent;
-    private ImageView originalPostImage;
+    private PostImagesCollage originalPostImage;
     private View originalPostLikeButton;
     private ImageView originalPostLikeIcon;
     private TextView originalPostLikeCount;
@@ -242,16 +243,9 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         // Загружаем изображения поста
         List<String> imageUrls = originalPost.getImageUrls();
         if (imageUrls != null && !imageUrls.isEmpty()) {
-            originalPostImage.setVisibility(View.VISIBLE);
-            Picasso.get()
-                    .load(imageUrls.get(0))
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_gallery)
-                    .into(originalPostImage);
-            
-            // Добавляем обработчик клика на изображение поста
-            originalPostImage.setOnClickListener(v -> {
-                PhotoViewerActivity.start(getContext(), imageUrls, 0, originalPost, originalPost.getAuthorName());
+            originalPostImage.setImages(imageUrls);
+            originalPostImage.setOnImageClickListener((position, urls) -> {
+                PhotoViewerActivity.start(getContext(), urls, position, originalPost, originalPost.getAuthorName());
             });
         } else {
             originalPostImage.setVisibility(View.GONE);
