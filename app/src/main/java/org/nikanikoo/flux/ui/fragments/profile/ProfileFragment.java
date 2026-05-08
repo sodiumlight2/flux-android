@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.button.MaterialButton;
 
 import org.nikanikoo.flux.R;
+import org.nikanikoo.flux.data.managers.FriendsManager;
 import org.nikanikoo.flux.data.managers.PostsManager;
 import org.nikanikoo.flux.data.managers.ProfileManager;
 import org.nikanikoo.flux.data.models.Post;
@@ -45,10 +47,15 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
     private CardView profileDetailsCard;
     private ImageView expandArrow;
     private MaterialButton btnCreatePostProfile;
+    private MaterialButton btnMessageProfile;
+    private MaterialButton btnFriendProfile;
+    private MaterialButton btnEditProfile;
+    private LinearLayout editProfileContainer;
     private CardView friendsCard;
     
     // State
     private boolean isDetailsExpanded = false;
+    private boolean isFriend = false;
     
     // Arguments
     private static final String ARG_USER_NAME = "user_name";
@@ -110,6 +117,10 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         profileDetailsCard = view.findViewById(R.id.profile_details_card);
         expandArrow = view.findViewById(R.id.expand_arrow);
         btnCreatePostProfile = view.findViewById(R.id.btn_create_post_profile);
+        btnMessageProfile = view.findViewById(R.id.btn_message_profile);
+        btnFriendProfile = view.findViewById(R.id.btn_friend_profile);
+        btnEditProfile = view.findViewById(R.id.btn_edit_profile);
+        editProfileContainer = view.findViewById(R.id.edit_profile_container);
         friendsCard = view.findViewById(R.id.friends_card);
         
         // Настройка обработчиков кликов
@@ -120,6 +131,18 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         // Кнопка создания поста
         if (btnCreatePostProfile != null) {
             btnCreatePostProfile.setOnClickListener(v -> presenter.onCreatePostClick());
+        }
+
+        if (btnMessageProfile != null) {
+            btnMessageProfile.setOnClickListener(v -> onMessageButtonClick());
+        }
+
+        if (btnFriendProfile != null) {
+            btnFriendProfile.setOnClickListener(v -> onFriendButtonClick());
+        }
+
+        if (btnEditProfile != null) {
+            btnEditProfile.setOnClickListener(v -> presenter.onEditProfileClick());
         }
         
         // Раскрытие деталей
@@ -259,6 +282,8 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         // Обновление информации через Controller
         infoController.updateProfileInfo(profile);
 
+        updateButtonsVisibility(profile);
+
         // Загружаем посты после загрузки профиля
         loadPosts(true);
     }
@@ -325,6 +350,91 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
     }
 
     // ==================== Helper Methods ====================
+
+    private void onMessageButtonClick() {
+        if (presenter != null) {
+            presenter.onMessageButtonClick();
+        }
+    }
+
+    private void onFriendButtonClick() {
+        if (presenter != null) {
+            presenter.onFriendButtonClick(isFriend);
+        }
+    }
+
+    private void updateButtonsVisibility(UserProfile profile) {
+        if (profile == null || getActivity() == null) {
+            return;
+        }
+
+        boolean isOwnProfile = !isForeignProfile();
+        
+        if (editProfileContainer != null) {
+            editProfileContainer.setVisibility(isOwnProfile ? View.VISIBLE : View.GONE);
+        } else if (btnEditProfile != null) {
+            btnEditProfile.setVisibility(isOwnProfile ? View.VISIBLE : View.GONE);
+        }
+
+        boolean showFriendButtons = !isOwnProfile;
+        if (btnMessageProfile != null) {
+            btnMessageProfile.setVisibility(showFriendButtons ? View.VISIBLE : View.GONE);
+        }
+        if (btnFriendProfile != null) {
+            btnFriendProfile.setVisibility(showFriendButtons ? View.VISIBLE : View.GONE);
+        }
+
+        if (showFriendButtons && userId > 0) {
+            checkFriendshipStatus(userId);
+        }
+    }
+
+    private void checkFriendshipStatus(int targetUserId) {
+        if (getActivity() == null) {
+            return;
+        }
+
+        FriendsManager friendsManager = FriendsManager.getInstance(getActivity());
+        List<Integer> userIds = new ArrayList<>();
+        userIds.add(targetUserId);
+
+        friendsManager.areFriends(userIds, new FriendsManager.AreFriendsCallback() {
+            @Override
+            public void onSuccess(List<FriendsManager.FriendStatus> friendStatuses) {
+                if (getActivity() == null || friendStatuses.isEmpty()) {
+                    return;
+                }
+
+                getActivity().runOnUiThread(() -> {
+                    FriendsManager.FriendStatus status = friendStatuses.get(0);
+                    isFriend = status.isFriend();
+                    updateFriendButtonText();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        isFriend = false;
+                        updateFriendButtonText();
+                    });
+                }
+            }
+        });
+    }
+
+    private void updateFriendButtonText() {
+        if (btnFriendProfile == null || getActivity() == null) {
+            return;
+        }
+
+        if (isFriend) {
+            btnFriendProfile.setText(R.string.profile_friend);
+        } else {
+            btnFriendProfile.setText(R.string.profile_add_friend);
+        }
+    }
 
     private void toggleDetailsCard() {
         if (profileDetailsCard == null || expandArrow == null) {

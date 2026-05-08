@@ -118,6 +118,21 @@ public interface ProfileContract {
         void onDetailsClick();
         
         /**
+         * Обработать клик по кнопке сообщения
+         */
+        void onMessageButtonClick();
+        
+        /**
+         * Обработать клик по кнопке добавления/удаления из друзей
+         */
+        void onFriendButtonClick(boolean isFriend);
+        
+        /**
+         * Обработать клик по кнопке редактирования профиля
+         */
+        void onEditProfileClick();
+        
+        /**
          * Получить текущий профиль
          */
         UserProfile getCurrentProfile();

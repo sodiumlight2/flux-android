@@ -482,6 +482,11 @@
     <string name="profile_posts_loading_error">Ошибка загрузки постов: </string>
     <string name="profile_posts_refresh_error">Не удалось загрузить новые посты</string>
     <string name="profile_photo_title">Фото профиля</string>
+    <string name="profile_edit">Редактировать</string>
+    <string name="profile_message">Сообщение</string>
+    <string name="profile_add_friend">Добавить в друзья</string>
+    <string name="profile_friend">Удалить из друзей</string>
+
 
     <!-- Links -->
     <string name="link_title">Ссылка</string>
@@ -535,5 +540,41 @@
     <string name="error_timeout_message">Сервер не ответил вовремя. Проверьте интернет и попробуйте снова</string>
     <string name="error_unauthorized_title">Требуется авторизация</string>
     <string name="error_unauthorized_message">Сессия истекла. Войдите в аккаунт заново</string>
+
+    <!-- Profile Fragment -->
+    <string name="add_to_friends">Добавить в друзья</string>
+    <string name="remove_from_friends">Удалить из друзей</string>
+    <string name="remove_friend_title">Удаление из друзей</string>
+    <string name="remove_friend_confirmation">Вы уверены, что хотите удалить %s из друзей?</string>
+    <string name="remove">Удалить</string>
+
+    <!-- Profile Edit -->
+    <string name="profile_edit_title">Редактирование профиля</string>
+    <string name="profile_edit_main">Основное</string>
+    <string name="profile_edit_contacts">Контакты</string>
+    <string name="profile_edit_interests">Интересы</string>
+    <string name="profile_edit_additional">Дополнительно</string>
+    <string name="profile_edit_name">Имя</string>
+    <string name="profile_edit_sname">Фамилия</string>
+    <string name="profile_edit_nickname">Ник</string>
+    <string name="profile_edit_status">Статус</string>
+    <string name="profile_edit_sex">Пол</string>
+    <string name="profile_edit_relation">Семейное положение</string>
+    <string name="profile_edit_relation_0">Не выбрано</string>
+    <string name="profile_edit_relation_1">Не замужем/не женат</string>
+    <string name="profile_edit_relation_2">Встречаюсь</string>
+    <string name="profile_edit_relation_3">Помолвлена/Помолвлен</string>
+    <string name="profile_edit_relation_4">Замужен/Женат</string>
+    <string name="profile_edit_relation_5">В гражданском браке</string>
+    <string name="profile_edit_relation_6">Влюблена/Влюблён</string>
+    <string name="profile_edit_relation_7">Всё сложно</string>
+    <string name="profile_edit_relation_8">В активном поиске</string>
+    <string name="profile_edit_bdate">Дата рождения</string>
+    <string name="profile_edit_bdate_visibility_1">Показывать дату рождения</string>
+    <string name="profile_edit_bdate_visibility_2">Показывать только день и месяц</string>
+    <string name="profile_edit_home_town">Родной город</string>
+    <string name="profile_edit_telegram">Telegram</string>
+    <string name="profile_edit_change_avatar">Сменить аватар</string>
+    <string name="profile_edit_in_development">В разработке</string>
 
 </resources>
