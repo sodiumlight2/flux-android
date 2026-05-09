@@ -53,6 +53,11 @@ public interface ProfileContract {
         void openCreatePost(int ownerId);
         
         /**
+         * Открыть чат с пользователем
+         */
+        void openChat(int userId, String userName);
+        
+        /**
          * Показать/скрыть кнопку создания поста
          */
         void setCreatePostButtonVisible(boolean visible);

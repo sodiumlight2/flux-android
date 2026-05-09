@@ -185,26 +185,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
         }
         
         int targetUserId = currentProfile.getId();
-        if (view.getContext() == null) {
-            return;
-        }
-        
-        FriendsManager friendsManager = FriendsManager.getInstance(view.getContext());
-        friendsManager.startConversationWithFriend(targetUserId, new FriendsManager.ActionCallback() {
-            @Override
-            public void onSuccess() {
-                if (view != null) {
-                    view.showMessage("Чат открыт");
-                }
-            }
-            
-            @Override
-            public void onError(String error) {
-                if (view != null) {
-                    view.showMessage("Ошибка открытия чата: " + error);
-                }
-            }
-        });
+        String userName = currentProfile.getFullName();
+        view.openChat(targetUserId, userName);
     }
     
     @Override

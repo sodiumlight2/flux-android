@@ -24,6 +24,7 @@ import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
 import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.ui.fragments.comments.CommentsFragment;
 import org.nikanikoo.flux.ui.fragments.friends.UserFriendsFragment;
+import org.nikanikoo.flux.ui.fragments.messages.ChatFragment;
 import org.nikanikoo.flux.utils.Logger;
 
 import java.util.ArrayList;
@@ -330,6 +331,18 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
             intent.putExtra("owner_id", ownerId);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void openChat(int userId, String userName) {
+        if (getActivity() == null) {
+            return;
+        }
+        ChatFragment chatFragment = ChatFragment.newInstance(userId, userName);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, chatFragment)
+                .addToBackStack("chat_" + userId)
+                .commit();
     }
 
     @Override
