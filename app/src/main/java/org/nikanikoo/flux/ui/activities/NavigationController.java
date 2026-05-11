@@ -46,6 +46,7 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
     private final MainActivity activity;
     private final CustomDrawerLayout drawerLayout;
     private final NavigationView navigationView;
+    private final View navigationRailView;
     
     // Header views
     private TextView drawerName;
@@ -68,14 +69,51 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
     private final AccountManager accountManager;
     
     public NavigationController(MainActivity activity, CustomDrawerLayout drawerLayout, 
-                                NavigationView navigationView, Toolbar toolbar) {
+                                NavigationView navigationView, 
+                                View navigationRailView, 
+                                Toolbar toolbar) {
         this.activity = activity;
         this.drawerLayout = drawerLayout;
         this.navigationView = navigationView;
+        this.navigationRailView = navigationRailView;
         this.accountManager = AccountManager.getInstance(activity);
         
         initDrawer(toolbar);
         initHeaderViews();
+        initNavigationRail();
+    }
+    
+    private void initNavigationRail() {
+        if (navigationRailView != null) {
+            View menuButton = navigationRailView.findViewById(R.id.rail_menu_button);
+            if (menuButton != null) {
+                menuButton.setOnClickListener(v -> openDrawer());
+            }
+
+            LinearLayout itemsContainer = navigationRailView.findViewById(R.id.navigation_rail_items);
+            if (itemsContainer != null) {
+                android.view.LayoutInflater inflater = android.view.LayoutInflater.from(activity);
+                android.view.Menu menu = navigationView.getMenu();
+                for (int i = 0; i < menu.size(); i++) {
+                    MenuItem item = menu.getItem(i);
+                    if (item.isVisible()) {
+                        View itemView = inflater.inflate(R.layout.item_custom_rail, itemsContainer, false);
+                        ImageView iconView = itemView.findViewById(R.id.rail_item_icon);
+                        if (iconView != null && item.getIcon() != null) {
+                            iconView.setImageDrawable(item.getIcon());
+                        }
+                        
+                        itemView.setOnClickListener(v -> {
+                            onNavigationItemSelected(item);
+                        });
+                        
+                        itemView.setTag(item.getItemId());
+                        
+                        itemsContainer.addView(itemView);
+                    }
+                }
+            }
+        }
     }
     
     /**
@@ -90,6 +128,10 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
                 R.string.close_drawer);
         
         drawerLayout.addDrawerListener(drawerToggle);
+        
+        boolean isTablet = navigationRailView != null && navigationRailView.getVisibility() == View.VISIBLE;
+        drawerToggle.setDrawerIndicatorEnabled(!isTablet);
+        
         drawerToggle.syncState();
         
         Logger.d(TAG, "initDrawer: drawerIndicatorEnabled=" + drawerToggle.isDrawerIndicatorEnabled());
@@ -423,7 +465,7 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         
         if (fragment != null) {
             navigateToFragment(fragment, tag);
-            currentFragmentId = id;
+            setCurrentFragmentId(id);
         }
         
         closeDrawer();
@@ -464,6 +506,19 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         this.currentFragmentId = id;
         if (navigationView != null) {
             navigationView.setCheckedItem(id);
+        }
+        if (navigationRailView != null) {
+            LinearLayout itemsContainer = navigationRailView.findViewById(R.id.navigation_rail_items);
+            if (itemsContainer != null) {
+                for (int i = 0; i < itemsContainer.getChildCount(); i++) {
+                    View child = itemsContainer.getChildAt(i);
+                    Object tag = child.getTag();
+                    if (tag instanceof Integer) {
+                        int itemId = (Integer) tag;
+                        child.setSelected(itemId == id);
+                    }
+                }
+            }
         }
     }
     
@@ -513,11 +568,12 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
             }
             Logger.d(TAG, "Set drawerIndicatorEnabled=false, displayHomeAsUpEnabled=true");
         } else {
-            drawerToggle.setDrawerIndicatorEnabled(true);
+            boolean isTablet = navigationRailView != null && navigationRailView.getVisibility() == View.VISIBLE;
+            drawerToggle.setDrawerIndicatorEnabled(!isTablet);
             if (activity.getSupportActionBar() != null) {
                 activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
-            Logger.d(TAG, "Set drawerIndicatorEnabled=true, displayHomeAsUpEnabled=false");
+            Logger.d(TAG, "Set drawerIndicatorEnabled=" + !isTablet + ", displayHomeAsUpEnabled=false");
         }
         drawerToggle.syncState();
     }

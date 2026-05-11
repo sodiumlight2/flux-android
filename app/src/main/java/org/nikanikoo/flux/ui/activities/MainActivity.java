@@ -172,7 +172,14 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         // Navigation Controller
         CustomDrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.drawer_view);
-        navigationController = new NavigationController(this, drawerLayout, navigationView, toolbar);
+        View navigationRailView = findViewById(R.id.navigation_rail);
+        
+        boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+        if (navigationRailView != null) {
+            navigationRailView.setVisibility(isTablet ? View.VISIBLE : View.GONE);
+        }
+        
+        navigationController = new NavigationController(this, drawerLayout, navigationView, navigationRailView, toolbar);
         
         // Mini Player Controller
         miniPlayerController = new MiniPlayerController(this);
@@ -454,10 +461,18 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
             public void onSuccess(int messages, int notifications, int friends) {
                 runOnUiThread(() -> {
                     NavigationView navigationView = findViewById(R.id.drawer_view);
+                    View navigationRailView = findViewById(R.id.navigation_rail);
+                    
                     if (navigationView != null) {
-                        updateBadge(navigationView, R.id.drawer_notification, notifications, getString(R.string.notifications_title));
-                        updateBadge(navigationView, R.id.drawer_messages, messages, getString(R.string.messages_title));
-                        updateBadge(navigationView, R.id.drawer_friends, friends, getString(R.string.friends_title));
+                        updateDrawerBadge(navigationView, R.id.drawer_notification, notifications, getString(R.string.notifications_title));
+                        updateDrawerBadge(navigationView, R.id.drawer_messages, messages, getString(R.string.messages_title));
+                        updateDrawerBadge(navigationView, R.id.drawer_friends, friends, getString(R.string.friends_title));
+                    }
+                    
+                    if (navigationRailView != null) {
+                        updateRailBadge(navigationRailView, R.id.drawer_notification, notifications);
+                        updateRailBadge(navigationRailView, R.id.drawer_messages, messages);
+                        updateRailBadge(navigationRailView, R.id.drawer_friends, friends);
                     }
                 });
             }
@@ -469,10 +484,34 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         });
     }
     
-    private void updateBadge(NavigationView navigationView, int itemId, int count, String defaultTitle) {
+    private void updateDrawerBadge(NavigationView navigationView, int itemId, int count, String defaultTitle) {
         MenuItem item = navigationView.getMenu().findItem(itemId);
         if (item != null) {
             item.setTitle(count > 0 ? defaultTitle + " (" + count + ")" : defaultTitle);
+        }
+    }
+    
+    private void updateRailBadge(View navigationRailView, int itemId, int count) {
+        if (navigationRailView != null) {
+            android.widget.LinearLayout itemsContainer = navigationRailView.findViewById(R.id.navigation_rail_items);
+            if (itemsContainer != null) {
+                for (int i = 0; i < itemsContainer.getChildCount(); i++) {
+                    View child = itemsContainer.getChildAt(i);
+                    Object tag = child.getTag();
+                    if (tag instanceof Integer && (Integer) tag == itemId) {
+                        android.widget.TextView badgeView = child.findViewById(R.id.rail_item_badge);
+                        if (badgeView != null) {
+                            if (count > 0) {
+                                badgeView.setVisibility(View.VISIBLE);
+                                badgeView.setText(count > 99 ? "99+" : String.valueOf(count));
+                            } else {
+                                badgeView.setVisibility(View.GONE);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
     
