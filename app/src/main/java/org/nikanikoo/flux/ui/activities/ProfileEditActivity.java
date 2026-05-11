@@ -22,6 +22,7 @@ import org.nikanikoo.flux.ui.fragments.profile.edit.ProfileEditAdditionalFragmen
 import org.nikanikoo.flux.ui.fragments.profile.edit.ProfileEditContactsFragment;
 import org.nikanikoo.flux.ui.fragments.profile.edit.ProfileEditInterestsFragment;
 import org.nikanikoo.flux.ui.fragments.profile.edit.ProfileEditMainFragment;
+import org.nikanikoo.flux.utils.ThemeManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager themeManager = ThemeManager.getInstance(this);
+        themeManager.applyThemeToActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
