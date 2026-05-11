@@ -222,15 +222,19 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
             return;
         }
         
-        if (!isRefresh) {
-            paginationHelper.startLoading();
-        }
-        
-        int targetUserId = isForeignProfile() ? userId : profile.getId();
-        
         if (isRefresh) {
             paginationHelper.reset();
         }
+        
+        paginationHelper.startLoading();
+        
+        if (!isRefresh) {
+            if (postAdapter != null && postAdapter.getPostsCount() > 0) {
+                postAdapter.showLoading();
+            }
+        }
+        
+        int targetUserId = isForeignProfile() ? userId : profile.getId();
         
         int offset = paginationHelper.getCurrentOffset();
         Logger.d(TAG, "loadPosts: targetUserId=" + targetUserId + ", offset=" + offset);

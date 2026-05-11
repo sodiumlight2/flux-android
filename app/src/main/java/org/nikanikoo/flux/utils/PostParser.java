@@ -139,6 +139,9 @@ public class PostParser {
             post.setGroup(authorInfo.isGroup);
             post.setLiked(isLiked);
 
+            int isPinned = ValidationUtils.safeGetInt(actualPostData, "is_pinned", 0);
+            post.setPinned(isPinned == 1);
+
             JSONArray attachments = ValidationUtils.safeGetJSONArray(actualPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
             

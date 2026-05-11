@@ -218,12 +218,16 @@ public class GroupProfileFragment extends BaseProfileFragment {
             return;
         }
         
-        if (!isRefresh) {
-            paginationHelper.startLoading();
-        }
-        
         if (isRefresh) {
             paginationHelper.reset();
+        }
+        
+        paginationHelper.startLoading();
+        
+        if (!isRefresh) {
+            if (postAdapter != null && postAdapter.getPostsCount() > 0) {
+                postAdapter.showLoading();
+            }
         }
         
         int offset = paginationHelper.getCurrentOffset();

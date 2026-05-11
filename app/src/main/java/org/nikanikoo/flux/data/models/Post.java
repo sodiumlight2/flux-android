@@ -26,6 +26,7 @@ public class Post implements Serializable {
     private String repostText;
     private boolean authorVerified;
     private boolean isGroup;
+    private boolean isPinned;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -63,6 +64,7 @@ public class Post implements Serializable {
     public String getRepostText() { return repostText; }
     public boolean isAuthorVerified() { return authorVerified; }
     public boolean isGroup() { return isGroup; }
+    public boolean isPinned() { return isPinned; }
 
     // Setters
     public void setAuthorName(String authorName) { this.authorName = authorName; }
@@ -126,4 +128,5 @@ public class Post implements Serializable {
     public void setRepostText(String repostText) { this.repostText = repostText; }
     public void setAuthorVerified(boolean authorVerified) { this.authorVerified = authorVerified; }
     public void setGroup(boolean group) { this.isGroup = group; }
+    public void setPinned(boolean pinned) { this.isPinned = pinned; }
 }

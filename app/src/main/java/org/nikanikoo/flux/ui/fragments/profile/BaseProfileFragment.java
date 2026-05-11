@@ -142,7 +142,6 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
         recyclerPosts.setLayoutManager(layoutManager);
 
         // RecyclerView optimizations
-        recyclerPosts.setHasFixedSize(true);
         recyclerPosts.setItemViewCacheSize(20);
 
         // Enable item animator for smooth animations
@@ -152,17 +151,50 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
         postAdapter.setOnPostClickListener(this);
         recyclerPosts.setAdapter(postAdapter);
         
-        scrollListener = new EndlessScrollListener(layoutManager, paginationHelper) {
-            @Override
-            public void onLoadMore(int offset, int totalItemsCount, RecyclerView view) {
-                Logger.d(TAG, "EndlessScrollListener.onLoadMore: offset=" + offset + ", canLoadMore=" + paginationHelper.canLoadMore());
-                if (paginationHelper.canLoadMore()) {
-                    loadPosts(false);
-                }
+        if (getView() != null) {
+            androidx.core.widget.NestedScrollView nestedScrollView = getView().findViewById(R.id.profile_content);
+            if (nestedScrollView == null) {
+                nestedScrollView = getView().findViewById(R.id.group_content);
             }
-        };
-        
-        recyclerPosts.addOnScrollListener(scrollListener);
+            
+            if (nestedScrollView != null) {
+                final androidx.core.widget.NestedScrollView finalScrollView = nestedScrollView;
+                finalScrollView.setOnScrollChangeListener(new androidx.core.widget.NestedScrollView.OnScrollChangeListener() {
+                    private int lastLoggedDiff = -1;
+                    
+                    @Override
+                    public void onScrollChange(androidx.core.widget.NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                        View child = v.getChildAt(v.getChildCount() - 1);
+                        if (child != null) {
+                            int diff = (child.getBottom() - (v.getHeight() + scrollY));
+                            
+                            if (Math.abs(diff - lastLoggedDiff) > 500) {
+                                Logger.d(TAG, "Scroll diff=" + diff + ", childBottom=" + child.getBottom() + ", height=" + v.getHeight() + ", scrollY=" + scrollY);
+                                lastLoggedDiff = diff;
+                            }
+                            
+                            if (diff <= 1500) {
+                                if (paginationHelper.canLoadMore() && !paginationHelper.isLoading()) {
+                                    Logger.d(TAG, "NestedScrollView reached bottom (diff=" + diff + "), loading more");
+                                    loadPosts(false);
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                scrollListener = new EndlessScrollListener(layoutManager, paginationHelper) {
+                    @Override
+                    public void onLoadMore(int offset, int totalItemsCount, RecyclerView view) {
+                        Logger.d(TAG, "EndlessScrollListener.onLoadMore: offset=" + offset + ", canLoadMore=" + paginationHelper.canLoadMore());
+                        if (paginationHelper.canLoadMore()) {
+                            loadPosts(false);
+                        }
+                    }
+                };
+                recyclerPosts.addOnScrollListener(scrollListener);
+            }
+        }
         
         Logger.d(TAG, "setupRecyclerView: complete, postAdapter=" + (postAdapter != null ? "created" : "null"));
     }
@@ -235,8 +267,19 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
             
             Logger.d(TAG, "onPostsLoaded: isRefresh=" + isRefresh + ", loaded=" + loadedPosts.size() + 
                     ", before=" + postsBeforeAdd + ", after=" + postsAfterAdd + ", added=" + actuallyAdded);
+
+            int unpinnedPostsCount = 0;
+            for (Post post : loadedPosts) {
+                if (!post.isPinned()) {
+                    unpinnedPostsCount++;
+                }
+            }
+
+            paginationHelper.onDataLoaded(unpinnedPostsCount);
             
-            paginationHelper.onDataLoaded(actuallyAdded);
+            if (unpinnedPostsCount == 0) {
+                paginationHelper.setNoMoreData();
+            }
             
             if (loadedPosts.isEmpty() && postAdapter.getPostsCount() == 0) {
                 showEmptyState();
@@ -254,6 +297,10 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
             Logger.e(TAG, "Error loading posts: " + error);
             paginationHelper.stopLoading();
             hideLoading();
+            
+            if (postAdapter != null) {
+                postAdapter.hideLoading();
+            }
 
             showErrorAuto(error);
         });
