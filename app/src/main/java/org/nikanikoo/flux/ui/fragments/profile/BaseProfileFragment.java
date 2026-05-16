@@ -428,11 +428,30 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
     }
 
     protected void deletePost(Post post) {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.post_delete_confirm))
                 .setMessage(getString(R.string.post_delete_message))
                 .setPositiveButton(getString(R.string.delete), (dialog, which) -> {
-                    Toast.makeText(getContext(), getString(R.string.post_delete_not_supported), Toast.LENGTH_SHORT).show();
+                    postsManager.deletePost(post.getOwnerId(), post.getPostId(), new PostsManager.DeleteCallback() {
+                        @Override
+                        public void onSuccess() {
+                            if (isAdded()) {
+                                requireActivity().runOnUiThread(() -> {
+                                    Toast.makeText(getContext(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                                    loadPosts(true);
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            if (isAdded()) {
+                                requireActivity().runOnUiThread(() -> {
+                                    Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                        }
+                    });
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();

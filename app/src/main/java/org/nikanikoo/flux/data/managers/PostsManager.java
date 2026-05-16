@@ -68,6 +68,11 @@ public class PostsManager extends BaseManager<PostsManager> {
         void onError(String error);
     }
 
+    public interface DeleteCallback {
+        void onSuccess();
+        void onError(String error);
+    }
+
     public interface PinCallback {
         void onSuccess();
         void onError(String error);
@@ -971,6 +976,37 @@ public class PostsManager extends BaseManager<PostsManager> {
         Logger.d(TAG, "Unpinning post: owner_id=" + ownerId + ", post_id=" + postId);
 
         api.callMethod("wall.unpin", params, new OpenVKApi.ApiCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    Logger.apiResponse(TAG, response.toString());
+                    if (response.has("response") && (response.optInt("response") == 1 || response.optBoolean("response"))) {
+                        callback.onSuccess();
+                    } else if (response.has("error")) {
+                        callback.onError(response.getJSONObject("error").optString("error_msg", "Ошибка API"));
+                    } else {
+                        callback.onError("Неожиданный формат ответа");
+                    }
+                } catch (Exception e) {
+                    callback.onError("Ошибка парсинга ответа");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    public void deletePost(int ownerId, int postId, DeleteCallback callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("owner_id", String.valueOf(ownerId));
+        params.put("post_id", String.valueOf(postId));
+
+        Logger.d(TAG, "Deleting post: owner_id=" + ownerId + ", post_id=" + postId);
+
+        api.callMethod("wall.delete", params, new OpenVKApi.ApiCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
