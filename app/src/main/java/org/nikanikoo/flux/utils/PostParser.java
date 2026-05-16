@@ -139,8 +139,15 @@ public class PostParser {
             post.setGroup(authorInfo.isGroup);
             post.setLiked(isLiked);
 
-            int isPinned = ValidationUtils.safeGetInt(actualPostData, "is_pinned", 0);
-            post.setPinned(isPinned == 1);
+            boolean isPinned = actualPostData.optInt("is_pinned", 0) == 1 || 
+                              actualPostData.optBoolean("is_pinned", false) ||
+                              actualPostData.optInt("pinned", 0) == 1 ||
+                              actualPostData.optBoolean("pinned", false);
+            post.setPinned(isPinned);
+            
+            post.setCanEdit(actualPostData.optBoolean("can_edit", false));
+            post.setCanDelete(actualPostData.optBoolean("can_delete", false));
+            post.setCanPin(actualPostData.optBoolean("can_pin", false));
 
             JSONArray attachments = ValidationUtils.safeGetJSONArray(actualPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);

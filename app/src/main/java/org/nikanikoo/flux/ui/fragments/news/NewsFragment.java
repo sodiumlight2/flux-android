@@ -584,20 +584,15 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         boolean isOwnPost = currentProfile != null && post.getAuthorId() == currentProfile.getId();
         boolean isOnOwnWall = currentProfile != null && post.getOwnerId() == currentProfile.getId();
         
-        if (isOwnPost) {
-            // Свой пост - можно редактировать, потом удалить
+        if (post.canEdit()) {
             popup.getMenu().add(0, 1, 0, getString(R.string.edit));
-            popup.getMenu().add(0, 3, 0, getString(R.string.pin));
-            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
+        }
+        if (post.canPin()) {
+            popup.getMenu().add(0, 3, 0, post.isPinned() ? getString(R.string.unpin) : getString(R.string.pin));
+        }
+        popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
+        if (post.canDelete()) {
             popup.getMenu().add(0, 5, 0, getString(R.string.delete));
-        } else if (isOnOwnWall) {
-            // Пост на своей стене - можно закрепить, потом удалить
-            popup.getMenu().add(0, 3, 0, getString(R.string.pin));
-            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
-            popup.getMenu().add(0, 5, 0, getString(R.string.delete));
-        } else {
-            // Общие действия
-            popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
         }
         
         popup.setOnMenuItemClickListener(item -> {
@@ -608,8 +603,12 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                 case 5: // Удалить
                     deletePost(post);
                     return true;
-                case 3: // Закрепить
-                    pinPost(post);
+                case 3: // Закрепить/Открепить
+                    if (post.isPinned()) {
+                        unpinPost(post);
+                    } else {
+                        pinPost(post);
+                    }
                     return true;
                 case 4: // Скопировать ссылку
                     copyPostLink(post);
@@ -639,7 +638,51 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     }
     
     private void pinPost(Post post) {
-        Toast.makeText(getContext(), getString(R.string.post_pin_not_supported), Toast.LENGTH_SHORT).show();
+        postsManager.pinPost(post.getOwnerId(), post.getPostId(), new PostsManager.PinCallback() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        post.setPinned(true);
+                        loadPosts(true); 
+                        Toast.makeText(getContext(), "Пост закреплен", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Ошибка при закреплении: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
+    }
+
+    private void unpinPost(Post post) {
+        postsManager.unpinPost(post.getOwnerId(), post.getPostId(), new PostsManager.PinCallback() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        post.setPinned(false);
+                        loadPosts(true);
+                        Toast.makeText(getContext(), "Пост откреплен", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Ошибка при откреплении: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
     }
     
     private void copyPostLink(Post post) {

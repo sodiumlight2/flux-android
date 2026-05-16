@@ -526,7 +526,4 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         });
     }
 
-    @Override
-    public void onPostLongClick(Post post, View view) {
-    }
 }

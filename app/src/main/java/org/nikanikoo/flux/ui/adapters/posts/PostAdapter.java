@@ -128,7 +128,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Безопасная установка текстовых данных
         holder.authorName.setText(ValidationUtils.sanitizeUserInput(post.getAuthorName()));
-        holder.timestamp.setText(post.getTimestamp());
+        String timestampText = post.getTimestamp();
+        if (post.isPinned()) {
+            timestampText += ", " + context.getString(R.string.pinned);
+        }
+        holder.timestamp.setText(timestampText);
         holder.likeCount.setText(String.valueOf(Math.max(0, post.getLikeCount())));
         holder.commentCount.setText(String.valueOf(Math.max(0, post.getCommentCount())));
         

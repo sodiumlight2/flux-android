@@ -44,6 +44,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
     protected PostAdapter postAdapter;
     protected PostsManager postsManager;
     protected LikesManager likesManager;
+    protected org.nikanikoo.flux.data.managers.ProfileManager profileManager;
     
     // Pagination
     protected LinearLayoutManager layoutManager;
@@ -65,6 +66,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
 
         postsManager = PostsManager.getInstance(requireContext());
         likesManager = LikesManager.getInstance(requireContext());
+        profileManager = org.nikanikoo.flux.data.managers.ProfileManager.getInstance(requireContext());
 
         // Инициализируем paginationHelper всегда
         paginationHelper = new PaginationHelper(Constants.Api.POSTS_PER_PAGE);
@@ -370,5 +372,132 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
                     }
                 }
             });
+    }
+
+    @Override
+    public void onPostLongClick(Post post, View view) {
+        showPostContextMenu(post, view);
+    }
+
+    protected void showPostContextMenu(Post post, View view) {
+        android.widget.PopupMenu popup = new android.widget.PopupMenu(requireContext(), view);
+        
+        org.nikanikoo.flux.data.models.UserProfile currentProfile = profileManager.getCachedProfileSync();
+        boolean isOwnPost = currentProfile != null && post.getAuthorId() == currentProfile.getId();
+        boolean isOnOwnWall = currentProfile != null && post.getOwnerId() == currentProfile.getId();
+        
+        if (post.canEdit()) {
+            popup.getMenu().add(0, 1, 0, getString(R.string.edit));
+        }
+        if (post.canPin()) {
+            popup.getMenu().add(0, 3, 0, post.isPinned() ? getString(R.string.unpin) : getString(R.string.pin));
+        }
+        popup.getMenu().add(0, 4, 0, getString(R.string.copy_link));
+        if (post.canDelete()) {
+            popup.getMenu().add(0, 5, 0, getString(R.string.delete));
+        }
+        
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case 1: // Редактировать
+                    editPost(post);
+                    return true;
+                case 5: // Удалить
+                    deletePost(post);
+                    return true;
+                case 3: // Закрепить/Открепить
+                    if (post.isPinned()) {
+                        unpinPost(post);
+                    } else {
+                        pinPost(post);
+                    }
+                    return true;
+                case 4: // Скопировать ссылку
+                    copyPostLink(post);
+                    return true;
+                default:
+                    return false;
+            }
+        });
+        
+        popup.show();
+    }
+
+    protected void editPost(Post post) {
+        Toast.makeText(getContext(), getString(R.string.post_edit_not_supported), Toast.LENGTH_SHORT).show();
+    }
+
+    protected void deletePost(Post post) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.post_delete_confirm))
+                .setMessage(getString(R.string.post_delete_message))
+                .setPositiveButton(getString(R.string.delete), (dialog, which) -> {
+                    Toast.makeText(getContext(), getString(R.string.post_delete_not_supported), Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
+    }
+
+    protected void pinPost(Post post) {
+        postsManager.pinPost(post.getOwnerId(), post.getPostId(), new PostsManager.PinCallback() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        post.setPinned(true);
+                        loadPosts(true);
+                        Toast.makeText(getContext(), "Пост закреплен", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Ошибка при закреплении: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
+    }
+
+    protected void unpinPost(Post post) {
+        postsManager.unpinPost(post.getOwnerId(), post.getPostId(), new PostsManager.PinCallback() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        post.setPinned(false);
+                        loadPosts(true);
+                        Toast.makeText(getContext(), "Пост откреплен", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Ошибка при откреплении: " + error, Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
+    }
+
+    protected void copyPostLink(Post post) {
+        org.nikanikoo.flux.data.managers.api.OpenVKApi api = 
+            org.nikanikoo.flux.data.managers.api.OpenVKApi.getInstance(requireContext());
+        String baseUrl = api.getBaseUrl();
+        if (baseUrl.endsWith("/method")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 7);
+        }
+        String postUrl = baseUrl + "/wall" + post.getOwnerId() + "_" + post.getPostId();
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) 
+                requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("Post URL", postUrl);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(getContext(), getString(R.string.copied_link), Toast.LENGTH_SHORT).show();
     }
 }

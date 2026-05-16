@@ -27,6 +27,9 @@ public class Post implements Serializable {
     private boolean authorVerified;
     private boolean isGroup;
     private boolean isPinned;
+    private boolean canEdit;
+    private boolean canDelete;
+    private boolean canPin;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -65,6 +68,9 @@ public class Post implements Serializable {
     public boolean isAuthorVerified() { return authorVerified; }
     public boolean isGroup() { return isGroup; }
     public boolean isPinned() { return isPinned; }
+    public boolean canEdit() { return canEdit; }
+    public boolean canDelete() { return canDelete; }
+    public boolean canPin() { return canPin; }
 
     // Setters
     public void setAuthorName(String authorName) { this.authorName = authorName; }
@@ -129,4 +135,7 @@ public class Post implements Serializable {
     public void setAuthorVerified(boolean authorVerified) { this.authorVerified = authorVerified; }
     public void setGroup(boolean group) { this.isGroup = group; }
     public void setPinned(boolean pinned) { this.isPinned = pinned; }
+    public void setCanEdit(boolean canEdit) { this.canEdit = canEdit; }
+    public void setCanDelete(boolean canDelete) { this.canDelete = canDelete; }
+    public void setCanPin(boolean canPin) { this.canPin = canPin; }
 }

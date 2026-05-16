@@ -16,6 +16,8 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="pinned">pinned</string>
     <string name="close">Close</string>
     <string name="back">Back</string>
     <string name="search">Search</string>

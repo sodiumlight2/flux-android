@@ -17,6 +17,8 @@
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
     <string name="pin">Закрепить</string>
+    <string name="unpin">Открепить</string>
+    <string name="pinned">закреплено</string>
     <string name="close">Закрыть</string>
     <string name="back">Назад</string>
     <string name="search">Поиск</string>
