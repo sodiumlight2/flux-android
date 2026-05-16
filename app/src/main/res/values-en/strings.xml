@@ -16,7 +16,8 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="edit_post_title">Edit post</string>
-    <string name="edit_post_hint">Post text</string>
+    <string name="edit_post_hint">What\'s new?</string>
+    <string name="profile_edit_success">Changes saved</string>
     <string name="pin">Pin</string>
     <string name="unpin">Unpin</string>
     <string name="pinned">pinned</string>

@@ -33,6 +33,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ProfileEditPagerAdapter pagerAdapter;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton fabSave;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ProfileEditActivity.class);
@@ -50,12 +51,39 @@ public class ProfileEditActivity extends AppCompatActivity {
         setupToolbar();
         setupViewPager();
         setupTabLayout();
+        setupFab();
+    }
+
+    private void setupFab() {
+        fabSave.setOnClickListener(v -> {
+            Fragment currentFragment = pagerAdapter.createFragment(viewPager.getCurrentItem());
+            if (currentFragment instanceof ProfileEditMainFragment) {
+                ((ProfileEditMainFragment) currentFragment).saveProfile(() -> {
+                    setResult(RESULT_OK);
+                    finish();
+                });
+            } else {
+                Toast.makeText(this, "Сохранение доступно только на основной вкладке", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    fabSave.show();
+                } else {
+                    fabSave.hide();
+                }
+            }
+        });
     }
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
+        fabSave = findViewById(R.id.fab_save);
     }
 
     private void setupToolbar() {

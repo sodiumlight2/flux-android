@@ -17,7 +17,8 @@
     <string name="delete">Видалити</string>
     <string name="edit">Редагувати</string>
     <string name="edit_post_title">Редагування посту</string>
-    <string name="edit_post_hint">Текст посту</string>
+    <string name="edit_post_hint">Що нового?</string>
+    <string name="profile_edit_success">Зміни збережено</string>
     <string name="pin">Закріпити</string>
     <string name="unpin">Відкріпити</string>
     <string name="pinned">закріплено</string>

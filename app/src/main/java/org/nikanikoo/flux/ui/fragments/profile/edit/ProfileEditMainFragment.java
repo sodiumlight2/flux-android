@@ -40,7 +40,6 @@ public class ProfileEditMainFragment extends Fragment {
     private RadioGroup bdateVisibilityRadioGroup;
     private MaterialRadioButton bdateVisibilityFull;
     private MaterialRadioButton bdateVisibilityDayMonth;
-    private MaterialButton saveButton;
 
     private final String[] relationOptions = {
             "Не выбрано", // 0
@@ -85,7 +84,6 @@ public class ProfileEditMainFragment extends Fragment {
         bdateVisibilityRadioGroup = view.findViewById(R.id.bdate_visibility_radio_group);
         bdateVisibilityFull = view.findViewById(R.id.bdate_visibility_full);
         bdateVisibilityDayMonth = view.findViewById(R.id.bdate_visibility_day_month);
-        saveButton = view.findViewById(R.id.save_button);
 
         ArrayAdapter<String> relationAdapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_dropdown_item_1line, relationOptions);
@@ -93,10 +91,93 @@ public class ProfileEditMainFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        saveButton.setOnClickListener(v -> {
-            // TODO: сохранить изменения профиля
-            Toast.makeText(requireContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
+        bdateEdit.setOnClickListener(v -> {
+            String currentBdate = bdateEdit.getText().toString();
+            int year = 1990, month = 0, day = 1;
+            
+            if (!currentBdate.isEmpty()) {
+                String[] parts = currentBdate.split("\\.");
+                if (parts.length >= 2) {
+                    day = Integer.parseInt(parts[0]);
+                    month = Integer.parseInt(parts[1]) - 1;
+                    if (parts.length == 3) {
+                        year = Integer.parseInt(parts[2]);
+                    }
+                }
+            }
+            
+            android.app.DatePickerDialog datePickerDialog = new android.app.DatePickerDialog(requireContext(),
+                    (view, year1, month1, dayOfMonth) -> {
+                        String date = String.format(java.util.Locale.US, "%02d.%02d.%04d", dayOfMonth, month1 + 1, year1);
+                        bdateEdit.setText(date);
+                    }, year, month, day);
+            datePickerDialog.show();
         });
+
+        relationAutoComplete.setOnClickListener(v -> relationAutoComplete.showDropDown());
+    }
+
+    public void saveProfile(SaveProfileListener listener) {
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        
+        String firstName = nameEdit.getText().toString().trim();
+        String lastName = surnameEdit.getText().toString().trim();
+        String screenName = nicknameEdit.getText().toString().trim();
+        String status = statusEdit.getText().toString().trim();
+        String homeTown = homeTownEdit.getText().toString().trim();
+        String bdate = bdateEdit.getText().toString().trim();
+
+        params.put("first_name", firstName);
+        params.put("last_name", lastName);
+        params.put("screen_name", screenName);
+        params.put("status", status);
+        params.put("home_town", homeTown);
+        params.put("bdate", bdate);
+        
+        int sex = 0;
+        if (sexMale.isChecked()) sex = 2;
+        else if (sexFemale.isChecked()) sex = 1;
+        params.put("sex", String.valueOf(sex));
+        
+        String selectedRelation = relationAutoComplete.getText().toString();
+        int relationIndex = 0;
+        for (int i = 0; i < relationOptions.length; i++) {
+            if (relationOptions[i].equals(selectedRelation)) {
+                relationIndex = i;
+                break;
+            }
+        }
+        params.put("relation", String.valueOf(relationIndex));
+        
+        int bdateVisibility = 1; // Показывает дату рождения
+        if (bdateVisibilityDayMonth.isChecked()) bdateVisibility = 2; // Показывает только день и месяц
+        params.put("bdate_visibility", String.valueOf(bdateVisibility));
+
+        org.nikanikoo.flux.data.managers.ProfileManager.getInstance(requireContext())
+                .saveProfileInfo(params, new org.nikanikoo.flux.data.managers.ProfileManager.SaveProfileCallback() {
+            @Override
+            public void onSuccess() {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), R.string.profile_edit_success, Toast.LENGTH_SHORT).show();
+                        if (listener != null) listener.onSaveComplete();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        });
+    }
+
+    public interface SaveProfileListener {
+        void onSaveComplete();
     }
 
     private void loadProfileData() {
@@ -107,20 +188,20 @@ public class ProfileEditMainFragment extends Fragment {
                 try {
                     JSONObject responseObj = response.getJSONObject("response");
 
-                    String firstName = responseObj.optString("first_name");
-                    String lastName = responseObj.optString("last_name");
+                    String firstName = responseObj.isNull("first_name") ? "" : responseObj.optString("first_name");
+                    String lastName = responseObj.isNull("last_name") ? "" : responseObj.optString("last_name");
                     String photoUrl = responseObj.optString("photo_200");
-                    String nickname = responseObj.optString("nickname");
-                    String status = responseObj.optString("status");
-                    String homeTown = responseObj.optString("home_town");
-                    String bdate = responseObj.optString("bdate");
+                    String screenName = responseObj.isNull("screen_name") ? (responseObj.isNull("nickname") ? "" : responseObj.optString("nickname")) : responseObj.optString("screen_name");
+                    String status = responseObj.isNull("status") ? "" : responseObj.optString("status");
+                    String homeTown = responseObj.isNull("home_town") ? "" : responseObj.optString("home_town");
+                    String bdate = responseObj.isNull("bdate") ? "" : responseObj.optString("bdate");
                     int sex = responseObj.optInt("sex", 0);
                     int relation = responseObj.optInt("relation", 0);
                     int bdateVisibility = responseObj.optInt("bdate_visibility", 0);
 
                     nameEdit.setText(firstName);
                     surnameEdit.setText(lastName);
-                    nicknameEdit.setText(nickname);
+                    nicknameEdit.setText(screenName);
                     statusEdit.setText(status);
                     homeTownEdit.setText(homeTown);
                     bdateEdit.setText(bdate);
@@ -136,9 +217,9 @@ public class ProfileEditMainFragment extends Fragment {
                     }
 
                     if (bdateVisibility == 1) {
-                        bdateVisibilityFull.setChecked(true);
-                    } else if (bdateVisibility == 2) {
                         bdateVisibilityDayMonth.setChecked(true);
+                    } else {
+                        bdateVisibilityFull.setChecked(true);
                     }
 
                     if (!photoUrl.isEmpty()) {
