@@ -424,7 +424,46 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
     }
 
     protected void editPost(Post post) {
-        Toast.makeText(getContext(), getString(R.string.post_edit_not_supported), Toast.LENGTH_SHORT).show();
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_post, null);
+        com.google.android.material.textfield.TextInputEditText editMessage = dialogView.findViewById(R.id.edit_post_message);
+        com.google.android.material.button.MaterialButton btnCancel = dialogView.findViewById(R.id.btn_cancel_edit);
+        com.google.android.material.button.MaterialButton btnSave = dialogView.findViewById(R.id.btn_save_edit);
+
+        editMessage.setText(post.getContent());
+        
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(requireContext());
+        dialog.setContentView(dialogView);
+
+        dialog.getBehavior().setState(com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnSave.setOnClickListener(v -> {
+            String newMessage = editMessage.getText() != null ? editMessage.getText().toString() : "";
+            postsManager.editPost(post.getOwnerId(), post.getPostId(), newMessage, new PostsManager.EditCallback() {
+                @Override
+                public void onSuccess(int postId) {
+                    if (isAdded()) {
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            loadPosts(true);
+                        });
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+                    if (isAdded()) {
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }
+            });
+        });
+
+        dialog.show();
     }
 
     protected void deletePost(Post post) {

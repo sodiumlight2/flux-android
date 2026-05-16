@@ -16,6 +16,8 @@
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
+    <string name="edit_post_title">Редактирование поста</string>
+    <string name="edit_post_hint">Текст поста</string>
     <string name="pin">Закрепить</string>
     <string name="unpin">Открепить</string>
     <string name="pinned">закреплено</string>

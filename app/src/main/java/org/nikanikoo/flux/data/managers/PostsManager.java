@@ -68,6 +68,11 @@ public class PostsManager extends BaseManager<PostsManager> {
         void onError(String error);
     }
 
+    public interface EditCallback {
+        void onSuccess(int postId);
+        void onError(String error);
+    }
+
     public interface DeleteCallback {
         void onSuccess();
         void onError(String error);
@@ -1013,6 +1018,45 @@ public class PostsManager extends BaseManager<PostsManager> {
                     Logger.apiResponse(TAG, response.toString());
                     if (response.has("response") && (response.optInt("response") == 1 || response.optBoolean("response"))) {
                         callback.onSuccess();
+                    } else if (response.has("error")) {
+                        callback.onError(response.getJSONObject("error").optString("error_msg", "Ошибка API"));
+                    } else {
+                        callback.onError("Неожиданный формат ответа");
+                    }
+                } catch (Exception e) {
+                    callback.onError("Ошибка парсинга ответа");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    public void editPost(int ownerId, int postId, String message, EditCallback callback) {
+        Map<String, String> params = new HashMap<>();
+        params.put("owner_id", String.valueOf(ownerId));
+        params.put("post_id", String.valueOf(postId));
+        params.put("message", message);
+
+        Logger.d(TAG, "Editing post: owner_id=" + ownerId + ", post_id=" + postId);
+
+        api.callMethod("wall.edit", params, new OpenVKApi.ApiCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    Logger.apiResponse(TAG, response.toString());
+                    if (response.has("response")) {
+                        Object respObj = response.get("response");
+                        if (respObj instanceof Integer) {
+                            callback.onSuccess((Integer) respObj);
+                        } else if (respObj instanceof JSONObject) {
+                            callback.onSuccess(ValidationUtils.safeGetInt((JSONObject) respObj, "post_id", postId));
+                        } else {
+                            callback.onSuccess(postId);
+                        }
                     } else if (response.has("error")) {
                         callback.onError(response.getJSONObject("error").optString("error_msg", "Ошибка API"));
                     } else {
