@@ -115,6 +115,7 @@ dependencies {
     // Image Loading
     implementation("com.squareup.picasso:picasso:2.71828")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("com.github.yalantis:ucrop:2.2.8")
     
     // ExoPlayer for video playback
     implementation("androidx.media3:media3-exoplayer:1.3.1")

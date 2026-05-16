@@ -137,6 +137,10 @@
             android:theme="@style/Theme.Flux"
             android:configChanges="orientation|screenSize" />
 
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:theme="@style/Theme.Flux"/>
+
         <service
             android:name=".services.LongPollService"
             android:enabled="true"

@@ -1,5 +1,9 @@
 package org.nikanikoo.flux.ui.fragments.profile.edit;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +13,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,10 +24,14 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.Picasso;
+import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONObject;
 import org.nikanikoo.flux.R;
+import org.nikanikoo.flux.data.managers.PhotoUploadManager;
 import org.nikanikoo.flux.data.managers.api.OpenVKApi;
+
+import java.io.File;
 
 public class ProfileEditMainFragment extends Fragment {
 
@@ -40,6 +50,32 @@ public class ProfileEditMainFragment extends Fragment {
     private RadioGroup bdateVisibilityRadioGroup;
     private MaterialRadioButton bdateVisibilityFull;
     private MaterialRadioButton bdateVisibilityDayMonth;
+
+    private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    startCrop(uri);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> cropImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri resultUri = UCrop.getOutput(result.getData());
+                    if (resultUri != null) {
+                        uploadAvatar(resultUri);
+                    }
+                } else if (result.getResultCode() == UCrop.RESULT_ERROR && result.getData() != null) {
+                    Throwable cropError = UCrop.getError(result.getData());
+                    if (cropError != null) {
+                        Toast.makeText(requireContext(), cropError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
 
     private final String[] relationOptions = {
             "Не выбрано", // 0
@@ -115,6 +151,53 @@ public class ProfileEditMainFragment extends Fragment {
         });
 
         relationAutoComplete.setOnClickListener(v -> relationAutoComplete.showDropDown());
+
+        changeAvatarButton.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
+    }
+
+    private void startCrop(@NonNull Uri uri) {
+        String destinationFileName = "cropped_avatar_" + System.currentTimeMillis() + ".jpg";
+        File destinationFile = new File(requireContext().getCacheDir(), destinationFileName);
+        
+        UCrop.Options options = new UCrop.Options();
+        options.setCircleDimmedLayer(true);
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        options.setCompressionQuality(90);
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(false);
+        
+        Intent intent = UCrop.of(uri, Uri.fromFile(destinationFile))
+                .withAspectRatio(1, 1)
+                .withMaxResultSize(1000, 1000)
+                .withOptions(options)
+                .getIntent(requireContext());
+        
+        cropImageLauncher.launch(intent);
+    }
+
+    private void uploadAvatar(@NonNull Uri uri) {
+        Toast.makeText(requireContext(), "Загрузка аватарки...", Toast.LENGTH_SHORT).show();
+        PhotoUploadManager.getInstance(requireContext()).uploadOwnerPhoto(uri, new PhotoUploadManager.PhotoUploadCallback() {
+            @Override
+            public void onSuccess(String attachment) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Аватарка успешно изменена", Toast.LENGTH_SHORT).show();
+                        Picasso.get().invalidate(uri);
+                        Picasso.get().load(uri).placeholder(R.drawable.ic_account).into(avatarImage);
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Ошибка загрузки: " + error, Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        });
     }
 
     public void saveProfile(SaveProfileListener listener) {
