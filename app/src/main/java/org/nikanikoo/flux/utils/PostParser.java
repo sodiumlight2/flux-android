@@ -130,6 +130,16 @@ public class PostParser {
 
             String timeAgo = TimeUtils.formatTimeAgo(timestamp);
 
+            int authorSex = 0;
+            if (authorSourceId > 0) {
+                JsonUtils.ProfileInfo authorProfile = profileMap.get(authorSourceId);
+                if (authorProfile != null) {
+                    authorSex = authorProfile.sex;
+                }
+            }
+
+            AuthorInfo ownerInfo = extractAuthorInfo(ownerId, profileMap, groupMap);
+
             Post post = new Post(authorInfo.name, timeAgo, text, likeCount, commentCount);
             post.setPostId(postId);
             post.setOwnerId(ownerId);
@@ -138,6 +148,11 @@ public class PostParser {
             post.setAuthorVerified(authorInfo.verified);
             post.setGroup(authorInfo.isGroup);
             post.setLiked(isLiked);
+            
+            post.setOwnerName(ownerInfo.name);
+            post.setOwnerVerified(ownerInfo.verified);
+            post.setOwnerGroup(ownerInfo.isGroup);
+            post.setAuthorSex(authorSex);
 
             boolean isPinned = actualPostData.optInt("is_pinned", 0) == 1 || 
                               actualPostData.optBoolean("is_pinned", false) ||
@@ -209,6 +224,16 @@ public class PostParser {
 
             String timeAgo = TimeUtils.formatTimeAgo(timestamp);
 
+            int authorSex = 0;
+            if (sourceId > 0) {
+                JsonUtils.ProfileInfo authorProfile = profileMap.get(sourceId);
+                if (authorProfile != null) {
+                    authorSex = authorProfile.sex;
+                }
+            }
+
+            AuthorInfo ownerInfo = extractAuthorInfo(ownerId, profileMap, groupMap);
+
             Post post = new Post(authorInfo.name, timeAgo, text, likeCount, commentCount);
             post.setPostId(postId);
             post.setOwnerId(ownerId);
@@ -217,6 +242,11 @@ public class PostParser {
             post.setAuthorVerified(authorInfo.verified);
             post.setGroup(authorInfo.isGroup);
             post.setLiked(isLiked);
+            
+            post.setOwnerName(ownerInfo.name);
+            post.setOwnerVerified(ownerInfo.verified);
+            post.setOwnerGroup(ownerInfo.isGroup);
+            post.setAuthorSex(authorSex);
 
             JSONArray attachments = ValidationUtils.safeGetJSONArray(originalPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);

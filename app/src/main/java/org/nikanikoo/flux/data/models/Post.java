@@ -30,6 +30,10 @@ public class Post implements Serializable {
     private boolean canEdit;
     private boolean canDelete;
     private boolean canPin;
+    private String ownerName;
+    private int authorSex;
+    private boolean ownerVerified;
+    private boolean isOwnerGroup;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -138,4 +142,16 @@ public class Post implements Serializable {
     public void setCanEdit(boolean canEdit) { this.canEdit = canEdit; }
     public void setCanDelete(boolean canDelete) { this.canDelete = canDelete; }
     public void setCanPin(boolean canPin) { this.canPin = canPin; }
+
+    public String getOwnerName() { return ownerName; }
+    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
+    
+    public int getAuthorSex() { return authorSex; }
+    public void setAuthorSex(int authorSex) { this.authorSex = authorSex; }
+
+    public boolean isOwnerVerified() { return ownerVerified; }
+    public void setOwnerVerified(boolean ownerVerified) { this.ownerVerified = ownerVerified; }
+
+    public boolean isOwnerGroup() { return isOwnerGroup; }
+    public void setOwnerGroup(boolean isOwnerGroup) { this.isOwnerGroup = isOwnerGroup; }
 }

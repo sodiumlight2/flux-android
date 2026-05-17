@@ -150,6 +150,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
         recyclerPosts.setItemAnimator(null);
         
         postAdapter = new PostAdapter(getContext(), posts);
+        postAdapter.setProfileWall(true);
         postAdapter.setOnPostClickListener(this);
         recyclerPosts.setAdapter(postAdapter);
         

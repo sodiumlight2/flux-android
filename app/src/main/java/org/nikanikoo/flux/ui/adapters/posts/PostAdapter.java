@@ -1,6 +1,15 @@
 package org.nikanikoo.flux.ui.adapters.posts;
 
 import android.content.Context;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.ImageSpan;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +46,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private OnPostClickListener clickListener;
     private volatile boolean isLoading = false;
+    private boolean isProfileWall = false;
+
+    public void setProfileWall(boolean isProfileWall) {
+        this.isProfileWall = isProfileWall;
+    }
     
     // Кеш для предотвращения дублирования постов (thread-safe)
     private final Set<String> postIds = Collections.synchronizedSet(new HashSet<>());
@@ -127,7 +141,102 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         
         // Безопасная установка текстовых данных
-        holder.authorName.setText(ValidationUtils.sanitizeUserInput(post.getAuthorName()));
+        boolean isWallPostOnOtherWall = !isProfileWall && post.getOwnerId() != 0 && post.getAuthorId() != 0 && 
+                !(Math.abs(post.getOwnerId()) == Math.abs(post.getAuthorId()) && post.isGroup() == post.isOwnerGroup());
+        
+        if (isWallPostOnOtherWall) {
+            holder.authorName.setTypeface(null, Typeface.NORMAL);
+            holder.authorName.setMaxLines(2);
+            holder.authorName.setMovementMethod(SafeLinkMovementMethod.getInstance());
+            if (holder.authorVerified != null) {
+                holder.authorVerified.setVisibility(View.GONE);
+            }
+            
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            
+            // 1. Author Clickable Span
+            android.text.style.ClickableSpan authorClickSpan = new android.text.style.ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    if (clickListener != null && post.getAuthorId() != 0) {
+                        clickListener.onAuthorClick(post.getAuthorId(), post.getAuthorName(), post.isGroup());
+                    }
+                }
+
+                @Override
+                public void updateDrawState(@NonNull android.text.TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                    ds.setColor(holder.authorName.getCurrentTextColor());
+                    ds.setTypeface(Typeface.create(ds.getTypeface(), Typeface.BOLD));
+                }
+            };
+            
+            String authorName = ValidationUtils.sanitizeUserInput(post.getAuthorName());
+            int authorStart = ssb.length();
+            ssb.append(authorName);
+            int authorEnd = ssb.length();
+            ssb.setSpan(authorClickSpan, authorStart, authorEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            
+            if (post.isAuthorVerified()) {
+                ssb.append(" ");
+                int badgeStart = ssb.length();
+                ssb.append("￼");
+                int badgeEnd = ssb.length();
+                
+                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_verified);
+                if (drawable != null) {
+                    TypedValue typedValue = new TypedValue();
+                    context.getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true);
+                    int color = typedValue.data;
+                    DrawableCompat.setTint(drawable, color);
+                    
+                    drawable.setBounds(0, 0, (int) (14 * context.getResources().getDisplayMetrics().density), (int) (14 * context.getResources().getDisplayMetrics().density));
+                    ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
+                    ssb.setSpan(imageSpan, badgeStart, badgeEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            
+            ssb.append(" ");
+            String verb = post.getAuthorSex() == 1 ? "написала на стене" : "написал на стене";
+            ssb.append(verb);
+            ssb.append(" ");
+            
+            android.text.style.ClickableSpan ownerClickSpan = new android.text.style.ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    if (clickListener != null && post.getOwnerId() != 0) {
+                        int ownerAbsId = Math.abs(post.getOwnerId());
+                        clickListener.onAuthorClick(ownerAbsId, post.getOwnerName(), post.isOwnerGroup());
+                    }
+                }
+
+                @Override
+                public void updateDrawState(@NonNull android.text.TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                    ds.setColor(holder.authorName.getCurrentTextColor());
+                    ds.setTypeface(Typeface.create(ds.getTypeface(), Typeface.BOLD));
+                }
+            };
+            
+            String ownerName = ValidationUtils.sanitizeUserInput(post.getOwnerName() != null ? post.getOwnerName() : "User");
+            int ownerStart = ssb.length();
+            ssb.append(ownerName);
+            int ownerEnd = ssb.length();
+            ssb.setSpan(ownerClickSpan, ownerStart, ownerEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            
+            holder.authorName.setText(ssb);
+        } else {
+            holder.authorName.setTypeface(null, Typeface.BOLD);
+            holder.authorName.setMaxLines(1);
+            holder.authorName.setMovementMethod(null);
+            holder.authorName.setText(ValidationUtils.sanitizeUserInput(post.getAuthorName()));
+            if (holder.authorVerified != null) {
+                holder.authorVerified.setVisibility(post.isAuthorVerified() ? View.VISIBLE : View.GONE);
+            }
+        }
+        
         String timestampText = post.getTimestamp();
         if (post.isPinned()) {
             timestampText += ", " + context.getString(R.string.pinned);
@@ -135,12 +244,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.timestamp.setText(timestampText);
         holder.likeCount.setText(String.valueOf(Math.max(0, post.getLikeCount())));
         holder.commentCount.setText(String.valueOf(Math.max(0, post.getCommentCount())));
-        
-        // Отображение галочки верификации автора поста
-        Logger.d(TAG, "Post author " + post.getAuthorName() + " verified: " + post.isAuthorVerified());
-        if (holder.authorVerified != null) {
-            holder.authorVerified.setVisibility(post.isAuthorVerified() ? View.VISIBLE : View.GONE);
-        }
         
         // Оптимизированная загрузка аватара
         if (ImageUtils.isValidImageUrl(post.getAuthorAvatarUrl())) {
@@ -438,7 +541,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         };
         
         holder.avatar.setOnClickListener(authorClickListener);
-        holder.authorName.setOnClickListener(authorClickListener);
+        
+        boolean isWallPostOnOtherWall = !isProfileWall && post.getOwnerId() != 0 && post.getAuthorId() != 0 && 
+                !(Math.abs(post.getOwnerId()) == Math.abs(post.getAuthorId()) && post.isGroup() == post.isOwnerGroup());
+                
+        if (isWallPostOnOtherWall) {
+            holder.authorName.setOnClickListener(null);
+        } else {
+            holder.authorName.setOnClickListener(authorClickListener);
+        }
 
         holder.likeButton.setOnClickListener(v -> {
             if (clickListener != null) {
