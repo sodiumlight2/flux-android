@@ -585,4 +585,22 @@
     <string name="profile_edit_change_avatar">Сменить аватар</string>
     <string name="profile_edit_in_development">В разработке</string>
 
+    <!-- Logging & Crash settings -->
+    <string name="settings_log_limit">Лимит размера логов</string>
+    <string name="settings_save_logs">Сохранить логи на устройство</string>
+    <string name="settings_clear_logs">Очистить логи</string>
+    <string name="settings_clear_logs_confirm">Очистить файлы логов?</string>
+    <string name="settings_clear_logs_message">Вы уверены, что хотите удалить все сохраненные логи приложения?</string>
+    <string name="settings_logs_cleared">Логи очищены</string>
+    <string name="settings_logs_clear_error">Ошибка при очистке логов</string>
+    
+    <string name="crash_dialog_title">⚠️ Опа, произошёл сбой</string>
+    <string name="crash_dialog_message">В прошлый раз приложение завершило работу некорректно. Выберите действие с отчетом о сбое:</string>
+    <string name="crash_option_copy">Скопировать в буфер обмена</string>
+    <string name="crash_option_save">Сохранить отчет на устройство</string>
+    <string name="crash_option_ignore">Игнорировать</string>
+    <string name="crash_copied_success">Отчет скопирован в буфер обмена</string>
+    <string name="crash_saved_success">Файл успешно сохранен</string>
+    <string name="crash_saved_error">Не удалось сохранить файл</string>
+
 </resources>

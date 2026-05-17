@@ -25,6 +25,7 @@ public class FluxApplication extends Application {
 
     @Override
     public void onCreate() {
+        Logger.init(this);
         super.onCreate();
 
         Logger.d("FluxApplication", "Инициализация приложения");

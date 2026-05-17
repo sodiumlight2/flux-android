@@ -497,4 +497,22 @@
     <string name="language_kazakh_latin">Kazakh (Latin)</string>
     <string name="about_app_kk_cyrillic">🇰🇿 Казахська мова (Кирилична)</string>
 
+    <!-- Logging & Crash settings -->
+    <string name="settings_log_limit">Ліміт розміру логів</string>
+    <string name="settings_save_logs">Зберегти логи на пристрій</string>
+    <string name="settings_clear_logs">Очистити логи</string>
+    <string name="settings_clear_logs_confirm">Очистити файли логів?</string>
+    <string name="settings_clear_logs_message">Ви впевнені, що хочете видалити всі збережені логи застосунку?</string>
+    <string name="settings_logs_cleared">Логи очищено</string>
+    <string name="settings_logs_clear_error">Помилка при очищенні логів</string>
+    
+    <string name="crash_dialog_title">⚠️ Непередбачений збій</string>
+    <string name="crash_dialog_message">Минулого разу застосунок завершив роботу некоректно. Виберіть дію зі звітом про збій:</string>
+    <string name="crash_option_copy">Скопіювати в буфер обміну</string>
+    <string name="crash_option_save">Зберегти звіт на пристрій</string>
+    <string name="crash_option_ignore">Ігнорувати</string>
+    <string name="crash_copied_success">Звіт скопійовано в буфер обміну</string>
+    <string name="crash_saved_success">Файл успішно збережено</string>
+    <string name="crash_saved_error">Не вдалося зберегти файл</string>
+
 </resources>

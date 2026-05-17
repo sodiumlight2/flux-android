@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         
         setContentView(R.layout.activity_main);
         
+        Logger.checkAndShowCrashReport(this);
+        
         initializeManagers();
         setupControllers(); // Setup controllers BEFORE toolbar (navigationController needed)
         setupToolbar();
@@ -547,5 +549,11 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
             ((org.nikanikoo.flux.ui.fragments.friends.FriendsListFragment) currentFragment)
                     .updateUserOnlineStatus(userId, isOnline);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.handleSaveCrashResult(this, requestCode, resultCode, data);
     }
 }

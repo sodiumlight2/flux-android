@@ -502,4 +502,22 @@
     <string name="language_kazakh_latin">Казахська (Латиниця)</string>
     <string name="about_app_kk_cyrillic">🇰🇿 Kazakh language (Cyrillic)</string>
 
+    <!-- Logging & Crash settings -->
+    <string name="settings_log_limit">Log size limit</string>
+    <string name="settings_save_logs">Save logs to device</string>
+    <string name="settings_clear_logs">Clear logs</string>
+    <string name="settings_clear_logs_confirm">Clear log files?</string>
+    <string name="settings_clear_logs_message">Are you sure you want to delete all saved application logs?</string>
+    <string name="settings_logs_cleared">Logs cleared</string>
+    <string name="settings_logs_clear_error">Error clearing logs</string>
+    
+    <string name="crash_dialog_title">⚠️ Unexpected Crash</string>
+    <string name="crash_dialog_message">The application closed unexpectedly last time. Select an action for the crash report:</string>
+    <string name="crash_option_copy">Copy to clipboard</string>
+    <string name="crash_option_save">Save report to device</string>
+    <string name="crash_option_ignore">Ignore</string>
+    <string name="crash_copied_success">Report copied to clipboard</string>
+    <string name="crash_saved_success">File saved successfully</string>
+    <string name="crash_saved_error">Failed to save file</string>
+
 </resources>

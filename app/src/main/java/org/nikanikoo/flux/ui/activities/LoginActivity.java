@@ -30,6 +30,7 @@ import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.security.AccountManager;
 import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
+import org.nikanikoo.flux.utils.Logger;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -77,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
         CUSTOM_OPTION = getString(R.string.instance_display_names_custom);
         
         setContentView(R.layout.activity_login);
+        
+        Logger.checkAndShowCrashReport(this);
         
         ThemeManager.applySystemBarsAppearance(this);
 
@@ -503,5 +506,11 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.handleSaveCrashResult(this, requestCode, resultCode, data);
     }
 }
