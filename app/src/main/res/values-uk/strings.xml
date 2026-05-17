@@ -61,6 +61,9 @@
     <string name="login_hint">Email</string>
     <string name="password_hint">Пароль</string>
     <string name="forgot_password">Забули пароль?</string>
+    <string name="login_with_token">Увійти за токеном</string>
+    <string name="token_hint">Токен доступу (access_token)</string>
+    <string name="login_token_invalid">Введіть токен</string>
     <string name="btn_login">Увійти</string>
     <string name="btn_login_confirm">Все одно увійти</string>
     <string name="btn_login_loading">Вхід...</string>

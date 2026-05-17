@@ -56,6 +56,9 @@
     <string name="login_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="login_with_token">Sign in with token</string>
+    <string name="token_hint">Access token</string>
+    <string name="login_token_invalid">Please enter a token</string>
     <string name="btn_login">Sign in</string>
     <string name="btn_login_confirm">Log in anyway</string>
     <string name="btn_login_loading">Signing in...</string>

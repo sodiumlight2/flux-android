@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -118,6 +119,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(LoginActivity.this, getString(R.string.closed), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.text_login_with_token).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTokenLoginDialog();
             }
         });
     }
@@ -375,5 +383,125 @@ public class LoginActivity extends AppCompatActivity {
         
         btnLogin.setEnabled(true);
         btnLogin.setText(getString(R.string.btn_login));
+    }
+
+    private void showTokenLoginDialog() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_login_token, null);
+        
+        AutoCompleteTextView dialogSpinnerInstance = dialogView.findViewById(R.id.dialog_spinner_instance);
+        TextInputLayout dialogLayoutCustomInstance = dialogView.findViewById(R.id.dialog_layout_custom_instance);
+        TextInputEditText dialogEditCustomInstance = dialogView.findViewById(R.id.dialog_edit_custom_instance);
+        TextInputEditText dialogEditToken = dialogView.findViewById(R.id.dialog_edit_token);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            INSTANCE_DISPLAY_NAMES
+        );
+        dialogSpinnerInstance.setAdapter(adapter);
+        
+        dialogSpinnerInstance.setText(INSTANCE_DISPLAY_NAMES[selectedInstanceIndex], false);
+        final int[] dialogSelectedInstanceIndex = {selectedInstanceIndex};
+        
+        if (INSTANCE_DISPLAY_NAMES[selectedInstanceIndex].equals(CUSTOM_OPTION)) {
+            dialogLayoutCustomInstance.setVisibility(View.VISIBLE);
+            dialogEditCustomInstance.setText(editCustomInstance.getText());
+        }
+        
+        dialogSpinnerInstance.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialogSelectedInstanceIndex[0] = position;
+                if (INSTANCE_DISPLAY_NAMES[position].equals(CUSTOM_OPTION)) {
+                    dialogLayoutCustomInstance.setVisibility(View.VISIBLE);
+                    dialogEditCustomInstance.requestFocus();
+                } else {
+                    dialogLayoutCustomInstance.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.login_with_token))
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.btn_login), null)
+            .setNegativeButton(getString(R.string.cancel), (dialogInterface, which) -> dialogInterface.dismiss())
+            .create();
+            
+        dialog.show();
+        
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String instance = "";
+            if (INSTANCE_DISPLAY_NAMES[dialogSelectedInstanceIndex[0]].equals(CUSTOM_OPTION)) {
+                String customInstance = dialogEditCustomInstance.getText().toString().trim();
+                if (customInstance.isEmpty()) {
+                    dialogEditCustomInstance.setError(getString(R.string.instance_address_hint));
+                    return;
+                }
+                instance = customInstance;
+            } else {
+                instance = INSTANCE_URLS[dialogSelectedInstanceIndex[0]];
+            }
+
+            String token = dialogEditToken.getText().toString().trim();
+            if (token.isEmpty()) {
+                dialogEditToken.setError(getString(R.string.login_token_invalid));
+                dialogEditToken.requestFocus();
+                return;
+            }
+
+            dialog.dismiss();
+            performTokenLogin(instance, token);
+        });
+    }
+
+    private void performTokenLogin(String instance, String token) {
+        OpenVKApi.resetInstance();
+        final String formattedInstance = formatInstanceUrl(instance);
+        OpenVKApi.getInstance(this).saveInstance(formattedInstance);
+        OpenVKApi.getInstance(this).saveToken(token);
+        
+        btnLogin.setEnabled(false);
+        btnLogin.setText(getString(R.string.btn_login_loading));
+        
+        ProfileManager.getInstance(this).clearCache();
+        ProfileManager.getInstance(this).loadProfile(false, false, new ProfileManager.ProfileCallback() {
+            @Override
+            public void onSuccess(UserProfile profile) {
+                runOnUiThread(() -> {
+                    AccountManager.getInstance(LoginActivity.this).addAccount(token, formattedInstance, profile);
+                    
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+                    
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    if (getIntent().getBooleanExtra("add_account", false)) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
+                    startActivity(intent);
+                    finish();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    UserProfile dummyProfile = new UserProfile();
+                    dummyProfile.setId(0);
+                    dummyProfile.setFirstName(getString(R.string.loading));
+                    dummyProfile.setLastName("");
+                    dummyProfile.setScreenName("Token User");
+                    AccountManager.getInstance(LoginActivity.this).addAccount(token, formattedInstance, dummyProfile);
+                    
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+                    
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    if (getIntent().getBooleanExtra("add_account", false)) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
+                    startActivity(intent);
+                    finish();
+                });
+            }
+        });
     }
 }
