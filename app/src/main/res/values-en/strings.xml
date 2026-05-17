@@ -29,6 +29,8 @@
     <string name="share">Share</string>
     <string name="copy">Copy</string>
     <string name="link_copied">Link copied</string>
+    <string name="chat_favorites">Favorites</string>
+    <string name="chat_favorites_subtitle">Chat with yourself</string>
 
     <!-- Navigation -->
     <string name="toolbar_globalfeed">All news</string>

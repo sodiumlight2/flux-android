@@ -119,7 +119,54 @@ public class MessagesListFragment extends BaseFragment implements ConversationsA
                     getActivity().runOnUiThread(() -> {
                         hideError();
                         conversations.clear();
+                        
+                        org.nikanikoo.flux.data.managers.ProfileManager profileManager = 
+                            org.nikanikoo.flux.data.managers.ProfileManager.getInstance(requireContext());
+                        org.nikanikoo.flux.data.models.UserProfile myProfile = profileManager.getCachedProfileSync();
+                        
+                        Conversation selfConv = null;
+                        if (myProfile != null) {
+                            for (Conversation c : loadedConversations) {
+                                if (c.getPeerId() == myProfile.getId()) {
+                                    selfConv = c;
+                                    break;
+                                }
+                            }
+                            
+                            if (selfConv != null) {
+                                loadedConversations.remove(selfConv);
+                                Conversation updatedSelf = new Conversation(
+                                    selfConv.getId(),
+                                    selfConv.getPeerId(),
+                                    getString(R.string.chat_favorites),
+                                    selfConv.getLastMessage() == null || selfConv.getLastMessage().isEmpty() ? getString(R.string.chat_favorites_subtitle) : selfConv.getLastMessage(),
+                                    selfConv.getLastMessageDate(),
+                                    selfConv.getUnreadCount()
+                                );
+                                updatedSelf.setPeerPhoto(myProfile.getPhoto200());
+                                updatedSelf.setOnline(true);
+                                updatedSelf.setPeerVerified(myProfile.isVerified());
+                                selfConv = updatedSelf;
+                            } else {
+                                selfConv = new Conversation(
+                                    myProfile.getId(),
+                                    myProfile.getId(),
+                                    getString(R.string.chat_favorites),
+                                    getString(R.string.chat_favorites_subtitle),
+                                    0,
+                                    0
+                                );
+                                selfConv.setPeerPhoto(myProfile.getPhoto200());
+                                selfConv.setOnline(true);
+                                selfConv.setPeerVerified(myProfile.isVerified());
+                            }
+                        }
+                        
+                        if (selfConv != null) {
+                            conversations.add(selfConv);
+                        }
                         conversations.addAll(loadedConversations);
+                        
                         if (adapter != null) {
                             adapter.updateConversations(conversations);
                         }

@@ -363,7 +363,17 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
     @Override
     public boolean isForeignProfile() {
-        return userId > 0;
+        if (userId <= 0) {
+            return false;
+        }
+        
+        ProfileManager pm = ProfileManager.getInstance(requireContext());
+        UserProfile myProfile = pm.getCachedProfileSync();
+        if (myProfile != null && userId == myProfile.getId()) {
+            return false;
+        }
+        
+        return true;
     }
 
     // ==================== Helper Methods ====================

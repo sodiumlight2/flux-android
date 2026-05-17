@@ -30,6 +30,8 @@
     <string name="share">Поделиться</string>
     <string name="copy">Копировать</string>
     <string name="link_copied">Ссылка скопирована</string>
+    <string name="chat_favorites">Избранное</string>
+    <string name="chat_favorites_subtitle">Чат с самим собой</string>
 
     <!-- toolbars -->
     <string name="toolbar_subsfeed">Мои новости</string>
