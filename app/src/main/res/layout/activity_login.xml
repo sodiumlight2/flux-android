@@ -165,7 +165,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:text="@string/forgot_password"
-                            android:textColor="@color/light_primary"
+                            android:textColor="?attr/colorPrimary"
                             android:layout_marginBottom="4dp"
                             android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -180,7 +180,7 @@
                             android:focusable="true"
                             android:layout_marginBottom="4dp"
                             android:text="@string/login_with_token"
-                            android:textColor="@color/light_primary"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -232,7 +232,7 @@
                         android:focusable="true"
                         android:padding="8dp"
                         android:text="@string/register"
-                        android:textColor="@color/light_primary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
