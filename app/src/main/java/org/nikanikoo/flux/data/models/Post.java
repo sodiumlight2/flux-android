@@ -34,6 +34,8 @@ public class Post implements Serializable {
     private int authorSex;
     private boolean ownerVerified;
     private boolean isOwnerGroup;
+    private boolean explicit;
+    private boolean isNsfwRevealed;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -154,4 +156,10 @@ public class Post implements Serializable {
 
     public boolean isOwnerGroup() { return isOwnerGroup; }
     public void setOwnerGroup(boolean isOwnerGroup) { this.isOwnerGroup = isOwnerGroup; }
+
+    public boolean isExplicit() { return explicit; }
+    public void setExplicit(boolean explicit) { this.explicit = explicit; }
+
+    public boolean isNsfwRevealed() { return isNsfwRevealed; }
+    public void setNsfwRevealed(boolean nsfwRevealed) { this.isNsfwRevealed = nsfwRevealed; }
 }

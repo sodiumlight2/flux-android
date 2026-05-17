@@ -139,6 +139,33 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Logger.w(TAG, "Post at position " + position + " is null");
             return;
         }
+
+        if (holder.nsfwSpoiler != null && holder.postBodyContainer != null) {
+            if (post.isExplicit() && !post.isNsfwRevealed()) {
+                holder.nsfwSpoiler.setVisibility(View.VISIBLE);
+                holder.nsfwSpoiler.setAlpha(1f);
+                holder.postBodyContainer.setVisibility(View.INVISIBLE);
+                
+                holder.nsfwSpoiler.setOnClickListener(v -> {
+                    post.setNsfwRevealed(true);
+                    
+                    holder.postBodyContainer.setVisibility(View.VISIBLE);
+                    holder.nsfwSpoiler.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            holder.nsfwSpoiler.setVisibility(View.GONE);
+                            holder.nsfwSpoiler.setAlpha(1f);
+                        })
+                        .start();
+                });
+            } else {
+                holder.nsfwSpoiler.setVisibility(View.GONE);
+                holder.nsfwSpoiler.setOnClickListener(null);
+                holder.postBodyContainer.setVisibility(View.VISIBLE);
+                holder.postBodyContainer.setAlpha(1f);
+            }
+        }
         
         // Безопасная установка текстовых данных
         boolean isWallPostOnOtherWall = !isProfileWall && post.getOwnerId() != 0 && post.getAuthorId() != 0 && 
@@ -294,6 +321,33 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Показываем контейнер оригинального поста
         holder.originalPostContainer.setVisibility(View.VISIBLE);
+        
+        if (holder.originalPostNsfwSpoiler != null && holder.originalPostPostBodyContainer != null) {
+            if (originalPost.isExplicit() && !originalPost.isNsfwRevealed()) {
+                holder.originalPostNsfwSpoiler.setVisibility(View.VISIBLE);
+                holder.originalPostNsfwSpoiler.setAlpha(1f);
+                holder.originalPostPostBodyContainer.setVisibility(View.INVISIBLE);
+                
+                holder.originalPostNsfwSpoiler.setOnClickListener(v -> {
+                    originalPost.setNsfwRevealed(true);
+                    
+                    holder.originalPostPostBodyContainer.setVisibility(View.VISIBLE);
+                    holder.originalPostNsfwSpoiler.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            holder.originalPostNsfwSpoiler.setVisibility(View.GONE);
+                            holder.originalPostNsfwSpoiler.setAlpha(1f);
+                        })
+                        .start();
+                });
+            } else {
+                holder.originalPostNsfwSpoiler.setVisibility(View.GONE);
+                holder.originalPostNsfwSpoiler.setOnClickListener(null);
+                holder.originalPostPostBodyContainer.setVisibility(View.VISIBLE);
+                holder.originalPostPostBodyContainer.setAlpha(1f);
+            }
+        }
         
         // Заполняем данные оригинального поста
         holder.originalPostAuthorName.setText(ValidationUtils.sanitizeUserInput(originalPost.getAuthorName()));
@@ -862,6 +916,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView originalPostLikeCount;
         TextView originalPostCommentCount;
         ImageView originalPostAuthorVerified;
+        
+        // NSFW spoiler views
+        View postBodyContainer;
+        View nsfwSpoiler;
+        View originalPostPostBodyContainer;
+        View originalPostNsfwSpoiler;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -895,6 +955,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             originalPostLikeCount = itemView.findViewById(R.id.original_post_like_count);
             originalPostCommentCount = itemView.findViewById(R.id.original_post_comment_count);
             originalPostAuthorVerified = itemView.findViewById(R.id.original_post_author_verified);
+
+            postBodyContainer = itemView.findViewById(R.id.post_body_container);
+            nsfwSpoiler = itemView.findViewById(R.id.nsfw_spoiler);
+            originalPostPostBodyContainer = itemView.findViewById(R.id.original_post_body_container);
+            originalPostNsfwSpoiler = itemView.findViewById(R.id.original_post_nsfw_spoiler);
         }
     }
 

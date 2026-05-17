@@ -57,6 +57,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private TextView originalPostTimestamp;
     private TextView originalPostContent;
     private PostImagesCollage originalPostImage;
+    private View originalPostBodyContainer;
+    private View originalPostNsfwSpoiler;
     private View originalPostLikeButton;
     private ImageView originalPostLikeIcon;
     private TextView originalPostLikeCount;
@@ -119,6 +121,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostTimestamp = view.findViewById(R.id.original_post_timestamp);
         originalPostContent = view.findViewById(R.id.original_post_content);
         originalPostImage = view.findViewById(R.id.original_post_image);
+        originalPostBodyContainer = view.findViewById(R.id.original_post_body_container);
+        originalPostNsfwSpoiler = view.findViewById(R.id.original_post_nsfw_spoiler);
         originalPostLikeButton = view.findViewById(R.id.original_post_like_button);
         originalPostLikeIcon = view.findViewById(R.id.original_post_like_icon);
         originalPostLikeCount = view.findViewById(R.id.original_post_like_count);
@@ -194,6 +198,33 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostContent.setText(ValidationUtils.SanitizeText(originalPost.getContent()));
         originalPostLikeCount.setText(String.valueOf(originalPost.getLikeCount()));
         originalPostCommentCount.setText(String.valueOf(originalPost.getCommentCount()));
+        
+        if (originalPostNsfwSpoiler != null && originalPostBodyContainer != null) {
+            if (originalPost.isExplicit() && !originalPost.isNsfwRevealed()) {
+                originalPostNsfwSpoiler.setVisibility(View.VISIBLE);
+                originalPostNsfwSpoiler.setAlpha(1f);
+                originalPostBodyContainer.setVisibility(View.INVISIBLE);
+                
+                originalPostNsfwSpoiler.setOnClickListener(v -> {
+                    originalPost.setNsfwRevealed(true);
+                    
+                    originalPostBodyContainer.setVisibility(View.VISIBLE);
+                    originalPostNsfwSpoiler.animate()
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            originalPostNsfwSpoiler.setVisibility(View.GONE);
+                            originalPostNsfwSpoiler.setAlpha(1f);
+                        })
+                        .start();
+                });
+            } else {
+                originalPostNsfwSpoiler.setVisibility(View.GONE);
+                originalPostNsfwSpoiler.setOnClickListener(null);
+                originalPostBodyContainer.setVisibility(View.VISIBLE);
+                originalPostBodyContainer.setAlpha(1f);
+            }
+        }
         
         // Загружаем аватарку автора
         if (originalPost.getAuthorAvatarUrl() != null && !originalPost.getAuthorAvatarUrl().isEmpty()) {

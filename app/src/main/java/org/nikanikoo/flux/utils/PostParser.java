@@ -160,6 +160,12 @@ public class PostParser {
                               actualPostData.optBoolean("pinned", false);
             post.setPinned(isPinned);
             
+            boolean isExplicit = actualPostData.optInt("is_explicit", 0) == 1 || 
+                               actualPostData.optBoolean("is_explicit", false) ||
+                               actualPostData.optInt("explicit", 0) == 1 ||
+                               actualPostData.optBoolean("explicit", false);
+            post.setExplicit(isExplicit);
+            
             post.setCanEdit(actualPostData.optBoolean("can_edit", false));
             post.setCanDelete(actualPostData.optBoolean("can_delete", false));
             post.setCanPin(actualPostData.optBoolean("can_pin", false));
@@ -247,6 +253,12 @@ public class PostParser {
             post.setOwnerVerified(ownerInfo.verified);
             post.setOwnerGroup(ownerInfo.isGroup);
             post.setAuthorSex(authorSex);
+
+            boolean isExplicit = originalPostData.optInt("is_explicit", 0) == 1 || 
+                               originalPostData.optBoolean("is_explicit", false) ||
+                               originalPostData.optInt("explicit", 0) == 1 ||
+                               originalPostData.optBoolean("explicit", false);
+            post.setExplicit(isExplicit);
 
             JSONArray attachments = ValidationUtils.safeGetJSONArray(originalPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);

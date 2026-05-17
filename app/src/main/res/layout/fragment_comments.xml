@@ -79,24 +79,81 @@
 
                         </LinearLayout>
 
-                        <!-- Текст поста -->
-                        <TextView
-                            android:id="@+id/original_post_content"
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:lineSpacingExtra="2dp"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textIsSelectable="true"
-                            android:textSize="14sp" />
+                            android:measureAllChildren="true"
+                            android:layout_marginBottom="12dp">
 
-                        <!-- Изображение поста -->
-                        <org.nikanikoo.flux.ui.adapters.posts.PostImagesCollage
-                            android:id="@+id/original_post_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_marginBottom="12dp"/>
+                            <LinearLayout
+                                android:id="@+id/original_post_body_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <!-- Текст поста -->
+                                <TextView
+                                    android:id="@+id/original_post_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="12dp"
+                                    android:lineSpacingExtra="2dp"
+                                    android:textColor="?attr/colorOnSurface"
+                                    android:textIsSelectable="true"
+                                    android:textSize="14sp" />
+
+                                <!-- Изображение поста -->
+                                <org.nikanikoo.flux.ui.adapters.posts.PostImagesCollage
+                                    android:id="@+id/original_post_image"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/original_post_nsfw_spoiler"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:minHeight="140dp"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:background="@drawable/bg_nsfw_overlay"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone"
+                                android:padding="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_nsfw_spoiler"
+                                    android:paddingHorizontal="18dp"
+                                    android:paddingVertical="12dp">
+
+                                    <ImageView
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:src="@drawable/ic_visibility_off"
+                                        app:tint="@color/white"
+                                        android:layout_marginBottom="8dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Данный пост может содержать 18+ контент"
+                                        android:textColor="#E0E0E0"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold"
+                                        android:gravity="center" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </FrameLayout>
 
                         <!-- Действия с постом -->
                         <LinearLayout
