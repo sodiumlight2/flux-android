@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +48,7 @@ public class ChatFragment extends Fragment implements MessagesAdapter.OnMessageC
     private MessagesAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private EditText messageInput;
-    private ImageButton sendButton;
+    private ImageView sendButton;
     private MessagesManager messagesManager;
     private List<Message> messages;
 

@@ -184,7 +184,7 @@ public class ProfileEditMainFragment extends Fragment {
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Аватарка успешно изменена", Toast.LENGTH_SHORT).show();
                         Picasso.get().invalidate(uri);
-                        Picasso.get().load(uri).placeholder(R.drawable.ic_account).into(avatarImage);
+                        Picasso.get().load(uri).placeholder(R.drawable.ic_account_circle).into(avatarImage);
                     });
                 }
             }
@@ -306,7 +306,7 @@ public class ProfileEditMainFragment extends Fragment {
                     }
 
                     if (!photoUrl.isEmpty()) {
-                        Picasso.get().load(photoUrl).placeholder(R.drawable.ic_account).into(avatarImage);
+                        Picasso.get().load(photoUrl).placeholder(R.drawable.ic_account_circle).into(avatarImage);
                     }
 
                 } catch (Exception e) {

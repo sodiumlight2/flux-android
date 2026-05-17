@@ -398,11 +398,11 @@ public class GroupProfileFragment extends BaseProfileFragment {
         
         if (isDetailsExpanded) {
             groupDetailsCard.setVisibility(View.GONE);
-            expandArrow.setImageResource(R.drawable.ic_expand_more);
+            expandArrow.setImageResource(R.drawable.ic_keyboard_arrow_down);
             isDetailsExpanded = false;
         } else {
             groupDetailsCard.setVisibility(View.VISIBLE);
-            expandArrow.setImageResource(R.drawable.ic_expand_less);
+            expandArrow.setImageResource(R.drawable.ic_keyboard_arrow_up);
             isDetailsExpanded = true;
         }
     }

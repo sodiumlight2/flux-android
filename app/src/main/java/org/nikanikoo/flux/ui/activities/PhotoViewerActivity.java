@@ -465,7 +465,7 @@ public class PhotoViewerActivity extends AppCompatActivity {
     
     private void updateLikeButton() {
         if (post != null) {
-            btnLike.setImageResource(post.isLiked() ? R.drawable.ic_like_filled : R.drawable.ic_like);
+            btnLike.setImageResource(post.isLiked() ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite);
 
             int color = post.isLiked() ?
                 androidx.core.content.ContextCompat.getColor(this, R.color.like_color) :

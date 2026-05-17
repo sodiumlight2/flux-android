@@ -460,11 +460,11 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         
         if (isDetailsExpanded) {
             profileDetailsCard.setVisibility(View.GONE);
-            expandArrow.setImageResource(R.drawable.ic_expand_more);
+            expandArrow.setImageResource(R.drawable.ic_keyboard_arrow_down);
             isDetailsExpanded = false;
         } else {
             profileDetailsCard.setVisibility(View.VISIBLE);
-            expandArrow.setImageResource(R.drawable.ic_expand_less);
+            expandArrow.setImageResource(R.drawable.ic_keyboard_arrow_up);
             isDetailsExpanded = true;
         }
     }

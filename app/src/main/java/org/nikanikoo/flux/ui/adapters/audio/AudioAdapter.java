@@ -128,11 +128,11 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
             String title = audio.getTitle();
             
             if (artist == null || title == null || artist.isEmpty() || title.isEmpty()) {
-                audioCover.setImageResource(R.drawable.ic_music);
+                audioCover.setImageResource(R.drawable.ic_music_note);
                 return;
             }
             
-            albumArtFetcher.loadAlbumArt(artist, title, audioCover, R.drawable.ic_music);
+            albumArtFetcher.loadAlbumArt(artist, title, audioCover, R.drawable.ic_music_note);
         }
     }
 }

@@ -606,7 +606,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_music)
+                .setSmallIcon(R.drawable.ic_library_music)
                 .setLargeIcon(albumArt != null ? albumArt : getFallbackIcon())
                 .setContentTitle(currentAudio.getTitle())
                 .setContentText(currentAudio.getArtist())
@@ -620,13 +620,13 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .setStyle(mediaStyle)
-                .addAction(createAction(R.drawable.ic_previous, "Назад", ACTION_PREVIOUS))
+                .addAction(createAction(R.drawable.ic_skip_previous, "Назад", ACTION_PREVIOUS))
                 .addAction(createAction(
                         isPlaying() ? R.drawable.ic_pause : R.drawable.ic_play,
                         isPlaying() ? "Пауза" : "Играть",
                         isPlaying() ? ACTION_PAUSE : ACTION_PLAY
                 ))
-                .addAction(createAction(R.drawable.ic_next, "Вперед", ACTION_NEXT));
+                .addAction(createAction(R.drawable.ic_skip_next, "Вперед", ACTION_NEXT));
 
         Notification notification = builder.build();
 
@@ -638,7 +638,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         try {
             return BitmapFactory.decodeResource(getResources(), R.drawable.logo_flux);
         } catch (Exception e) {
-            return BitmapFactory.decodeResource(getResources(), R.drawable.ic_music);
+            return BitmapFactory.decodeResource(getResources(), R.drawable.ic_library_music);
         }
     }
 

@@ -339,7 +339,7 @@ public class MessageNotificationManager {
         // Используем системную иконку сообщений как fallback
         int iconRes;
         try {
-            iconRes = R.drawable.ic_messages;
+            iconRes = R.drawable.ic_chat_bubble;
         } catch (Exception e) {
             Log.w(TAG, "ic_messages not found, using system icon");
             iconRes = android.R.drawable.ic_dialog_email;
@@ -424,7 +424,7 @@ public class MessageNotificationManager {
         // Используем системную иконку сообщений как fallback
         int iconRes;
         try {
-            iconRes = R.drawable.ic_messages;
+            iconRes = R.drawable.ic_chat_bubble;
         } catch (Exception e) {
             Log.w(TAG, "ic_messages not found, using system icon");
             iconRes = android.R.drawable.ic_dialog_email;

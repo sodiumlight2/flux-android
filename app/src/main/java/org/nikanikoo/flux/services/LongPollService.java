@@ -132,7 +132,7 @@ public class LongPollService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("OpenVK Flux")
                 .setContentText("Connected to receive messages")
-                .setSmallIcon(R.drawable.ic_messages)
+                .setSmallIcon(R.drawable.ic_chat_bubble)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)

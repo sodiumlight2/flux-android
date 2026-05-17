@@ -21,7 +21,7 @@
                 android:id="@+id/avatar_image"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_account"
+                android:src="@drawable/ic_account_circle"
                 android:scaleType="centerCrop"
                 app:shapeAppearanceOverlay="@style/CircleImageView"
                 app:strokeColor="?attr/colorOutline"
@@ -51,8 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_name"
-            app:startIconDrawable="@drawable/ic_account">
+            android:hint="@string/profile_edit_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/name_edit"
@@ -69,8 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_sname"
-            app:startIconDrawable="@drawable/ic_account">
+            android:hint="@string/profile_edit_sname">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/surname_edit"
@@ -87,8 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_nickname"
-            app:startIconDrawable="@drawable/ic_account">
+            android:hint="@string/profile_edit_nickname">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nickname_edit"
@@ -105,8 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_status"
-            app:startIconDrawable="@drawable/ic_info">
+            android:hint="@string/profile_edit_status">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/status_edit"
@@ -123,8 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_home_town"
-            app:startIconDrawable="@drawable/ic_account">
+            android:hint="@string/profile_edit_home_town">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/home_town_edit"
@@ -183,8 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/profile_edit_relation"
-            app:startIconDrawable="@drawable/ic_account">
+            android:hint="@string/profile_edit_relation">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/relation_auto_complete"
@@ -212,8 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/profile_edit_bdate"
-            app:startIconDrawable="@drawable/ic_info">
+            android:hint="@string/profile_edit_bdate">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bdate_edit"

@@ -58,7 +58,7 @@
                     android:id="@+id/news_toolbar_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_arrow_down"
+                    android:src="@drawable/ic_stat_minus"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="4dp"/>
 

@@ -232,7 +232,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements AudioPlaye
             return;
         }
 
-        albumArtFetcher.loadAlbumArt(artist, title, albumArt, R.drawable.ic_music, new AlbumArtFetcher.AlbumArtCallback() {
+        albumArtFetcher.loadAlbumArt(artist, title, albumArt, R.drawable.ic_library_music, new AlbumArtFetcher.AlbumArtCallback() {
             @Override
             public void onSuccess(String imageUrl) {
                 albumArt.setVisibility(android.view.View.VISIBLE);
