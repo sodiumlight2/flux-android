@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
     private AccountManager accountManager;
     private LocaleManager localeManager;
 
+    private int currentThemeMode = -1;
+    private int currentThemeStyle = -1;
+    private int currentContrastMode = -1;
+
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
@@ -104,8 +108,29 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         
         handleNotificationIntent(getIntent());
         
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+            Logger.d(TAG, "BackStack changed, count=" + backStackCount);
+            
+            for (int i = 0; i < backStackCount; i++) {
+                Logger.d(TAG, "  BackStack[" + i + "]: " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
+            }
+            
+            if (navigationController != null) {
+                navigationController.updateDrawerToggleForBackStack(backStackCount);
+            }
+        });
+        
         if (savedInstanceState == null) {
             setupInitialFragment();
+        } else {
+            int savedFragmentId = savedInstanceState.getInt("current_fragment_id", -1);
+            if (savedFragmentId != -1 && navigationController != null) {
+                navigationController.setCurrentFragmentId(savedFragmentId);
+            }
+            if (navigationController != null) {
+                navigationController.updateDrawerToggleForBackStack(getSupportFragmentManager().getBackStackEntryCount());
+            }
         }
         
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
@@ -122,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         ThemeManager themeManager = ThemeManager.getInstance(this);
         themeManager.applySavedTheme();
         themeManager.applyThemeToActivity(this);
+        
+        currentThemeMode = themeManager.getThemeMode();
+        currentThemeStyle = themeManager.getThemeStyle();
+        currentContrastMode = themeManager.getContrastMode();
         
         if (themeManager.getThemeStyle() == ThemeManager.STYLE_MATERIAL_YOU && 
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -235,19 +264,6 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
             navigationController.navigateToFragment(new NewsFragment(), "news");
             navigationController.setCurrentFragmentId(R.id.drawer_news);
         }
-        
-        // Add listener for back stack changes
-        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-            int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
-            Logger.d(TAG, "BackStack changed, count=" + backStackCount);
-            
-            // Логируем содержимое back stack
-            for (int i = 0; i < backStackCount; i++) {
-                Logger.d(TAG, "  BackStack[" + i + "]: " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-            }
-            
-            navigationController.updateDrawerToggleForBackStack(backStackCount);
-        });
     }
     
     /**
@@ -358,6 +374,17 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
     @Override
     protected void onResume() {
         super.onResume();
+        
+        ThemeManager themeManager = ThemeManager.getInstance(this);
+        if (currentThemeMode != themeManager.getThemeMode() ||
+            currentThemeStyle != themeManager.getThemeStyle() ||
+            currentContrastMode != themeManager.getContrastMode()) {
+            
+            Logger.d(TAG, "Theme changed, recreating MainActivity");
+            recreate();
+            return;
+        }
+        
         if (longPollManager != null) {
             longPollManager.start();
         }
@@ -365,6 +392,14 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         
         if (miniPlayerController != null) {
             miniPlayerController.bindService();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (navigationController != null) {
+            outState.putInt("current_fragment_id", navigationController.getCurrentFragmentId());
         }
     }
     
@@ -448,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
                 .setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
                     themeManager.setThemeMode(which);
                     dialog.dismiss();
+                    recreate();
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();

@@ -222,10 +222,8 @@ public class AppearanceSettingsFragment extends Fragment {
     }
     
     private void restartMainActivity() {
-        // Полный перезапуск приложения для применения цветовой схемы
-        Intent intent = new Intent(requireContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        requireActivity().finish();
+        if (getActivity() != null) {
+            getActivity().recreate();
+        }
     }
 }
