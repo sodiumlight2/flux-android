@@ -72,7 +72,7 @@ jobs:
         with:
           tag_name: build-alpha-${{ github.run_number }}
           name: Build ${{ steps.commit.outputs.hash }} (${{ github.run_number }})
-          prerelease: true
+          prerelease: false
           files: |
             flux.apk
             flux-debug.apk
