@@ -206,6 +206,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                 originalPostBodyContainer.setVisibility(View.INVISIBLE);
                 
                 originalPostNsfwSpoiler.setOnClickListener(v -> {
+                    v.getRootView().clearFocus();
+                    
                     originalPost.setNsfwRevealed(true);
                     
                     originalPostBodyContainer.setVisibility(View.VISIBLE);

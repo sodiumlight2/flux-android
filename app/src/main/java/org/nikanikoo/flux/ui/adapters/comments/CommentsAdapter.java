@@ -234,4 +234,20 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             container.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull CommentViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder.content != null) {
+            holder.content.clearFocus();
+        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull CommentViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder.content != null) {
+            holder.content.clearFocus();
+        }
+    }
 }

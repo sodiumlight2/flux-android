@@ -23,6 +23,7 @@
     android:id="@+id/profile_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:visibility="gone"
     tools:context=".ui.fragments.profile.ProfileFragment">
 
@@ -844,6 +845,7 @@
             android:id="@+id/recycler_profile_posts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
             android:nestedScrollingEnabled="false"
             android:padding="8dp"/>
 

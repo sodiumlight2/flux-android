@@ -342,4 +342,36 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return text;
         }
     }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof OutgoingMessageViewHolder) {
+            OutgoingMessageViewHolder outHolder = (OutgoingMessageViewHolder) holder;
+            if (outHolder.messageText != null) {
+                outHolder.messageText.clearFocus();
+            }
+        } else if (holder instanceof IncomingMessageViewHolder) {
+            IncomingMessageViewHolder inHolder = (IncomingMessageViewHolder) holder;
+            if (inHolder.messageText != null) {
+                inHolder.messageText.clearFocus();
+            }
+        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof OutgoingMessageViewHolder) {
+            OutgoingMessageViewHolder outHolder = (OutgoingMessageViewHolder) holder;
+            if (outHolder.messageText != null) {
+                outHolder.messageText.clearFocus();
+            }
+        } else if (holder instanceof IncomingMessageViewHolder) {
+            IncomingMessageViewHolder inHolder = (IncomingMessageViewHolder) holder;
+            if (inHolder.messageText != null) {
+                inHolder.messageText.clearFocus();
+            }
+        }
+    }
 }

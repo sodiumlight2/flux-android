@@ -16,6 +16,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:fillViewport="true">
 
             <LinearLayout
@@ -82,7 +83,6 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:measureAllChildren="true"
                             android:layout_marginBottom="12dp">
 
                             <LinearLayout
@@ -265,6 +265,7 @@
                     android:id="@+id/recycler_comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants"
                     android:nestedScrollingEnabled="false" />
 
             </LinearLayout>

@@ -147,6 +147,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.postBodyContainer.setVisibility(View.INVISIBLE);
                 
                 holder.nsfwSpoiler.setOnClickListener(v -> {
+                    v.getRootView().clearFocus();
+                    
                     post.setNsfwRevealed(true);
                     
                     holder.postBodyContainer.setVisibility(View.VISIBLE);
@@ -329,6 +331,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.originalPostPostBodyContainer.setVisibility(View.INVISIBLE);
                 
                 holder.originalPostNsfwSpoiler.setOnClickListener(v -> {
+                    v.getRootView().clearFocus();
+                    
                     originalPost.setNsfwRevealed(true);
                     
                     holder.originalPostPostBodyContainer.setVisibility(View.VISIBLE);
@@ -1002,6 +1006,34 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (container != null) {
             container.removeAllViews();
             container.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof PostViewHolder) {
+            PostViewHolder postHolder = (PostViewHolder) holder;
+            if (postHolder.content != null) {
+                postHolder.content.clearFocus();
+            }
+            if (postHolder.originalPostContent != null) {
+                postHolder.originalPostContent.clearFocus();
+            }
+        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof PostViewHolder) {
+            PostViewHolder postHolder = (PostViewHolder) holder;
+            if (postHolder.content != null) {
+                postHolder.content.clearFocus();
+            }
+            if (postHolder.originalPostContent != null) {
+                postHolder.originalPostContent.clearFocus();
+            }
         }
     }
 }
