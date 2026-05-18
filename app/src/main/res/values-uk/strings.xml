@@ -332,12 +332,14 @@
     <string name="appearance_theme_system">Системна</string>
     <string name="appearance_theme_light">Світла</string>
     <string name="appearance_theme_dark">Темна</string>
+    <string name="appearance_theme_amoled">AMOLED</string>
     <string name="appearance_color_scheme">Колірна схема</string>
     <string name="appearance_color_blue">Синя</string>
     <string name="appearance_color_material_you">Material You (динамічна)</string>
     <string name="appearance_color_green">Зелена</string>
     <string name="appearance_color_purple">Фіолетова</string>
     <string name="appearance_color_red">Червона</string>
+    <string name="appearance_color_amoled">AMOLED</string>
     <string name="appearance_material_you_info">Material You доступний тільки на Android 12+</string>
     <string name="appearance_select_theme">Вибір теми</string>
 

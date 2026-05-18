@@ -360,12 +360,14 @@
     <string name="appearance_theme_system">Системная</string>
     <string name="appearance_theme_light">Светлая</string>
     <string name="appearance_theme_dark">Тёмная</string>
+    <string name="appearance_theme_amoled">AMOLED</string>
     <string name="appearance_color_scheme">Цветовая схема</string>
     <string name="appearance_color_blue">Синяя</string>
     <string name="appearance_color_material_you">Material You (динамическая)</string>
     <string name="appearance_color_green">Зелёная</string>
     <string name="appearance_color_purple">Фиолетовая</string>
     <string name="appearance_color_red">Красная</string>
+    <string name="appearance_color_amoled">AMOLED</string>
     <string name="appearance_material_you_info">Material You доступен только на Android 12+</string>
     <string name="appearance_select_theme">Выбор темы</string>
 

@@ -308,6 +308,7 @@
     <string name="appearance_theme_system">System</string>
     <string name="appearance_theme_light">Light</string>
     <string name="appearance_theme_dark">Dark</string>
+    <string name="appearance_theme_amoled">AMOLED</string>
     <string name="appearance_color_scheme">Color scheme</string>
     <string name="appearance_color_flux_blue">Blue</string>
     <string name="appearance_color_blue">Blue</string>
@@ -315,6 +316,7 @@
     <string name="appearance_color_green">Green</string>
     <string name="appearance_color_purple">Purple</string>
     <string name="appearance_color_red">Red</string>
+    <string name="appearance_color_amoled">AMOLED</string>
     <string name="appearance_material_you_info">Material You is only available on Android 12+</string>
     <string name="appearance_select_theme">Select theme</string>
 
