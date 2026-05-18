@@ -27,7 +27,7 @@ import okhttp3.Response;
 public class UpdateChecker {
     private static final String TAG = "UpdateChecker";
     private static final String RELEASES_URL = org.nikanikoo.flux.Constants.Links.GITHUB_RELEASES_API;
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = org.nikanikoo.flux.utils.SSLHelper.configureToIgnoreSSL(new OkHttpClient.Builder()).build();
 
     public interface UpdateCheckCallback {
         void onResult(UpdateInfo info, boolean isNewer, String error);
