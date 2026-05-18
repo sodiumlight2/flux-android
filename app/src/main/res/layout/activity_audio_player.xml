@@ -67,7 +67,7 @@
                 android:text="Название трека"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/track_artist"
