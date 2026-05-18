@@ -68,7 +68,7 @@ public class AboutAppFragment extends Fragment {
         }
         pendingUpdateInfo = null;
         
-        org.nikanikoo.flux.utils.UpdateChecker.checkUpdateStatus((info, isNewer) -> {
+        org.nikanikoo.flux.utils.UpdateChecker.checkUpdateStatus((info, isNewer, error) -> {
             if (getActivity() == null || !isAdded()) return;
             
             if (info != null) {
@@ -94,7 +94,7 @@ public class AboutAppFragment extends Fragment {
                 }
             } else {
                 if (updateStatusText != null) {
-                    updateStatusText.setText(R.string.update_check_failed);
+                    updateStatusText.setText(error != null ? error : getString(R.string.update_check_failed));
                     updateStatusText.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark));
                 }
                 if (btnCheckUpdate != null) {

@@ -97,6 +97,6 @@ public final class Constants {
 
     public static final class Links {
         public static final String GITHUB_REPO = "https://github.com/nikanikoo/flux-android";
-        public static final String GITHUB_RELEASES_API = "https://api.github.com/repos/nikanikoo/flux-android/releases";
+        public static final String GITHUB_RELEASES_API = "https://raw.githubusercontent.com/nikanikoo/flux-android/gh-pages/update.json";
     }
 }

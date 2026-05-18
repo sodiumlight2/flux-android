@@ -30,13 +30,13 @@ public class UpdateChecker {
     private static final OkHttpClient client = new OkHttpClient();
 
     public interface UpdateCheckCallback {
-        void onResult(UpdateInfo info, boolean isNewer);
+        void onResult(UpdateInfo info, boolean isNewer, String error);
     }
 
     public static void checkForUpdates(Activity activity) {
         checkUpdateStatus(new UpdateCheckCallback() {
             @Override
-            public void onResult(UpdateInfo result, boolean isNewer) {
+            public void onResult(UpdateInfo result, boolean isNewer, String error) {
                 if (result != null && isNewer && !activity.isFinishing()) {
                     android.content.SharedPreferences prefs = activity.getSharedPreferences("updates", android.content.Context.MODE_PRIVATE);
                     int skippedVersion = prefs.getInt("skipped_version", -1);
@@ -58,40 +58,26 @@ public class UpdateChecker {
 
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful() || response.body() == null) {
-                    return null;
+                    throw new Exception("HTTP Error: " + response.code());
                 }
                 
                 String jsonStr = response.body().string();
-                JSONArray releases = new JSONArray(jsonStr);
-                if (releases.length() == 0) return null;
+                JSONObject latest = new JSONObject(jsonStr);
                 
-                JSONObject latest = releases.getJSONObject(0);
-                String tagName = latest.optString("tag_name", "");
-                int latestVersion = parseVersionCode(tagName);
+                int latestVersion = latest.optInt("versionCode", -1);
+                String releaseName = latest.optString("versionName", "New Update");
+                String body = latest.optString("changelog", "");
                 
-                JSONArray assets = latest.optJSONArray("assets");
-                if (assets != null && assets.length() > 0) {
-                    String downloadUrl = null;
-                    for (int i = 0; i < assets.length(); i++) {
-                        JSONObject asset = assets.getJSONObject(i);
-                        String name = asset.optString("name", "");
-                        if (name.endsWith(".apk")) {
-                            boolean isDebugApk = name.contains("debug");
-                            if (org.nikanikoo.flux.BuildConfig.DEBUG == isDebugApk) {
-                                downloadUrl = asset.optString("browser_download_url");
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if (downloadUrl != null) {
-                        String releaseName = latest.optString("name", "New Update");
-                        String body = latest.optString("body", "");
-                        return new UpdateInfo(latestVersion, releaseName, body, downloadUrl);
-                    }
+                String downloadUrl = org.nikanikoo.flux.BuildConfig.DEBUG 
+                        ? latest.optString("debugApkUrl", "") 
+                        : latest.optString("releaseApkUrl", "");
+                        
+                if (downloadUrl != null && !downloadUrl.isEmpty()) {
+                    return new UpdateInfo(latestVersion, releaseName, body, downloadUrl);
                 }
             } catch (Exception e) {
                 Logger.e(TAG, "Failed to check for updates", e);
+                throw new RuntimeException(e);
             }
             return null;
         }, new AsyncTaskHelper.AsyncCallback<UpdateInfo>() {
@@ -99,15 +85,15 @@ public class UpdateChecker {
             public void onSuccess(UpdateInfo result) {
                 if (result != null) {
                     boolean isNewer = result.versionCode > BuildConfig.VERSION_CODE;
-                    callback.onResult(result, isNewer);
+                    callback.onResult(result, isNewer, null);
                 } else {
-                    callback.onResult(null, false);
+                    callback.onResult(null, false, "Release not found or no matching APK");
                 }
             }
 
             @Override
             public void onError(String error) {
-                callback.onResult(null, false);
+                callback.onResult(null, false, error);
             }
         });
     }

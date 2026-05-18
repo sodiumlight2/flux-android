@@ -85,3 +85,24 @@ jobs:
             🔗 Commit: ${{ steps.commit.outputs.hash }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Update JSON
+        run: |
+          mkdir -p public
+          CHANGELOG=$(echo "${{ steps.commit.outputs.body }}" | awk '{printf "%s\\n", $0}' | sed 's/"/\\"/g')
+          cat <<EOF > public/update.json
+          {
+            "versionCode": ${{ github.run_number }},
+            "versionName": "Build ${{ steps.commit.outputs.hash }} (${{ github.run_number }})",
+            "changelog": "$CHANGELOG",
+            "releaseApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ github.run_number }}/flux.apk",
+            "debugApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ github.run_number }}/flux-debug.apk"
+          }
+          EOF
+
+      - name: Deploy Update JSON to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: false
