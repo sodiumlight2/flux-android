@@ -52,8 +52,9 @@ public class UpdateChecker {
     public static void checkUpdateStatus(UpdateCheckCallback callback) {
         AsyncTaskHelper.executeAsync(() -> {
             Request request = new Request.Builder()
-                    .url(RELEASES_URL)
-                    .header("Accept", "application/vnd.github.v3+json")
+                    .url(RELEASES_URL + "?t=" + System.currentTimeMillis())
+                    .header("Accept", "application/json")
+                    .header("Cache-Control", "no-cache")
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
