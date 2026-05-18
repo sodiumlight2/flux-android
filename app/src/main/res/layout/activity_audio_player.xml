@@ -20,7 +20,7 @@
             android:background="?attr/colorSurface"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:title="@string/audio_title" />
+            app:title="@string/audio_title"/>
 
         <LinearLayout
             android:id="@+id/main_player_content"
