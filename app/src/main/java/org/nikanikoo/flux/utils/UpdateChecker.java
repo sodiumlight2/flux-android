@@ -131,6 +131,69 @@ public class UpdateChecker {
     }
 
     private static void downloadAndInstall(Context context, String url, String fileName) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            downloadWithOkHttp(context, url, fileName);
+        } else {
+            downloadWithDownloadManager(context, url, fileName);
+        }
+    }
+
+    private static void downloadWithOkHttp(Context context, String url, String fileName) {
+        Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show();
+        AsyncTaskHelper.executeAsync(() -> {
+            try {
+                Request request = new Request.Builder().url(url).build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        throw new Exception("HTTP Error: " + response.code());
+                    }
+                    
+                    File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    if (!downloadsDir.exists()) downloadsDir.mkdirs();
+                    
+                    File outputFile = new File(downloadsDir, fileName);
+                    if (outputFile.exists()) outputFile.delete();
+                    
+                    try (java.io.InputStream is = response.body().byteStream();
+                         java.io.FileOutputStream fos = new java.io.FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[8192];
+                        int read;
+                        while ((read = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, read);
+                        }
+                    }
+                    return outputFile;
+                }
+            } catch (Exception e) {
+                Logger.e(TAG, "OkHttp download failed", e);
+                return null;
+            }
+        }, new AsyncTaskHelper.AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File file) {
+                if (file != null) {
+                    try {
+                        Intent install = new Intent(Intent.ACTION_VIEW);
+                        install.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(install);
+                    } catch (Exception e) {
+                        Logger.e(TAG, "Failed to install downloaded APK", e);
+                        fallbackToBrowser(context, url);
+                    }
+                } else {
+                    fallbackToBrowser(context, url);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                fallbackToBrowser(context, url);
+            }
+        });
+    }
+
+    private static void downloadWithDownloadManager(Context context, String url, String fileName) {
         Toast.makeText(context, R.string.update_downloading, Toast.LENGTH_SHORT).show();
         try {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
