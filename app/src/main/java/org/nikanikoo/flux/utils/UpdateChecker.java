@@ -71,12 +71,24 @@ public class UpdateChecker {
                 
                 JSONArray assets = latest.optJSONArray("assets");
                 if (assets != null && assets.length() > 0) {
-                    JSONObject asset = assets.getJSONObject(0);
-                    String downloadUrl = asset.optString("browser_download_url");
-                    String releaseName = latest.optString("name", "New Update");
-                    String body = latest.optString("body", "");
+                    String downloadUrl = null;
+                    for (int i = 0; i < assets.length(); i++) {
+                        JSONObject asset = assets.getJSONObject(i);
+                        String name = asset.optString("name", "");
+                        if (name.endsWith(".apk")) {
+                            boolean isDebugApk = name.contains("debug");
+                            if (org.nikanikoo.flux.BuildConfig.DEBUG == isDebugApk) {
+                                downloadUrl = asset.optString("browser_download_url");
+                                break;
+                            }
+                        }
+                    }
                     
-                    return new UpdateInfo(latestVersion, releaseName, body, downloadUrl);
+                    if (downloadUrl != null) {
+                        String releaseName = latest.optString("name", "New Update");
+                        String body = latest.optString("body", "");
+                        return new UpdateInfo(latestVersion, releaseName, body, downloadUrl);
+                    }
                 }
             } catch (Exception e) {
                 Logger.e(TAG, "Failed to check for updates", e);

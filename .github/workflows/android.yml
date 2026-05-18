@@ -47,8 +47,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease -PciVersionCode=${{ github.run_number }} -PciVersionName="${{ github.run_number }}-${{ steps.commit.outputs.hash }}"
+      - name: Build Release and Debug APK
+        run: ./gradlew assembleRelease assembleDebug -PciVersionCode=${{ github.run_number }} -PciVersionName="${{ github.run_number }}-${{ steps.commit.outputs.hash }}"
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
@@ -62,13 +62,20 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
+      - name: Rename APKs
+        run: |
+          mv ${{steps.sign_app.outputs.signedReleaseFile}} flux.apk
+          mv app/build/outputs/apk/debug/app-debug.apk flux-debug.apk
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: build-alpha-${{ github.run_number }}
           name: Build ${{ steps.commit.outputs.hash }} (${{ github.run_number }})
           prerelease: true
-          files: ${{steps.sign_app.outputs.signedReleaseFile}}
+          files: |
+            flux.apk
+            flux-debug.apk
           body: |
             ## Changes in this build:
             
