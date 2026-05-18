@@ -152,7 +152,20 @@ public class UpdateChecker {
                     public void onReceive(Context ctxt, Intent intent) {
                         long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                         if (id == downloadId) {
-                            installApk(ctxt, downloadManager, id);
+                            android.database.Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(id));
+                            if (cursor != null && cursor.moveToFirst()) {
+                                int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                                if (statusIndex != -1) {
+                                    int status = cursor.getInt(statusIndex);
+                                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                                        installApk(ctxt, downloadManager, id);
+                                    } else if (status == DownloadManager.STATUS_FAILED) {
+                                        Logger.e(TAG, "DownloadManager failed to download update. Falling back to browser.");
+                                        fallbackToBrowser(ctxt, url);
+                                    }
+                                }
+                                cursor.close();
+                            }
                             ctxt.unregisterReceiver(this);
                         }
                     }
@@ -165,11 +178,18 @@ public class UpdateChecker {
                 }
             }
         } catch (Exception e) {
-            Logger.e(TAG, "Failed to download update", e);
-            // Fallback to browser
+            Logger.e(TAG, "Failed to enqueue download", e);
+            fallbackToBrowser(context, url);
+        }
+    }
+
+    private static void fallbackToBrowser(Context context, String url) {
+        try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+        } catch (Exception ex) {
+            Logger.e(TAG, "Failed to open browser", ex);
         }
     }
 
