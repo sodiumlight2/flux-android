@@ -32,8 +32,10 @@ android {
         applicationId = "org.nikanikoo.flux"
         minSdk = 21
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.2-dev.2"
+        val ciVersionCode = project.findProperty("ciVersionCode")?.toString()?.toIntOrNull()
+        val ciVersionName = project.findProperty("ciVersionName")?.toString()
+        versionCode = ciVersionCode ?: 999999999
+        versionName = ciVersionName ?: "local-build"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

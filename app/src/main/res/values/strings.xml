@@ -607,4 +607,17 @@
     <string name="crash_saved_success">Файл успешно сохранен</string>
     <string name="crash_saved_error">Не удалось сохранить файл</string>
 
+    <!-- Updates -->
+    <string name="update_available_title">Доступно обновление: %s</string>
+    <string name="update_available_message">Выпущена новая версия приложения.\n\n%s</string>
+    <string name="update_download">Скачать</string>
+    <string name="update_downloading">Загрузка обновления...</string>
+    <string name="update_later">Позже</string>
+    <string name="update_skip">Пропустить</string>
+    <string name="update_checking">Проверка обновлений...</string>
+    <string name="update_available_short">Доступно обновление: %s</string>
+    <string name="update_latest_installed">У вас установлена последняя версия</string>
+    <string name="update_check_failed">Не удалось проверить обновления</string>
+    <string name="update_check_btn">Проверить обновления</string>
+
 </resources>

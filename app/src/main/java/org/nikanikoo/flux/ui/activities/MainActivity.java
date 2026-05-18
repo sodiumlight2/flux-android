@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         
         ThemeManager.applySystemBarsAppearance(this);
         
+        org.nikanikoo.flux.utils.UpdateChecker.checkForUpdates(this);
+        
         Logger.d(TAG, "onCreate completed");
     }
     

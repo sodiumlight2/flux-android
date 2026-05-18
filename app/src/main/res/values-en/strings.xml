@@ -524,4 +524,17 @@
     <string name="crash_saved_success">File saved successfully</string>
     <string name="crash_saved_error">Failed to save file</string>
 
+    <!-- Updates -->
+    <string name="update_available_title">Update available: %s</string>
+    <string name="update_available_message">A new version is available.\n\n%s</string>
+    <string name="update_download">Download</string>
+    <string name="update_downloading">Downloading update...</string>
+    <string name="update_later">Later</string>
+    <string name="update_skip">Skip</string>
+    <string name="update_checking">Checking for updates...</string>
+    <string name="update_available_short">Update available: %s</string>
+    <string name="update_latest_installed">You are using the latest version</string>
+    <string name="update_check_failed">Failed to check for updates</string>
+    <string name="update_check_btn">Check for updates</string>
+
 </resources>
