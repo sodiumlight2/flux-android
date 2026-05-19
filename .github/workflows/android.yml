@@ -9,12 +9,40 @@ permissions:
   contents: write
 
 jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for recent commits
+        id: check
+        run: |
+          COMMITS=$(git log --since="3 days ago" --no-merges --oneline)
+          
+          # Проверяем: если коммитов нет И это не ручной запуск - отменяем сборку
+          if [ -z "$COMMITS" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "No new commits in the last 3 days. Skipping build."
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "New commits found or manual trigger. Proceeding to build."
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          fi
+
   build:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Снова указываем 0, чтобы правильно сгенерировать тело релиза ниже
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
