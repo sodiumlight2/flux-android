@@ -603,7 +603,10 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         
         comment.setLiked(newLikedState);
         comment.setLikesCount(newLikeCount);
-        commentsAdapter.notifyDataSetChanged();
+        int index = comments.indexOf(comment);
+        if (index >= 0) {
+            commentsAdapter.notifyItemChanged(index, "LIKE_UPDATE");
+        }
 
         // Передаем ОРИГИНАЛЬНОЕ состояние в toggleCommentLike
         commentsManager.toggleCommentLikeWithOriginalState(comment, originalPost.getOwnerId(), originalPost.getPostId(), 
@@ -615,7 +618,10 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                     getActivity().runOnUiThread(() -> {
                         comment.setLikesCount(serverLikesCount);
                         comment.setLiked(serverIsLiked);
-                        commentsAdapter.notifyDataSetChanged();
+                        int successIndex = comments.indexOf(comment);
+                        if (successIndex >= 0) {
+                            commentsAdapter.notifyItemChanged(successIndex, "LIKE_UPDATE");
+                        }
                     });
                 }
             }
@@ -627,7 +633,10 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
                     getActivity().runOnUiThread(() -> {
                         comment.setLiked(originalLikedState);
                         comment.setLikesCount(originalLikeCount);
-                        commentsAdapter.notifyDataSetChanged();
+                        int errorIndex = comments.indexOf(comment);
+                        if (errorIndex >= 0) {
+                            commentsAdapter.notifyItemChanged(errorIndex, "LIKE_UPDATE");
+                        }
                         Toast.makeText(getContext(), getString(R.string.error_loading) + error, Toast.LENGTH_SHORT).show();
                     });
                 }

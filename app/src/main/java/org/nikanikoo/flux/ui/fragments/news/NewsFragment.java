@@ -443,7 +443,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                                 Post currentPost = postAdapter.getPost(position);
                                 if (currentPost != null) {
                                     currentPost.setLiked(isLiked);
-                                    postAdapter.notifyItemChanged(position);
+                                    postAdapter.notifyItemChanged(position, "LIKE_UPDATE");
                                 }
                             });
                         }
@@ -507,7 +507,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
 
         adapterPost.setLiked(newLikedState);
         adapterPost.setLikeCount(newLikeCount);
-        postAdapter.notifyItemChanged(position);
+        postAdapter.notifyItemChanged(position, "LIKE_UPDATE");
 
         // Отправляем запрос на сервер
         postsManager.toggleLikeOptimistic(adapterPost, originalLikedState, new PostsManager.LikeToggleCallback() {
@@ -521,7 +521,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                             if (p != null) {
                                 p.setLikeCount(serverLikesCount);
                                 p.setLiked(serverIsLiked);
-                                postAdapter.notifyItemChanged(pos);
+                                postAdapter.notifyItemChanged(pos, "LIKE_UPDATE");
                             }
                         }
                     });
@@ -539,7 +539,7 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                             if (p != null) {
                                 p.setLiked(originalLikedState);
                                 p.setLikeCount(originalLikeCount);
-                                postAdapter.notifyItemChanged(pos);
+                                postAdapter.notifyItemChanged(pos, "LIKE_UPDATE");
                             }
                         }
 

@@ -128,6 +128,31 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // LoadingViewHolder не требует привязки данных
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty() && holder instanceof PostViewHolder) {
+            PostViewHolder postHolder = (PostViewHolder) holder;
+            Post post;
+            synchronized (postsLock) {
+                post = posts.get(position);
+            }
+            if (post != null) {
+                boolean likeUpdated = false;
+                for (Object payload : payloads) {
+                    if ("LIKE_UPDATE".equals(payload)) {
+                        likeUpdated = true;
+                        break;
+                    }
+                }
+                if (likeUpdated) {
+                    updateLikeState(postHolder, post);
+                    return;
+                }
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
     private void bindPostViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post;
         synchronized (postsLock) {

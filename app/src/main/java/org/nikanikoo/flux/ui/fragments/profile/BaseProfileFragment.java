@@ -331,7 +331,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
         for (int i = 0; i < posts.size(); i++) {
             if (posts.get(i).getPostId() == post.getPostId() && 
                 posts.get(i).getOwnerId() == post.getOwnerId()) {
-                postAdapter.notifyItemChanged(i);
+                postAdapter.notifyItemChanged(i, "LIKE_UPDATE");
                 break;
             }
         }
@@ -347,7 +347,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
                             for (int i = 0; i < posts.size(); i++) {
                                 if (posts.get(i).getPostId() == post.getPostId() && 
                                     posts.get(i).getOwnerId() == post.getOwnerId()) {
-                                    postAdapter.notifyItemChanged(i);
+                                    postAdapter.notifyItemChanged(i, "LIKE_UPDATE");
                                     break;
                                 }
                             }
@@ -364,7 +364,7 @@ public abstract class BaseProfileFragment extends BaseFragment implements PostAd
                             for (int i = 0; i < posts.size(); i++) {
                                 if (posts.get(i).getPostId() == post.getPostId() && 
                                     posts.get(i).getOwnerId() == post.getOwnerId()) {
-                                    postAdapter.notifyItemChanged(i);
+                                    postAdapter.notifyItemChanged(i, "LIKE_UPDATE");
                                     break;
                                 }
                             }
