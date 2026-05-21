@@ -296,6 +296,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             timestampText += ", " + context.getString(R.string.pinned);
         }
         holder.timestamp.setText(timestampText);
+        setDeviceIcon(holder.deviceIcon, post.getPlatform());
         holder.likeCount.setText(String.valueOf(Math.max(0, post.getLikeCount())));
         holder.commentCount.setText(String.valueOf(Math.max(0, post.getCommentCount())));
         
@@ -381,6 +382,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Заполняем данные оригинального поста
         holder.originalPostAuthorName.setText(ValidationUtils.sanitizeUserInput(originalPost.getAuthorName()));
         holder.originalPostTimestamp.setText(originalPost.getTimestamp());
+        setDeviceIcon(holder.originalPostDeviceIcon, originalPost.getPlatform());
 
         String originalContent = originalPost.getContent();
         if (ValidationUtils.isValidPostText(originalContent)) {
@@ -610,6 +612,38 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.unsupportedElements.setVisibility(View.VISIBLE);
         } else {
             holder.unsupportedElements.setVisibility(View.GONE);
+        }
+    }
+
+    private void setDeviceIcon(ImageView imageView, String platform) {
+        if (imageView == null) return;
+        if (platform != null) {
+            int iconResId = 0;
+            switch (platform.toLowerCase()) {
+                case "android":
+                    iconResId = R.drawable.ic_android;
+                    break;
+                case "iphone":
+                    iconResId = R.drawable.ic_ios;
+                    break;
+                case "wphone":
+                    iconResId = R.drawable.ic_window;
+                    break;
+                case "mobile":
+                    iconResId = R.drawable.ic_mobile_3;
+                    break;
+                case "api":
+                    iconResId = R.drawable.ic_settings;
+                    break;
+            }
+            if (iconResId != 0) {
+                imageView.setImageResource(iconResId);
+                imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
+        } else {
+            imageView.setVisibility(View.GONE);
         }
     }
     
@@ -931,12 +965,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View repostIndicator; // Индикатор репоста
         ImageView postMenuButton;
         ImageView authorVerified;
+        ImageView deviceIcon;
         
         // Поля для репостов
         View originalPostContainer;
         ImageView originalPostAvatar;
         TextView originalPostAuthorName;
         TextView originalPostTimestamp;
+        ImageView originalPostDeviceIcon;
         TextView originalPostContent;
         PostImagesCollage originalPostImagesCollage;
         android.widget.LinearLayout originalPostAudioContainer;
@@ -957,6 +993,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             avatar = itemView.findViewById(R.id.post_avatar);
             authorName = itemView.findViewById(R.id.post_author_name);
             timestamp = itemView.findViewById(R.id.post_timestamp);
+            deviceIcon = itemView.findViewById(R.id.post_device_icon);
             content = itemView.findViewById(R.id.post_content);
             imagesCollage = itemView.findViewById(R.id.post_images_collage);
             audioContainer = itemView.findViewById(R.id.post_audio_container);
@@ -976,6 +1013,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             originalPostAvatar = itemView.findViewById(R.id.original_post_avatar);
             originalPostAuthorName = itemView.findViewById(R.id.original_post_author_name);
             originalPostTimestamp = itemView.findViewById(R.id.original_post_timestamp);
+            originalPostDeviceIcon = itemView.findViewById(R.id.original_post_device_icon);
             originalPostContent = itemView.findViewById(R.id.original_post_content);
             originalPostImagesCollage = itemView.findViewById(R.id.original_post_images_collage);
             originalPostAudioContainer = itemView.findViewById(R.id.original_post_audio_container);

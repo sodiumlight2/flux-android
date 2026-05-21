@@ -65,12 +65,29 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/post_timestamp"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/post_timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <ImageView
+                        android:id="@+id/post_device_icon"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="gone"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -177,12 +194,29 @@
 
                                 </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/original_post_timestamp"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="11sp"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <TextView
+                                        android:id="@+id/original_post_timestamp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="11sp"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <ImageView
+                                        android:id="@+id/original_post_device_icon"
+                                        android:layout_width="12dp"
+                                        android:layout_height="12dp"
+                                        android:layout_marginStart="4dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:visibility="gone"
+                                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 

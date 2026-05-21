@@ -55,6 +55,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private ImageView originalPostAvatar;
     private TextView originalPostAuthorName;
     private TextView originalPostTimestamp;
+    private ImageView originalPostDeviceIcon;
     private TextView originalPostContent;
     private PostImagesCollage originalPostImage;
     private View originalPostBodyContainer;
@@ -119,6 +120,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostAvatar = view.findViewById(R.id.original_post_avatar);
         originalPostAuthorName = view.findViewById(R.id.original_post_author_name);
         originalPostTimestamp = view.findViewById(R.id.original_post_timestamp);
+        originalPostDeviceIcon = view.findViewById(R.id.original_post_device_icon);
         originalPostContent = view.findViewById(R.id.original_post_content);
         originalPostImage = view.findViewById(R.id.original_post_image);
         originalPostBodyContainer = view.findViewById(R.id.original_post_body_container);
@@ -195,6 +197,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private void displayOriginalPost() {
         originalPostAuthorName.setText(originalPost.getAuthorName());
         originalPostTimestamp.setText(originalPost.getTimestamp());
+        setDeviceIcon(originalPostDeviceIcon, originalPost.getPlatform());
         originalPostContent.setText(ValidationUtils.SanitizeText(originalPost.getContent()));
         originalPostLikeCount.setText(String.valueOf(originalPost.getLikeCount()));
         originalPostCommentCount.setText(String.valueOf(originalPost.getCommentCount()));
@@ -680,5 +683,37 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         fakePost.setImageUrl(imageUrl);
         
         PhotoViewerActivity.start(getContext(), imageUrls, 0, fakePost, getString(R.string.photo_viewer));
+    }
+
+    private void setDeviceIcon(ImageView imageView, String platform) {
+        if (imageView == null) return;
+        if (platform != null) {
+            int iconResId = 0;
+            switch (platform.toLowerCase()) {
+                case "android":
+                    iconResId = R.drawable.ic_android;
+                    break;
+                case "iphone":
+                    iconResId = R.drawable.ic_ios;
+                    break;
+                case "wphone":
+                    iconResId = R.drawable.ic_window;
+                    break;
+                case "mobile":
+                    iconResId = R.drawable.ic_mobile_3;
+                    break;
+                case "api":
+                    iconResId = R.drawable.ic_settings;
+                    break;
+            }
+            if (iconResId != 0) {
+                imageView.setImageResource(iconResId);
+                imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
     }
 }

@@ -36,6 +36,7 @@ public class Post implements Serializable {
     private boolean isOwnerGroup;
     private boolean explicit;
     private boolean isNsfwRevealed;
+    private String platform;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -162,4 +163,7 @@ public class Post implements Serializable {
 
     public boolean isNsfwRevealed() { return isNsfwRevealed; }
     public void setNsfwRevealed(boolean nsfwRevealed) { this.isNsfwRevealed = nsfwRevealed; }
+
+    public String getPlatform() { return platform; }
+    public void setPlatform(String platform) { this.platform = platform; }
 }

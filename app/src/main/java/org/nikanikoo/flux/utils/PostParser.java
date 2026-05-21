@@ -170,6 +170,14 @@ public class PostParser {
             post.setCanDelete(actualPostData.optBoolean("can_delete", false));
             post.setCanPin(actualPostData.optBoolean("can_pin", false));
 
+            JSONObject postSource = actualPostData.optJSONObject("post_source");
+            if (postSource != null) {
+                String platform = postSource.optString("platform", null);
+                if (platform != null && !platform.isEmpty()) {
+                    post.setPlatform(platform);
+                }
+            }
+
             JSONArray attachments = ValidationUtils.safeGetJSONArray(actualPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
             
@@ -259,6 +267,14 @@ public class PostParser {
                                originalPostData.optInt("explicit", 0) == 1 ||
                                originalPostData.optBoolean("explicit", false);
             post.setExplicit(isExplicit);
+
+            JSONObject postSource = originalPostData.optJSONObject("post_source");
+            if (postSource != null) {
+                String platform = postSource.optString("platform", null);
+                if (platform != null && !platform.isEmpty()) {
+                    post.setPlatform(platform);
+                }
+            }
 
             JSONArray attachments = ValidationUtils.safeGetJSONArray(originalPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
