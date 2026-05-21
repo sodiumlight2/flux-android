@@ -37,6 +37,8 @@ public class Post implements Serializable {
     private boolean explicit;
     private boolean isNsfwRevealed;
     private String platform;
+    private String copyrightName;
+    private String copyrightLink;
 
     public Post(String authorName, String timestamp, String content, int likeCount, int commentCount) {
         this.authorName = authorName;
@@ -166,4 +168,10 @@ public class Post implements Serializable {
 
     public String getPlatform() { return platform; }
     public void setPlatform(String platform) { this.platform = platform; }
+
+    public String getCopyrightName() { return copyrightName; }
+    public void setCopyrightName(String copyrightName) { this.copyrightName = copyrightName; }
+
+    public String getCopyrightLink() { return copyrightLink; }
+    public void setCopyrightLink(String copyrightLink) { this.copyrightLink = copyrightLink; }
 }

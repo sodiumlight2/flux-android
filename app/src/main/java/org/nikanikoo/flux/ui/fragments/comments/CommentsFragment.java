@@ -32,6 +32,7 @@ import org.nikanikoo.flux.ui.activities.PhotoViewerActivity;
 import org.nikanikoo.flux.ui.dialogs.RepostDialog;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.profile.GroupProfileFragment;
+import org.nikanikoo.flux.utils.SafeLinkMovementMethod;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private TextView originalPostLikeCount;
     private TextView originalPostCommentCount;
     private View originalPostShareButton;
+    private View originalPostCopyrightContainer;
+    private TextView originalPostCopyrightLink;
 
     // Views для ввода комментария
     private EditText editComment;
@@ -130,6 +133,8 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostLikeCount = view.findViewById(R.id.original_post_like_count);
         originalPostCommentCount = view.findViewById(R.id.original_post_comment_count);
         originalPostShareButton = view.findViewById(R.id.original_post_share_button);
+        originalPostCopyrightContainer = view.findViewById(R.id.original_post_copyright_container);
+        originalPostCopyrightLink = view.findViewById(R.id.original_post_copyright_link);
         
         // Комментарии
         recyclerComments = view.findViewById(R.id.recycler_comments);
@@ -198,6 +203,7 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostAuthorName.setText(originalPost.getAuthorName());
         originalPostTimestamp.setText(originalPost.getTimestamp());
         setDeviceIcon(originalPostDeviceIcon, originalPost.getPlatform());
+        handleCopyright(originalPostCopyrightContainer, originalPostCopyrightLink, originalPost);
         originalPostContent.setText(ValidationUtils.SanitizeText(originalPost.getContent()));
         originalPostLikeCount.setText(String.valueOf(originalPost.getLikeCount()));
         originalPostCommentCount.setText(String.valueOf(originalPost.getCommentCount()));
@@ -683,6 +689,23 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         fakePost.setImageUrl(imageUrl);
         
         PhotoViewerActivity.start(getContext(), imageUrls, 0, fakePost, getString(R.string.photo_viewer));
+    }
+
+    private void handleCopyright(View container, TextView linkView, Post post) {
+        if (container == null || linkView == null) return;
+        if (post != null && post.getCopyrightLink() != null && !post.getCopyrightLink().isEmpty()) {
+            String displayText = post.getCopyrightName() != null && !post.getCopyrightName().isEmpty() 
+                ? post.getCopyrightName() 
+                : post.getCopyrightLink();
+            linkView.setText(displayText);
+            linkView.setOnClickListener(v -> {
+                SafeLinkMovementMethod.handleLinkClick(requireContext(), post.getCopyrightLink());
+            });
+            container.setVisibility(View.VISIBLE);
+        } else {
+            container.setVisibility(View.GONE);
+            linkView.setOnClickListener(null);
+        }
     }
 
     private void setDeviceIcon(ImageView imageView, String platform) {

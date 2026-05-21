@@ -178,6 +178,16 @@ public class PostParser {
                 }
             }
 
+            JSONObject copyright = actualPostData.optJSONObject("copyright");
+            if (copyright != null) {
+                String link = copyright.optString("link", null);
+                String name = copyright.optString("name", null);
+                if (link != null && !link.isEmpty()) {
+                    post.setCopyrightLink(link);
+                    post.setCopyrightName(name);
+                }
+            }
+
             JSONArray attachments = ValidationUtils.safeGetJSONArray(actualPostData, "attachments");
             AttachmentProcessor.AttachmentResult attachmentResult = AttachmentProcessor.processAttachments(attachments);
             
@@ -273,6 +283,16 @@ public class PostParser {
                 String platform = postSource.optString("platform", null);
                 if (platform != null && !platform.isEmpty()) {
                     post.setPlatform(platform);
+                }
+            }
+
+            JSONObject copyright = originalPostData.optJSONObject("copyright");
+            if (copyright != null) {
+                String link = copyright.optString("link", null);
+                String name = copyright.optString("name", null);
+                if (link != null && !link.isEmpty()) {
+                    post.setCopyrightLink(link);
+                    post.setCopyrightName(name);
                 }
             }
 

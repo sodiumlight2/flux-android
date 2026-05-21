@@ -316,6 +316,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Отображение неподдерживаемых элементов
         handleUnsupportedElements(holder, post);
+
+        handleCopyright(holder.copyrightContainer, holder.copyrightLink, post);
         
         // Обновление состояния лайка
         updateLikeState(holder, post);
@@ -427,6 +429,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Обрабатываем неподдерживаемые элементы оригинального поста
         handleOriginalPostUnsupportedElements(holder, originalPost);
+        
+        handleCopyright(holder.originalPostCopyrightContainer, holder.originalPostCopyrightLink, originalPost);
         
         // Устанавливаем клик на оригинальный пост
         holder.originalPostContainer.setOnClickListener(v -> {
@@ -612,6 +616,23 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.unsupportedElements.setVisibility(View.VISIBLE);
         } else {
             holder.unsupportedElements.setVisibility(View.GONE);
+        }
+    }
+
+    private void handleCopyright(View container, TextView linkView, Post post) {
+        if (container == null || linkView == null) return;
+        if (post != null && post.getCopyrightLink() != null && !post.getCopyrightLink().isEmpty()) {
+            String displayText = post.getCopyrightName() != null && !post.getCopyrightName().isEmpty() 
+                ? post.getCopyrightName() 
+                : post.getCopyrightLink();
+            linkView.setText(displayText);
+            linkView.setOnClickListener(v -> {
+                SafeLinkMovementMethod.handleLinkClick(context, post.getCopyrightLink());
+            });
+            container.setVisibility(View.VISIBLE);
+        } else {
+            container.setVisibility(View.GONE);
+            linkView.setOnClickListener(null);
         }
     }
 
@@ -988,6 +1009,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View originalPostPostBodyContainer;
         View originalPostNsfwSpoiler;
 
+        // Copyright views
+        View copyrightContainer;
+        TextView copyrightLink;
+        View originalPostCopyrightContainer;
+        TextView originalPostCopyrightLink;
+
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.post_avatar);
@@ -1027,6 +1054,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             nsfwSpoiler = itemView.findViewById(R.id.nsfw_spoiler);
             originalPostPostBodyContainer = itemView.findViewById(R.id.original_post_body_container);
             originalPostNsfwSpoiler = itemView.findViewById(R.id.original_post_nsfw_spoiler);
+
+            copyrightContainer = itemView.findViewById(R.id.post_copyright_container);
+            copyrightLink = itemView.findViewById(R.id.post_copyright_link);
+            originalPostCopyrightContainer = itemView.findViewById(R.id.original_post_copyright_container);
+            originalPostCopyrightLink = itemView.findViewById(R.id.original_post_copyright_link);
         }
     }
 
