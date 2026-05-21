@@ -151,7 +151,11 @@
             android:name=".services.AudioPlayerService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
         
         <receiver 
             android:name="androidx.media.session.MediaButtonReceiver"

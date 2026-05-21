@@ -142,8 +142,13 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getAction() != null) {
-            handleAction(intent.getAction());
+        if (intent != null) {
+            String action = intent.getAction();
+            if (Intent.ACTION_MEDIA_BUTTON.equals(action)) {
+                MediaButtonReceiver.handleIntent(mediaSession, intent);
+            } else if (action != null) {
+                handleAction(action);
+            }
         }
         return START_STICKY;
     }
