@@ -272,6 +272,8 @@
     <!-- Settings -->
     <string name="notification_default">did something</string>
     <string name="settings_title">Settings</string>
+    <string name="settings_balance">Balance</string>
+    <string name="settings_balance_desc">Votes</string>
     <string name="settings_accounts">Account management</string>
     <string name="settings_accounts_desc">Switch between accounts</string>
     <string name="settings_appearance">Appearance</string>
@@ -536,5 +538,38 @@
     <string name="update_latest_installed">You are using the latest version</string>
     <string name="update_check_failed">Failed to check for updates</string>
     <string name="update_check_btn">Check for updates</string>
+
+    <string name="balance_current">Current balance</string>
+    <string name="balance_votes_plural">votes</string>
+    <string name="balance_action_topup">Top-up</string>
+    <string name="balance_action_voucher">Voucher</string>
+    <string name="balance_action_transfer">Transfer</string>
+    <string name="balance_info_title">What are votes?</string>
+    <string name="balance_info_desc">Votes are OpenVK\'s internal currency. You can use them to buy stickers or send gifts to other users.</string>
+    <string name="transfer_title">Transfer votes</string>
+    <string name="transfer_recipient">Recipient</string>
+    <string name="transfer_amount_hint">Votes count</string>
+    <string name="transfer_message_hint">Message (optional)</string>
+    <string name="transfer_btn_cancel">Cancel</string>
+    <string name="transfer_btn_confirm">Transfer</string>
+    <string name="transfer_search_hint">Search</string>
+    <string name="transfer_tab_friends">Friends</string>
+    <string name="transfer_tab_search">Search</string>
+    <string name="transfer_search_empty_prompt">Enter name, surname or ID to search</string>
+    <string name="transfer_friends_load_error">Failed to load friends list</string>
+    <string name="transfer_search_error">Search error</string>
+    <string name="transfer_no_results">No results found</string>
+    <string name="transfer_sort_rating">By rating</string>
+    <string name="transfer_sort_new">New first</string>
+    <string name="transfer_sort_old">Old first</string>
+    <string name="transfer_err_empty_amount">Enter amount of votes</string>
+    <string name="transfer_err_invalid_format">Invalid number format</string>
+    <string name="transfer_err_greater_than_zero">Votes count must be greater than 0</string>
+    <string name="transfer_success">Votes successfully sent!</string>
+    <string name="transfer_err_commerce_disabled">Commerce is disabled on this instance</string>
+    <string name="transfer_err_not_enough_votes">Not enough votes for transfer</string>
+    <string name="transfer_err_self_transfer">Cannot transfer votes to yourself</string>
+    <string name="transfer_err_invalid_recipient">Invalid recipient</string>
+    <string name="transfer_err_message_too_long">Message is too long</string>
 
 </resources>

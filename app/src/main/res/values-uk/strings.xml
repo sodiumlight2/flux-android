@@ -296,6 +296,8 @@
 
     <!-- Settings -->
     <string name="settings_title">Налаштування</string>
+    <string name="settings_balance">Баланс</string>
+    <string name="settings_balance_desc">Голоси</string>
     <string name="settings_accounts">Керування акаунтами</string>
     <string name="settings_accounts_desc">Перемикання між акаунтами</string>
     <string name="settings_appearance">Зовнішній вигляд</string>
@@ -516,5 +518,38 @@
     <string name="crash_copied_success">Звіт скопійовано в буфер обміну</string>
     <string name="crash_saved_success">Файл успішно збережено</string>
     <string name="crash_saved_error">Не вдалося зберегти файл</string>
+
+    <string name="balance_current">Поточний баланс</string>
+    <string name="balance_votes_plural">голосів</string>
+    <string name="balance_action_topup">Поповнити</string>
+    <string name="balance_action_voucher">Ваучер</string>
+    <string name="balance_action_transfer">Передати</string>
+    <string name="balance_info_title">Що таке голоса?</string>
+    <string name="balance_info_desc">Голоси - це внутрішня валюта OpenVK. За неї можна купити стікери або подарунки іншим користувачам.</string>
+    <string name="transfer_title">Переказ голосів</string>
+    <string name="transfer_recipient">Отримувач</string>
+    <string name="transfer_amount_hint">Кількість голосів</string>
+    <string name="transfer_message_hint">Повідомлення (необов\'язково)</string>
+    <string name="transfer_btn_cancel">Скасувати</string>
+    <string name="transfer_btn_confirm">Переказати</string>
+    <string name="transfer_search_hint">Пошук</string>
+    <string name="transfer_tab_friends">Друзі</string>
+    <string name="transfer_tab_search">Пошук</string>
+    <string name="transfer_search_empty_prompt">Введіть ім\'я, прізвище або ID для пошуку</string>
+    <string name="transfer_friends_load_error">Не вдалося завантажити список друзів</string>
+    <string name="transfer_search_error">Помилка пошуку</string>
+    <string name="transfer_no_results">Нічого не знайдено</string>
+    <string name="transfer_sort_rating">За рейтингом</string>
+    <string name="transfer_sort_new">Спочатку нові</string>
+    <string name="transfer_sort_old">Спочатку старі</string>
+    <string name="transfer_err_empty_amount">Введіть кількість голосів</string>
+    <string name="transfer_err_invalid_format">Невірний формат числа</string>
+    <string name="transfer_err_greater_than_zero">Кількість голосів має бути більше 0</string>
+    <string name="transfer_success">Голоси успішно надіслані!</string>
+    <string name="transfer_err_commerce_disabled">Комерція вимкнена на цій інстанції</string>
+    <string name="transfer_err_not_enough_votes">Недостатньо голосів для переказу</string>
+    <string name="transfer_err_self_transfer">Не можна переказувати голоси самому собі</string>
+    <string name="transfer_err_invalid_recipient">Невірний отримувач</string>
+    <string name="transfer_err_message_too_long">Повідомлення занадто довге</string>
 
 </resources>
