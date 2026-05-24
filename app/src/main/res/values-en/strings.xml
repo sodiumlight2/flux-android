@@ -114,6 +114,12 @@
     <string name="post_original_author">Original post author</string>
     <string name="post_original_content">Original post content</string>
     <string name="post_time_ago">%s ago</string>
+    <string name="time_just_now">Just now</string>
+    <string name="time_minutes_ago">%1$d min ago</string>
+    <string name="time_today_at">today at %1$s</string>
+    <string name="time_yesterday_at">yesterday at %1$s</string>
+    <string name="time_full_format">%1$s at %2$s</string>
+    <string name="time_full_format_year">%1$s, %2$d at %3$s</string>
     <string name="post_likes">Likes</string>
     <string name="post_comments">Comments</string>
     <string name="post_shares">Share</string>
