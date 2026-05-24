@@ -397,6 +397,12 @@
     <string name="profile_posts_loading_error">"Error loading posts: "</string>
     <string name="profile_posts_refresh_error">Could not load new posts</string>
 
+    <!-- Profile Menu -->
+    <string name="profile_menu_blacklist">Add to blacklist</string>
+    <string name="profile_menu_report">Report</string>
+    <string name="profile_menu_ignore">Ignore</string>
+    <string name="profile_menu_rate_up">Increase rating</string>
+
     <!-- Links -->
     <string name="profile_photo_title">Profile Photo</string>
     <string name="link_title">Link</string>

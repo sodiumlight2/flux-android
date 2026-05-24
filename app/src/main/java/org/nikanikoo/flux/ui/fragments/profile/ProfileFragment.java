@@ -2,6 +2,9 @@ package org.nikanikoo.flux.ui.fragments.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +100,7 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         // Инициализация Presenter
         ProfileManager profileManager = ProfileManager.getInstance(requireContext());
         presenter = new ProfilePresenter(profileManager);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -291,6 +295,10 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
 
         // Загружаем посты после загрузки профиля
         loadPosts(true);
+
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -534,6 +542,45 @@ public class ProfileFragment extends BaseProfileFragment implements ProfileContr
         RepostDialog.show(requireContext(), post, (repostedPost, comment) -> {
             Logger.d(TAG, "Repost with comment: " + comment);
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        
+        boolean isForeign = isForeignProfile();
+        
+        MenuItem blacklist = menu.findItem(R.id.action_blacklist);
+        if (blacklist != null) {
+            blacklist.setVisible(isForeign);
+        }
+        
+        MenuItem report = menu.findItem(R.id.action_report);
+        if (report != null) {
+            report.setVisible(isForeign);
+        }
+        
+        MenuItem ignore = menu.findItem(R.id.action_ignore);
+        if (ignore != null) {
+            ignore.setVisible(isForeign);
+        }
+        
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_rate_up) {
+            return true;
+        } else if (id == R.id.action_blacklist) {
+            return true;
+        } else if (id == R.id.action_report) {
+            return true;
+        } else if (id == R.id.action_ignore) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

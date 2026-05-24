@@ -533,6 +533,11 @@
     <string name="profile_add_friend">Добавить в друзья</string>
     <string name="profile_friend">Удалить из друзей</string>
 
+    <!-- Profile Menu -->
+    <string name="profile_menu_blacklist">Добавить в чёрный список</string>
+    <string name="profile_menu_report">Пожаловаться</string>
+    <string name="profile_menu_ignore">Игнорировать</string>
+    <string name="profile_menu_rate_up">Повысить рейтинг</string>
 
     <!-- Links -->
     <string name="link_title">Ссылка</string>
