@@ -571,9 +571,9 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
             boolean isTablet = navigationRailView != null && navigationRailView.getVisibility() == View.VISIBLE;
             drawerToggle.setDrawerIndicatorEnabled(!isTablet);
             if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(!isTablet);
             }
-            Logger.d(TAG, "Set drawerIndicatorEnabled=" + !isTablet + ", displayHomeAsUpEnabled=false");
+            Logger.d(TAG, "Set drawerIndicatorEnabled=" + !isTablet + ", displayHomeAsUpEnabled=" + (!isTablet));
         }
         drawerToggle.syncState();
     }

@@ -458,6 +458,15 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
     public void setToolbarTitle(String title) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                toolbar.setOnClickListener(null);
+                toolbar.setClickable(false);
+                View arrow = toolbar.findViewById(R.id.news_toolbar_arrow);
+                if (arrow != null) {
+                    arrow.setVisibility(View.GONE);
+                }
+            }
         }
     }
     
@@ -467,6 +476,7 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
             Toolbar toolbar = findViewById(R.id.toolbar);
             if (toolbar != null) {
                 toolbar.setOnClickListener(clickListener);
+                toolbar.setClickable(true);
             }
         }
     }
