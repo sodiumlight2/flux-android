@@ -1,6 +1,7 @@
 package org.nikanikoo.flux.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,8 @@ import org.nikanikoo.flux.ui.fragments.notifications.NotificationsFragment;
 import org.nikanikoo.flux.ui.fragments.profile.ProfileFragment;
 import org.nikanikoo.flux.ui.fragments.settings.SettingsFragment;
 import org.nikanikoo.flux.utils.Logger;
+import org.nikanikoo.flux.utils.ThemeManager;
+import org.nikanikoo.flux.utils.ThemeTransitionHelper;
 
 import java.util.List;
 
@@ -81,6 +84,13 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         initDrawer(toolbar);
         initHeaderViews();
         initNavigationRail();
+
+        org.nikanikoo.flux.data.managers.ProfileManager profileManager =
+                org.nikanikoo.flux.data.managers.ProfileManager.getInstance(activity);
+        UserProfile cachedProfile = profileManager.getCachedProfileSync();
+        if (cachedProfile != null) {
+            updateUserInfo(cachedProfile);
+        }
     }
     
     private void initNavigationRail() {
@@ -202,6 +212,31 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
                 closeDrawer();
                 navigateToFragmentWithBackStack(ProfileFragment.newInstance("", ""), "profile");
                 activity.setToolbarTitle(activity.getString(R.string.nav_profile));
+            });
+        }
+
+        ImageView themeToggleBtn = headerView.findViewById(R.id.theme_toggle_btn);
+        if (themeToggleBtn != null) {
+            ThemeManager themeManager = ThemeManager.getInstance(activity);
+            boolean isDark = themeManager.isDarkMode();
+            themeToggleBtn.setImageResource(isDark ? R.drawable.ic_sunny : R.drawable.ic_bedtime);
+
+            themeToggleBtn.setOnClickListener(v -> {
+                int currentMode = themeManager.getThemeMode();
+                int newMode = (currentMode == ThemeManager.THEME_DARK || currentMode == ThemeManager.THEME_AMOLED)
+                        ? ThemeManager.THEME_LIGHT
+                        : ThemeManager.THEME_DARK;
+
+                int[] location = new int[2];
+                v.getLocationInWindow(location);
+                int x = location[0] + v.getWidth() / 2;
+                int y = location[1] + v.getHeight() / 2;
+
+                Bitmap screenshot = ThemeTransitionHelper.takeScreenshot(activity);
+                ThemeTransitionHelper.setTransitionData(screenshot, x, y);
+                themeManager.setThemeMode(newMode);
+                activity.recreate();
+                activity.overridePendingTransition(0, 0);
             });
         }
     }

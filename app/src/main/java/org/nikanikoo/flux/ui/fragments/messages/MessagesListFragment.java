@@ -32,6 +32,9 @@ public class MessagesListFragment extends BaseFragment implements ConversationsA
     private boolean isConversationsLoaded = false;
     private boolean isViewCreated = false;
 
+    private static List<Conversation> sCachedConversations = null;
+    private static boolean sIsConversationsLoaded = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,11 @@ public class MessagesListFragment extends BaseFragment implements ConversationsA
         }
         if (messagesManager == null) {
             messagesManager = MessagesManager.getInstance(requireContext());
+        }
+        
+        if (conversations.isEmpty() && sIsConversationsLoaded && sCachedConversations != null) {
+            conversations.addAll(sCachedConversations);
+            isConversationsLoaded = true;
         }
     }
 
@@ -109,6 +117,9 @@ public class MessagesListFragment extends BaseFragment implements ConversationsA
         if (!isViewCreated) {
             return;
         }
+
+        sCachedConversations = null;
+        sIsConversationsLoaded = false;
         
         swipeRefreshLayout.setRefreshing(true);
         
@@ -171,6 +182,10 @@ public class MessagesListFragment extends BaseFragment implements ConversationsA
                             adapter.updateConversations(conversations);
                         }
                         isConversationsLoaded = true;
+                        
+                        sCachedConversations = new ArrayList<>(conversations);
+                        sIsConversationsLoaded = true;
+                        
                         swipeRefreshLayout.setRefreshing(false);
                     });
                 }

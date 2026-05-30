@@ -34,6 +34,7 @@ import org.nikanikoo.flux.ui.fragments.news.NewsFragment;
 import org.nikanikoo.flux.utils.Logger;
 import org.nikanikoo.flux.utils.LocaleManager;
 import org.nikanikoo.flux.utils.ThemeManager;
+import org.nikanikoo.flux.utils.ThemeTransitionHelper;
 import org.nikanikoo.flux.utils.ValidationUtils;
 
 /**
@@ -43,6 +44,10 @@ import org.nikanikoo.flux.utils.ValidationUtils;
 public class MainActivity extends AppCompatActivity implements NotificationBadgeListener {
 
     private static final String TAG = "MainActivity";
+
+    private static int sCachedMessages = -1;
+    private static int sCachedNotifications = -1;
+    private static int sCachedFriends = -1;
 
     // Controllers
     private NavigationController navigationController;
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0, 0);
         applyTheme();
         super.onCreate(savedInstanceState);
         
@@ -97,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         }
         
         setContentView(R.layout.activity_main);
+        
+        if (ThemeTransitionHelper.isTransitioning()) {
+            ThemeTransitionHelper.animateThemeChange(this);
+        }
         
         Logger.checkAndShowCrashReport(this);
         
@@ -390,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         if (longPollManager != null) {
             longPollManager.start();
         }
+        applyCachedBadges();
         updateAllBadges();
         
         if (miniPlayerController != null) {
@@ -509,6 +520,9 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
         api.getCounters(new OpenVKApi.CountersCallback() {
             @Override
             public void onSuccess(int messages, int notifications, int friends) {
+                sCachedMessages = messages;
+                sCachedNotifications = notifications;
+                sCachedFriends = friends;
                 runOnUiThread(() -> {
                     NavigationView navigationView = findViewById(R.id.drawer_view);
                     View navigationRailView = findViewById(R.id.navigation_rail);
@@ -532,6 +546,30 @@ public class MainActivity extends AppCompatActivity implements NotificationBadge
                 Logger.e(TAG, "Error updating counters: " + error);
             }
         });
+    }
+
+    private void applyCachedBadges() {
+        if (sCachedMessages == -1 && sCachedNotifications == -1 && sCachedFriends == -1) {
+            return;
+        }
+        NavigationView navigationView = findViewById(R.id.drawer_view);
+        View navigationRailView = findViewById(R.id.navigation_rail);
+        
+        int messages = Math.max(0, sCachedMessages);
+        int notifications = Math.max(0, sCachedNotifications);
+        int friends = Math.max(0, sCachedFriends);
+
+        if (navigationView != null) {
+            updateDrawerBadge(navigationView, R.id.drawer_notification, notifications, getString(R.string.notifications_title));
+            updateDrawerBadge(navigationView, R.id.drawer_messages, messages, getString(R.string.messages_title));
+            updateDrawerBadge(navigationView, R.id.drawer_friends, friends, getString(R.string.friends_title));
+        }
+        
+        if (navigationRailView != null) {
+            updateRailBadge(navigationRailView, R.id.drawer_notification, notifications);
+            updateRailBadge(navigationRailView, R.id.drawer_messages, messages);
+            updateRailBadge(navigationRailView, R.id.drawer_friends, friends);
+        }
     }
     
     private void updateDrawerBadge(NavigationView navigationView, int itemId, int count, String defaultTitle) {

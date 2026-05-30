@@ -63,6 +63,10 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
     private volatile int loadRequestCounter = 0;
     private List<Post> savedPosts = new ArrayList<>();
     private String savedNextFrom;
+
+    private static List<Post> sCachedPosts = null;
+    private static String sCachedNextFrom = null;
+    private static boolean sHasLoadedPosts = false;
     
     // Тип новостей: true = подписки, false = все новости
     private boolean isSubscriptionMode = true;
@@ -81,6 +85,12 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
         if (restoringFromBundle) {
             hasLoadedPosts = savedInstanceState.getBoolean("has_loaded_posts", false);
             savedNextFrom = savedInstanceState.getString("saved_next_from");
+        }
+
+        if (savedPosts.isEmpty() && sHasLoadedPosts && sCachedPosts != null) {
+            hasLoadedPosts = true;
+            savedPosts = new ArrayList<>(sCachedPosts);
+            savedNextFrom = sCachedNextFrom;
         }
 
         // Инициализация ErrorViewHandler
@@ -195,6 +205,11 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
             savedNextFrom = null;
             hasLoadedPosts = false;
             isLoadingPosts = false;
+            
+            sCachedPosts = null;
+            sCachedNextFrom = null;
+            sHasLoadedPosts = false;
+            
             loadPosts(true);
         });
     }
@@ -326,6 +341,11 @@ public class NewsFragment extends BaseFragment implements PostAdapter.OnPostClic
                     if (p != null) savedPosts.add(p);
                 }
                 savedNextFrom = nextFrom;
+                
+                sCachedPosts = new ArrayList<>(savedPosts);
+                sCachedNextFrom = savedNextFrom;
+                sHasLoadedPosts = true;
+                
                 isLoadingPosts = false;
                 if (loadedPosts.isEmpty() && postAdapter.getPostsCount() == 0) {
                     Logger.d(TAG, " No posts received, trying alternative method...");
