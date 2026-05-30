@@ -66,12 +66,24 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Get commit info
+      - name: Get commit info and version
         id: commit
         run: |
+          # Сохраняем хэш коммита
           echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           
           git fetch --tags
+          
+          LATEST_BUILD_TAG=$(git tag -l "build-alpha-*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_BUILD_TAG" ]; then
+            VERSION_CODE=1
+          else
+            LAST_CODE=${LATEST_BUILD_TAG#build-alpha-}
+            VERSION_CODE=$((LAST_CODE + 1))
+          fi
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          # -----------------------------------
+          
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           
           if [ -z "$LATEST_TAG" ]; then
@@ -92,8 +104,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build Release and Debug APK
-        run: ./gradlew assembleRelease assembleDebug -PciVersionCode=${{ github.run_number }} -PciVersionName="${{ github.run_number }}-${{ steps.commit.outputs.hash }}"
-
+        run: ./gradlew assembleRelease assembleDebug -PciVersionCode=${{ steps.commit.outputs.version_code }} -PciVersionName="${{ steps.commit.outputs.version_code }}-${{ steps.commit.outputs.hash }}"
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
