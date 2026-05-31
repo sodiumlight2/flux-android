@@ -16,7 +16,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.nikanikoo.flux.R;
 import org.nikanikoo.flux.data.coordinators.CacheCoordinator;
+import org.nikanikoo.flux.data.managers.AudioCacheManager;
 import org.nikanikoo.flux.utils.Logger;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class DataSettingsFragment extends Fragment {
 
@@ -32,18 +35,35 @@ public class DataSettingsFragment extends Fragment {
     private View settingsClearLogs;
     private TextView logsSizeValue;
 
+    private AudioCacheManager audioCacheManager;
+    private View settingsSaveOnListeningContainer;
+    private SwitchMaterial switchSaveOnListening;
+    private View settingsMusicCacheLimit;
+    private TextView musicCacheLimitValue;
+
+    private final android.content.BroadcastReceiver audioCacheReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(android.content.Context context, Intent intent) {
+            updateMusicCacheText();
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_data_settings, container, false);
 
         cacheCoordinator = new CacheCoordinator(requireContext());
+        audioCacheManager = AudioCacheManager.getInstance(requireContext());
 
         initViews(view);
         calculateCacheSize();
         updateLogsSize();
         updateLogLimitText();
         setupClickListeners();
+
+        switchSaveOnListening.setChecked(audioCacheManager.isSaveOnListeningEnabled());
+        updateMusicCacheText();
 
         return view;
     }
@@ -57,6 +77,11 @@ public class DataSettingsFragment extends Fragment {
         settingsSaveLogs = view.findViewById(R.id.settings_save_logs);
         settingsClearLogs = view.findViewById(R.id.settings_clear_logs);
         logsSizeValue = view.findViewById(R.id.logs_size_value);
+
+        settingsSaveOnListeningContainer = view.findViewById(R.id.settings_save_on_listening_container);
+        switchSaveOnListening = view.findViewById(R.id.switch_save_on_listening);
+        settingsMusicCacheLimit = view.findViewById(R.id.settings_music_cache_limit);
+        musicCacheLimitValue = view.findViewById(R.id.music_cache_limit_value);
     }
     
     private void setupClickListeners() {
@@ -134,6 +159,47 @@ public class DataSettingsFragment extends Fragment {
                     });
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
+                .show();
+        });
+
+        settingsSaveOnListeningContainer.setOnClickListener(v -> {
+            boolean isChecked = !switchSaveOnListening.isChecked();
+            switchSaveOnListening.setChecked(isChecked);
+            audioCacheManager.setSaveOnListeningEnabled(isChecked);
+        });
+
+        settingsMusicCacheLimit.setOnClickListener(v -> {
+            String cancelStr = getString(R.string.cancel);
+            String unlimitedStr = getString(R.string.settings_music_cache_unlimited);
+
+            String[] options = {"100 MB", "250 MB", "500 MB", "1 GB", "2 GB", "5 GB", unlimitedStr};
+            long[] values = {
+                100 * 1024 * 1024L,
+                250 * 1024 * 1024L,
+                500 * 1024 * 1024L,
+                1024 * 1024 * 1024L,
+                2L * 1024 * 1024 * 1024L,
+                5L * 1024 * 1024 * 1024L,
+                -1L
+            };
+
+            long currentLimit = audioCacheManager.getCacheLimit();
+            int selectedIndex = 6;
+            for (int i = 0; i < values.length; i++) {
+                if (values[i] == currentLimit) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.settings_music_cache_limit))
+                .setSingleChoiceItems(options, selectedIndex, (dialog, which) -> {
+                    audioCacheManager.setCacheLimit(values[which]);
+                    updateMusicCacheText();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(cancelStr, null)
                 .show();
         });
     }
@@ -215,5 +281,51 @@ public class DataSettingsFragment extends Fragment {
                 });
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        android.content.IntentFilter filter = new android.content.IntentFilter(AudioCacheManager.ACTION_AUDIO_CACHE_CHANGED);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(audioCacheReceiver, filter, android.content.Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            requireContext().registerReceiver(audioCacheReceiver, filter);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            requireContext().unregisterReceiver(audioCacheReceiver);
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    private void updateMusicCacheText() {
+        new Thread(() -> {
+            long sizeBytes = audioCacheManager.getCacheDirSize();
+            long limitBytes = audioCacheManager.getCacheLimit();
+            
+            String sizeStr = formatBytesToMB(sizeBytes) + " MB";
+            
+            String statusText;
+            if (limitBytes == -1L) {
+                statusText = getString(R.string.settings_music_cache_occupied_unlimited, sizeStr);
+            } else {
+                String limitStr = (limitBytes / (1024 * 1024)) + " MB";
+                statusText = getString(R.string.settings_music_cache_occupied, sizeStr, limitStr);
+            }
+            
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> musicCacheLimitValue.setText(statusText));
+            }
+        }).start();
+    }
+
+    private String formatBytesToMB(long bytes) {
+        double megabytes = bytes / (1024.0 * 1024.0);
+        return String.format(java.util.Locale.ROOT, "%.1f", megabytes);
     }
 }

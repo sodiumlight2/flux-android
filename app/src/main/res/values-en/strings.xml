@@ -254,6 +254,31 @@
     <string name="audio_add">Add</string>
     <string name="audio_more">More</string>
     <string name="audio_no_title">No title</string>
+    <string name="audio_tab_all">All</string>
+    <string name="audio_tab_downloaded">Downloaded</string>
+    <string name="audio_downloading">Downloading...</string>
+    <string name="audio_downloaded">Track downloaded</string>
+    <string name="audio_download_removed">Download removed</string>
+    <string name="audio_download_error">Download error: </string>
+    <string name="audio_no_downloaded">No downloaded tracks yet</string>
+    <string name="audio_download">Download</string>
+    <string name="audio_remove_download">Remove download</string>
+    <string name="audio_already_downloaded">Track already downloaded</string>
+    <string name="audio_download_all">Download all songs</string>
+    <string name="audio_download_all_started">Starting download for all songs</string>
+    <string name="audio_download_all_queued">All songs were added to the download queue</string>
+    <string name="audio_wait_for_profile">Wait for profile to load</string>
+    <string name="audio_play_next">Play next</string>
+    <string name="audio_added_next">Added next in queue</string>
+    <string name="audio_add_to_library">Add to audio</string>
+    <string name="audio_remove_from_library">Remove from audio</string>
+    <string name="settings_music_cache_title">Music</string>
+    <string name="settings_save_on_listening">Save to cache when listening</string>
+    <string name="settings_save_on_listening_desc">Save streamed tracks to cache for offline access</string>
+    <string name="settings_music_cache_limit">Music storage limit</string>
+    <string name="settings_music_cache_unlimited">Unlimited</string>
+    <string name="settings_music_cache_occupied">Occupied: %1$s / %2$s</string>
+    <string name="settings_music_cache_occupied_unlimited">Occupied: %1$s / Unlimited</string>
 
     <!-- Music Player -->
     <string name="player_previous">Previous track</string>

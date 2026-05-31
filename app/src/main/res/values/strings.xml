@@ -297,6 +297,31 @@
     <string name="audio_add">Добавить</string>
     <string name="audio_more">Ещё</string>
     <string name="audio_no_title">Без названия</string>
+    <string name="audio_tab_all">Все</string>
+    <string name="audio_tab_downloaded">Загруженные</string>
+    <string name="audio_downloading">Загрузка...</string>
+    <string name="audio_downloaded">Трек загружен</string>
+    <string name="audio_download_removed">Загрузка удалена</string>
+    <string name="audio_download_error">Ошибка загрузки: </string>
+    <string name="audio_no_downloaded">Загруженных треков пока нет</string>
+    <string name="audio_download">Загрузить</string>
+    <string name="audio_remove_download">Удалить загрузку</string>
+    <string name="audio_already_downloaded">Трек уже загружен</string>
+    <string name="audio_download_all">Загрузить все песни</string>
+    <string name="audio_download_all_started">Начинаю загрузку всех песен</string>
+    <string name="audio_download_all_queued">Все песни добавлены в очередь загрузки</string>
+    <string name="audio_wait_for_profile">Дождитесь загрузки профиля</string>
+    <string name="audio_play_next">Играть следующим</string>
+    <string name="audio_added_next">Добавлено следующим в очередь</string>
+    <string name="audio_add_to_library">Добавить в аудиозаписи</string>
+    <string name="audio_remove_from_library">Удалить из аудиозаписей</string>
+    <string name="settings_music_cache_title">Музыка</string>
+    <string name="settings_save_on_listening">Сохранять при прослушивании</string>
+    <string name="settings_save_on_listening_desc">Сохранять прослушанные песни в кэш для оффлайн доступа</string>
+    <string name="settings_music_cache_limit">Лимит хранилища музыки</string>
+    <string name="settings_music_cache_unlimited">Без ограничений</string>
+    <string name="settings_music_cache_occupied">Занято: %1$s / %2$s</string>
+    <string name="settings_music_cache_occupied_unlimited">Занято: %1$s / Без ограничений</string>
 
     <!-- Music Player -->
     <string name="player_previous">Предыдущий трек</string>
