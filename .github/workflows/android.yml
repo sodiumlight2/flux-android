@@ -125,8 +125,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-alpha-${{ github.run_number }}
-          name: Build ${{ steps.commit.outputs.hash }} (${{ github.run_number }})
+          tag_name: build-alpha-${{ steps.commit.outputs.version_code }}
+          name: Build ${{ steps.commit.outputs.hash }} (${{ steps.commit.outputs.version_code }})
           prerelease: false
           files: |
             flux.apk
@@ -147,11 +147,11 @@ jobs:
           CHANGELOG=$(echo "${{ steps.commit.outputs.body }}" | awk '{printf "%s\\n", $0}' | sed 's/"/\\"/g')
           cat <<EOF > public/update.json
           {
-            "versionCode": ${{ github.run_number }},
-            "versionName": "Build ${{ steps.commit.outputs.hash }} (${{ github.run_number }})",
+            "versionCode": ${{ steps.commit.outputs.version_code }},
+            "versionName": "Build ${{ steps.commit.outputs.hash }} (${{ steps.commit.outputs.version_code }})",
             "changelog": "$CHANGELOG",
-            "releaseApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ github.run_number }}/flux.apk",
-            "debugApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ github.run_number }}/flux-debug.apk"
+            "releaseApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ steps.commit.outputs.version_code }}/flux.apk",
+            "debugApkUrl": "https://github.com/nikanikoo/flux-android/releases/download/build-alpha-${{ steps.commit.outputs.version_code }}/flux-debug.apk"
           }
           EOF
 
