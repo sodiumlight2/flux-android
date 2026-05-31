@@ -348,6 +348,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.imagesCollage.setVisibility(View.GONE);
         AudioAttachmentView.clearAudioAttachments(holder.audioContainer);
         clearVideoAttachments(holder.videoContainer);
+        org.nikanikoo.flux.ui.views.PollAttachmentView.clearPollAttachments(holder.pollContainer);
         
         // Показываем контейнер оригинального поста
         holder.originalPostContainer.setVisibility(View.VISIBLE);
@@ -427,6 +428,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Обрабатываем видео оригинального поста
         handleOriginalPostVideo(holder, originalPost);
         
+        handleOriginalPostPoll(holder, originalPost);
+        
         // Обрабатываем неподдерживаемые элементы оригинального поста
         handleOriginalPostUnsupportedElements(holder, originalPost);
         
@@ -486,6 +489,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Скрываем контейнер оригинального поста
         holder.originalPostContainer.setVisibility(View.GONE);
+        org.nikanikoo.flux.ui.views.PollAttachmentView.clearPollAttachments(holder.originalPostPollContainer);
         
         // Обработка изображений поста с оптимизацией
         handlePostImages(holder, post);
@@ -495,6 +499,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         
         // Обработка видео вложений
         handlePostVideo(holder, post);
+
+        handlePostPoll(holder, post);
     }
     
     /**
@@ -521,6 +527,30 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             addVideoAttachments(holder.videoContainer, post.getVideoAttachments());
         } else {
             clearVideoAttachments(holder.videoContainer);
+        }
+    }
+
+    private void handleOriginalPostPoll(@NonNull PostViewHolder holder, Post originalPost) {
+        if (originalPost.getPollAttachments() != null && !originalPost.getPollAttachments().isEmpty()) {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.addPollAttachments(
+                context,
+                holder.originalPostPollContainer,
+                originalPost.getPollAttachments()
+            );
+        } else {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.clearPollAttachments(holder.originalPostPollContainer);
+        }
+    }
+
+    private void handlePostPoll(@NonNull PostViewHolder holder, Post post) {
+        if (post.getPollAttachments() != null && !post.getPollAttachments().isEmpty()) {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.addPollAttachments(
+                context,
+                holder.pollContainer,
+                post.getPollAttachments()
+            );
+        } else {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.clearPollAttachments(holder.pollContainer);
         }
     }
     
@@ -976,6 +1006,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PostImagesCollage imagesCollage;
         android.widget.LinearLayout audioContainer;
         android.widget.LinearLayout videoContainer;
+        android.widget.LinearLayout pollContainer;
         TextView unsupportedElements;
         View likeButton;
         ImageView likeIcon;
@@ -998,6 +1029,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PostImagesCollage originalPostImagesCollage;
         android.widget.LinearLayout originalPostAudioContainer;
         android.widget.LinearLayout originalPostVideoContainer;
+        android.widget.LinearLayout originalPostPollContainer;
         TextView originalPostUnsupportedElements;
         TextView originalPostLikeCount;
         TextView originalPostCommentCount;
@@ -1025,6 +1057,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imagesCollage = itemView.findViewById(R.id.post_images_collage);
             audioContainer = itemView.findViewById(R.id.post_audio_container);
             videoContainer = itemView.findViewById(R.id.post_video_container);
+            pollContainer = itemView.findViewById(R.id.post_poll_container);
             unsupportedElements = itemView.findViewById(R.id.post_unsupported_elements);
             likeButton = itemView.findViewById(R.id.post_like_button);
             likeIcon = itemView.findViewById(R.id.post_like_icon);
@@ -1045,6 +1078,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             originalPostImagesCollage = itemView.findViewById(R.id.original_post_images_collage);
             originalPostAudioContainer = itemView.findViewById(R.id.original_post_audio_container);
             originalPostVideoContainer = itemView.findViewById(R.id.original_post_video_container);
+            originalPostPollContainer = itemView.findViewById(R.id.original_post_poll_container);
             originalPostUnsupportedElements = itemView.findViewById(R.id.original_post_unsupported_elements);
             originalPostLikeCount = itemView.findViewById(R.id.original_post_like_count);
             originalPostCommentCount = itemView.findViewById(R.id.original_post_comment_count);

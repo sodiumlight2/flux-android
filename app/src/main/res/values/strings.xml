@@ -690,4 +690,17 @@
     <string name="update_check_failed">Не удалось проверить обновления</string>
     <string name="update_check_btn">Проверить обновления</string>
 
+    <!-- Polls -->
+    <string name="poll_anonymous">Анонимный опрос</string>
+    <string name="poll_public">Публичный опрос</string>
+    <string name="poll_multiple">Несколько вариантов</string>
+    <string name="poll_single">Один вариант</string>
+    <string name="poll_votes_count">Проголосовало: %d</string>
+    <string name="poll_votes_count_0">Опрошено 0 человек</string>
+    <string name="poll_vote_button">Проголосовать</string>
+    <string name="poll_unvote_button">Снять голос</string>
+    <string name="poll_closed">Опрос завершен</string>
+    <string name="poll_error_vote">Ошибка при голосовании</string>
+    <string name="poll_error_unvote">Ошибка при отмене голоса</string>
+
 </resources>

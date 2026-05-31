@@ -609,4 +609,17 @@
     <string name="transfer_err_invalid_recipient">Invalid recipient</string>
     <string name="transfer_err_message_too_long">Message is too long</string>
 
+    <!-- Polls -->
+    <string name="poll_anonymous">Anonymous poll</string>
+    <string name="poll_public">Public poll</string>
+    <string name="poll_multiple">Multiple choice</string>
+    <string name="poll_single">Single choice</string>
+    <string name="poll_votes_count">Voted: %d</string>
+    <string name="poll_votes_count_0">0 votes</string>
+    <string name="poll_vote_button">Vote</string>
+    <string name="poll_unvote_button">Retract vote</string>
+    <string name="poll_closed">Poll closed</string>
+    <string name="poll_error_vote">Voting error</string>
+    <string name="poll_error_unvote">Error retracting vote</string>
+
 </resources>

@@ -271,6 +271,14 @@
                                     android:visibility="gone"
                                     android:layout_marginBottom="8dp"/>
 
+                                <LinearLayout
+                                    android:id="@+id/original_post_poll_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone"
+                                    android:layout_marginBottom="8dp"/>
+
                                 <!-- Неподдерживаемые элементы оригинального поста -->
                                 <TextView
                                     android:id="@+id/original_post_unsupported_elements"
@@ -398,6 +406,14 @@
                 <!-- Видео вложения -->
                 <LinearLayout
                     android:id="@+id/post_video_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:id="@+id/post_poll_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

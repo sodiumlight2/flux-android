@@ -15,6 +15,7 @@ public class Post implements Serializable {
     private List<String> imageMaxResUrls;
     private List<Audio> audioAttachments;
     private List<Video> videoAttachments;
+    private List<Poll> pollAttachments;
     private int authorId;
     private String authorAvatarUrl;
     private String unsupportedElementsText;
@@ -51,6 +52,7 @@ public class Post implements Serializable {
         this.imageMaxResUrls = new ArrayList<>();
         this.audioAttachments = new ArrayList<>();
         this.videoAttachments = new ArrayList<>();
+        this.pollAttachments = new ArrayList<>();
         this.isRepost = false;
     }
 
@@ -65,6 +67,7 @@ public class Post implements Serializable {
     public List<String> getImageMaxResUrls() { return imageMaxResUrls; }
     public List<Audio> getAudioAttachments() { return audioAttachments; }
     public List<Video> getVideoAttachments() { return videoAttachments; }
+    public List<Poll> getPollAttachments() { return pollAttachments; }
     public int getAuthorId() { return authorId; }
     public String getAuthorAvatarUrl() { return authorAvatarUrl; }
     public String getUnsupportedElementsText() { return unsupportedElementsText; }
@@ -130,6 +133,17 @@ public class Post implements Serializable {
                 videoAttachments = new ArrayList<>();
             }
             videoAttachments.add(video);
+        }
+    }
+    public void setPollAttachments(List<Poll> pollAttachments) {
+        this.pollAttachments = pollAttachments != null ? pollAttachments : new ArrayList<>();
+    }
+    public void addPollAttachment(Poll poll) {
+        if (poll != null) {
+            if (pollAttachments == null) {
+                pollAttachments = new ArrayList<>();
+            }
+            pollAttachments.add(poll);
         }
     }
     public void setAuthorId(int authorId) { this.authorId = authorId; }

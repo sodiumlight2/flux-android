@@ -195,6 +195,7 @@ public class PostParser {
             post.setImageMaxResUrls(attachmentResult.getImageMaxResUrls());
             post.setAudioAttachments(attachmentResult.getAudioAttachments());
             post.setVideoAttachments(attachmentResult.getVideoAttachments());
+            post.setPollAttachments(attachmentResult.getPollAttachments());
             post.setUnsupportedElementsText(attachmentResult.getUnsupportedElementsText());
 
             JSONArray copyHistory = ValidationUtils.safeGetJSONArray(actualPostData, "copy_history");
@@ -303,6 +304,7 @@ public class PostParser {
             post.setImageMaxResUrls(attachmentResult.getImageMaxResUrls());
             post.setAudioAttachments(attachmentResult.getAudioAttachments());
             post.setVideoAttachments(attachmentResult.getVideoAttachments());
+            post.setPollAttachments(attachmentResult.getPollAttachments());
             post.setUnsupportedElementsText(attachmentResult.getUnsupportedElementsText());
 
             return post;

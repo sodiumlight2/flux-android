@@ -126,6 +126,41 @@
                                     android:layout_height="wrap_content"
                                     android:visibility="gone" />
 
+                                <LinearLayout
+                                    android:id="@+id/original_post_audio_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone"
+                                    android:layout_marginBottom="8dp"/>
+
+                                <LinearLayout
+                                    android:id="@+id/original_post_video_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone"
+                                    android:layout_marginBottom="8dp"/>
+
+                                <LinearLayout
+                                    android:id="@+id/original_post_poll_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone"
+                                    android:layout_marginBottom="8dp"/>
+
+                                <TextView
+                                    android:id="@+id/original_post_unsupported_elements"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="11sp"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:textStyle="italic"
+                                    android:layout_marginBottom="8dp"
+                                    android:visibility="gone" />
+
                                 <!-- Источник -->
                                 <LinearLayout
                                     android:id="@+id/original_post_copyright_container"
@@ -162,7 +197,7 @@
                             <LinearLayout
                                 android:id="@+id/original_post_nsfw_spoiler"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:minHeight="140dp"
                                 android:orientation="vertical"
                                 android:gravity="center"

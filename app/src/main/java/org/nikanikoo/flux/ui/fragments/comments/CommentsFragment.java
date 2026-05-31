@@ -59,6 +59,10 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
     private ImageView originalPostDeviceIcon;
     private TextView originalPostContent;
     private PostImagesCollage originalPostImage;
+    private android.widget.LinearLayout originalPostAudioContainer;
+    private android.widget.LinearLayout originalPostVideoContainer;
+    private android.widget.LinearLayout originalPostPollContainer;
+    private TextView originalPostUnsupportedElements;
     private View originalPostBodyContainer;
     private View originalPostNsfwSpoiler;
     private View originalPostLikeButton;
@@ -126,6 +130,10 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
         originalPostDeviceIcon = view.findViewById(R.id.original_post_device_icon);
         originalPostContent = view.findViewById(R.id.original_post_content);
         originalPostImage = view.findViewById(R.id.original_post_image);
+        originalPostAudioContainer = view.findViewById(R.id.original_post_audio_container);
+        originalPostVideoContainer = view.findViewById(R.id.original_post_video_container);
+        originalPostPollContainer = view.findViewById(R.id.original_post_poll_container);
+        originalPostUnsupportedElements = view.findViewById(R.id.original_post_unsupported_elements);
         originalPostBodyContainer = view.findViewById(R.id.original_post_body_container);
         originalPostNsfwSpoiler = view.findViewById(R.id.original_post_nsfw_spoiler);
         originalPostLikeButton = view.findViewById(R.id.original_post_like_button);
@@ -289,8 +297,43 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
             originalPostImage.setOnImageClickListener((position, urls) -> {
                 PhotoViewerActivity.start(getContext(), urls, position, originalPost, originalPost.getAuthorName());
             });
+            originalPostImage.setVisibility(View.VISIBLE);
         } else {
             originalPostImage.setVisibility(View.GONE);
+        }
+
+        if (originalPost.getAudioAttachments() != null && !originalPost.getAudioAttachments().isEmpty()) {
+            org.nikanikoo.flux.ui.views.AudioAttachmentView.addAudioAttachments(
+                getContext(), 
+                originalPostAudioContainer, 
+                originalPost.getAudioAttachments(), 
+                null
+            );
+        } else {
+            org.nikanikoo.flux.ui.views.AudioAttachmentView.clearAudioAttachments(originalPostAudioContainer);
+        }
+
+        if (originalPost.getVideoAttachments() != null && !originalPost.getVideoAttachments().isEmpty()) {
+            addVideoAttachments(originalPostVideoContainer, originalPost.getVideoAttachments());
+        } else {
+            clearVideoAttachments(originalPostVideoContainer);
+        }
+
+        if (originalPost.getPollAttachments() != null && !originalPost.getPollAttachments().isEmpty()) {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.addPollAttachments(
+                getContext(),
+                originalPostPollContainer,
+                originalPost.getPollAttachments()
+            );
+        } else {
+            org.nikanikoo.flux.ui.views.PollAttachmentView.clearPollAttachments(originalPostPollContainer);
+        }
+
+        if (originalPost.getUnsupportedElementsText() != null && !originalPost.getUnsupportedElementsText().isEmpty()) {
+            originalPostUnsupportedElements.setVisibility(View.VISIBLE);
+            originalPostUnsupportedElements.setText(originalPost.getUnsupportedElementsText());
+        } else {
+            originalPostUnsupportedElements.setVisibility(View.GONE);
         }
         
         // Обновляем состояние лайка
@@ -737,6 +780,29 @@ public class CommentsFragment extends Fragment implements CommentsAdapter.OnComm
             }
         } else {
             imageView.setVisibility(View.GONE);
+        }
+    }
+
+    private void addVideoAttachments(android.widget.LinearLayout container, List<org.nikanikoo.flux.data.models.Video> videos) {
+        if (container == null || videos == null || videos.isEmpty()) {
+            return;
+        }
+        
+        container.removeAllViews();
+        container.setVisibility(View.VISIBLE);
+        
+        for (org.nikanikoo.flux.data.models.Video video : videos) {
+            org.nikanikoo.flux.ui.views.VideoAttachmentView videoView =
+                new org.nikanikoo.flux.ui.views.VideoAttachmentView(getContext());
+            videoView.setVideo(video);
+            container.addView(videoView);
+        }
+    }
+    
+    private void clearVideoAttachments(android.widget.LinearLayout container) {
+        if (container != null) {
+            container.removeAllViews();
+            container.setVisibility(View.GONE);
         }
     }
 }
