@@ -48,6 +48,16 @@
     <string name="nav_videos">Видео</string>
     <string name="nav_music">Музыка</string>
     <string name="nav_notes">Заметки</string>
+    <string name="note_delete_not_supported">Удаление заметок не поддерживается</string>
+    <string name="note_create_title">Новая заметка</string>
+    <string name="note_title_hint">Заголовок</string>
+    <string name="note_text_hint">Текст заметки</string>
+    <string name="note_btn_create">Создать</string>
+    <string name="note_fill_fields_error">Заполните все поля</string>
+    <string name="note_created_success">Заметка создана</string>
+    <string name="note_viewer_title">Заметка</string>
+    <string name="note_edit_title">Редактировать заметку</string>
+    <string name="note_updated_success">Заметка обновлена</string>
     <string name="nav_notifications">Уведомления</string>
     <string name="nav_settings">Настройки</string>
     <string name="nav_profile">Профиль</string>

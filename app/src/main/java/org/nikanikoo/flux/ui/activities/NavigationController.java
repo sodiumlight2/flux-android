@@ -492,6 +492,10 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
             fragment = new NotificationsFragment();
             tag = "notifications";
             activity.setToolbarTitle(activity.getString(R.string.nav_notifications));
+        } else if (id == R.id.drawer_notes) {
+            fragment = new org.nikanikoo.flux.ui.fragments.notes.NotesFragment();
+            tag = "notes";
+            activity.setToolbarTitle(activity.getString(R.string.nav_notes));
         } else if (id == R.id.drawer_settings) {
             fragment = new SettingsFragment();
             tag = "settings";
@@ -596,17 +600,45 @@ public class NavigationController implements NavigationView.OnNavigationItemSele
         Logger.d(TAG, "updateDrawerToggleForBackStack: backStackCount=" + backStackCount + 
                 ", current drawerIndicatorEnabled=" + drawerToggle.isDrawerIndicatorEnabled());
         
+        Toolbar toolbar = activity.findViewById(R.id.toolbar);
         if (backStackCount > 0) {
             drawerToggle.setDrawerIndicatorEnabled(false);
+            drawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             if (activity.getSupportActionBar() != null) {
                 activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
+            if (toolbar != null) {
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+                toolbar.setNavigationOnClickListener(v -> {
+                    Logger.d(TAG, "Back button clicked via toolbar listener");
+                    activity.getSupportFragmentManager().popBackStack();
+                });
+            }
+            drawerToggle.setToolbarNavigationClickListener(v -> {
+                Logger.d(TAG, "Back button clicked via drawerToggle listener");
+                activity.getSupportFragmentManager().popBackStack();
+            });
             Logger.d(TAG, "Set drawerIndicatorEnabled=false, displayHomeAsUpEnabled=true");
         } else {
             boolean isTablet = navigationRailView != null && navigationRailView.getVisibility() == View.VISIBLE;
             drawerToggle.setDrawerIndicatorEnabled(!isTablet);
             if (activity.getSupportActionBar() != null) {
                 activity.getSupportActionBar().setDisplayHomeAsUpEnabled(!isTablet);
+            }
+            drawerToggle.setToolbarNavigationClickListener(null);
+            
+            drawerToggle.syncState();
+            
+            if (toolbar != null) {
+                toolbar.setNavigationOnClickListener(v -> {
+                    Logger.d(TAG, "Toolbar navigation clicked");
+                    int bc = activity.getSupportFragmentManager().getBackStackEntryCount();
+                    if (bc > 0) {
+                        activity.getSupportFragmentManager().popBackStack();
+                    } else {
+                        openDrawer();
+                    }
+                });
             }
             Logger.d(TAG, "Set drawerIndicatorEnabled=" + !isTablet + ", displayHomeAsUpEnabled=" + (!isTablet));
         }
